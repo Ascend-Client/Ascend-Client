@@ -56,10 +56,4 @@ dependencies {
     implementation "org.ow2.asm:asm-commons:$asmVersion"
     implementation "org.ow2.asm:asm-tree:$asmVersion"
     implementation "org.ow2.asm:asm-util:$asmVersion"
-
-    annotationProcessor "org.ow2.asm:asm:$asmVersion"
-    annotationProcessor "org.ow2.asm:asm-analysis:$asmVersion"
-    annotationProcessor "org.ow2.asm:asm-commons:$asmVersion"
-    annotationProcessor "org.ow2.asm:asm-tree:$asmVersion"
-    annotationProcessor "org.ow2.asm:asm-util:$asmVersion"
 }
