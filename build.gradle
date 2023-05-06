@@ -1,5 +1,9 @@
+import java.nio.file.Files
+import java.nio.file.StandardCopyOption
+
 plugins {
     id 'java'
+    id "fabric-loom" version "1.1-SNAPSHOT"
 }
 
 group 'io.github.betterclient'
@@ -7,8 +11,55 @@ version '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
+
+    maven {
+        url "https://repo.spongepowered.org/repository/maven-public/"
+    }
+
+    maven {
+        name "CombatReforged"
+        url "https://maven.rizecookey.net"
+    }
 }
 
-dependencies {
 
+def mcVer = "1.16_combat-6"
+
+loom {
+    setCustomMinecraftManifest("https://gist.githubusercontent.com/rizecookey/4c6142baaccc3875f9b227fe22f2ace5/raw/c8ed74b19f7a5315813c9d4b199798b692a8f359/1.16_combat-6.json")
+    setIntermediaryUrl("https://maven.rizecookey.net/net/fabricmc/intermediary/${mcVer}/intermediary-${mcVer}-v2.jar")
+}
+
+File downloadQuixotic() {
+    File f = file("quixotic.jar") as File
+    f.createNewFile()
+    def is = new URL("https://github.com/betterclient/Quixotic-Loader/releases/download/gamer/Quixotic-1.0.jar").openStream()
+    Files.copy(
+            is,
+            f.toPath(),
+            StandardCopyOption.REPLACE_EXISTING)
+    return f
+}
+
+def asmVersion = "9.5"
+
+dependencies {
+    minecraft "com.mojang:minecraft:$mcVer"
+    mappings "net.fabricmc:yarn:1.16_combat-6+build.2:v2"
+
+    implementation files(downloadQuixotic())
+
+    implementation "org.spongepowered:mixin:0.8.5"
+
+    implementation "org.ow2.asm:asm:$asmVersion"
+    implementation "org.ow2.asm:asm-analysis:$asmVersion"
+    implementation "org.ow2.asm:asm-commons:$asmVersion"
+    implementation "org.ow2.asm:asm-tree:$asmVersion"
+    implementation "org.ow2.asm:asm-util:$asmVersion"
+
+    annotationProcessor "org.ow2.asm:asm:$asmVersion"
+    annotationProcessor "org.ow2.asm:asm-analysis:$asmVersion"
+    annotationProcessor "org.ow2.asm:asm-commons:$asmVersion"
+    annotationProcessor "org.ow2.asm:asm-tree:$asmVersion"
+    annotationProcessor "org.ow2.asm:asm-util:$asmVersion"
 }
