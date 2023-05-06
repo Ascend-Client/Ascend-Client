@@ -28,12 +28,17 @@ def mcVer = "1.16_combat-6"
 loom {
     setCustomMinecraftManifest("https://gist.githubusercontent.com/rizecookey/4c6142baaccc3875f9b227fe22f2ace5/raw/c8ed74b19f7a5315813c9d4b199798b692a8f359/1.16_combat-6.json")
     setIntermediaryUrl("https://maven.rizecookey.net/net/fabricmc/intermediary/${mcVer}/intermediary-${mcVer}-v2.jar")
+
+    runConfigs.configureEach {
+        client()
+        setDefaultMainClass("io.github.betterclient.client.launch.IDEMain")
+    }
 }
 
 File downloadQuixotic() {
     File f = file("quixotic.jar") as File
     f.createNewFile()
-    def is = new URL("https://github.com/betterclient/Quixotic-Loader/releases/download/gamer/Quixotic-1.0.jar").openStream()
+    def is = new URL("https://github.com/betterclient/Quixotic-Loader/releases/download/validtag/Quixotic-1.0.jar").openStream()
     Files.copy(
             is,
             f.toPath(),
