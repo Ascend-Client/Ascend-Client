@@ -1,5 +1,8 @@
 package io.github.betterclient.client.util;
 
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.util.Identifier;
+
 import static org.lwjgl.opengl.GL11.*;
 
 public class UIUtil {
@@ -50,5 +53,39 @@ public class UIUtil {
         glEnable(3553);
         glScaled(2, 2, 2);
         glPopAttrib();
+    }
+
+    /**
+     * Totally not skidded from:
+     * https://github.com/TitanicClient/Client/blob/bac90137dc4d7724a88eff07c1edde6b74215185/Shared/src/main/java/cc/noxiuam/titanic/client/ui/util/RenderUtil.java#LL99C5-L119C6
+     * @param resourceLocation
+     * @param x
+     * @param y
+     * @param width
+     * @param height
+     */
+    public static void drawImage(String resourceLocation, float x, float y, float width, float height) {
+        float f5 = width / 2.0f;
+        float f6 = 0.0f;
+        float f7 = 0.0f;
+        glEnable(3042);
+
+        glBindTexture(GL_TEXTURE_2D, MinecraftClient.getInstance()
+                        .getTextureManager()
+                        .getTexture(new Identifier(resourceLocation))
+                        .getGlId()
+        );
+
+        glBegin(7);
+        glTexCoord2d(f6 / f5, f7 / f5);
+        glVertex2d(x, y);
+        glTexCoord2d(f6 / f5, (f7 + f5) / f5);
+        glVertex2d(x, y + height);
+        glTexCoord2d((f6 + f5) / f5, (f7 + f5) / f5);
+        glVertex2d(x + width, y + height);
+        glTexCoord2d((f6 + f5) / f5, f7 / f5);
+        glVertex2d(x + width, y);
+        glEnd();
+        glDisable(3042);
     }
 }
