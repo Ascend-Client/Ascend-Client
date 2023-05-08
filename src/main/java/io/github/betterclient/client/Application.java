@@ -30,6 +30,6 @@ public class Application implements QuixoticApplication {
 
     @Override
     public List<String> getMixinConfigurations() {
-        return new ArrayList<>();
+        return new ArrayList<>(List.of("ballsack.mixins.json"));
     }
 }

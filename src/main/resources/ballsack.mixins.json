@@ -1,0 +1,9 @@
+{
+  "compatibilityLevel": "JAVA_8",
+  "package": "io.github.betterclient.client.mixin",
+  "mixins": [
+    "MixinGameOptions",
+    "MixinInGameHud",
+    "MixinMinecraftClient"
+  ]
+}
