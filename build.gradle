@@ -37,6 +37,8 @@ loom {
 
 File downloadQuixotic() {
     File f = file("quixotic.jar") as File
+    if(f.exists()) return f
+
     f.createNewFile()
     def is = new URL("https://github.com/betterclient/Quixotic-Loader/releases/download/validtag/Quixotic-1.0.jar").openStream()
     Files.copy(

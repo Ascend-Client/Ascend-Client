@@ -3,14 +3,14 @@ package io.github.betterclient.client.ui;
 import io.github.betterclient.client.BallSack;
 import io.github.betterclient.client.event.impl.RenderEvent;
 import io.github.betterclient.client.mod.*;
-import io.github.betterclient.client.mod.Module;
+import io.github.betterclient.client.util.UIUtil;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 
+import java.awt.*;
 import java.util.List;
 import java.util.Vector;
-import java.util.stream.Collectors;
 
 public class HUDMoveScreen extends Screen {
     public ModuleManager modMan = BallSack.getInstance().moduleManager;
@@ -39,6 +39,25 @@ public class HUDMoveScreen extends Screen {
         }
 
         for(HUDModule mod : hudMods) {
+            Renderable render = mod.renderable;
+
+            UIUtil.drawRoundedRect(
+                    render.x - 4, render.y - 4,
+                    render.x + render.width + 4,
+                    render.y + render.height + 4,
+                    5f, new Color(0, 0, 0, 84).getRGB()
+            );
+
+            matrices.push();
+            int x = render.x;
+            int y = render.y + render.height + 6;
+
+            matrices.translate(x,y,1);
+            matrices.scale(0.85f,0.85f,1);
+            matrices.translate(-x,-y,1);
+            textRenderer.draw(matrices, mod.name, x, y, -1);
+            matrices.pop();
+
             mod.render(new RenderEvent());
         }
 
