@@ -3,6 +3,16 @@ package io.github.betterclient.client.util;
 import static org.lwjgl.opengl.GL11.*;
 
 public class UIUtil {
+    /**
+     * Totally not skidded from:
+     * https://github.com/TitanicClient/Client/blob/bac90137dc4d7724a88eff07c1edde6b74215185/Shared/src/main/java/cc/noxiuam/titanic/client/ui/util/RenderUtil.java#L129
+     * @param x
+     * @param y
+     * @param width
+     * @param height
+     * @param radius
+     * @param color
+     */
     public static void drawRoundedRect(double x, double y, double width, double height, double radius, int color) {
         int n2;
         float f = (float) (color >> 24 & 0xFF) / (float) 255;
