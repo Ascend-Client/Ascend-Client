@@ -1,6 +1,7 @@
 package io.github.betterclient.client.mod;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import io.github.betterclient.client.util.UIUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawableHelper;
@@ -26,7 +27,7 @@ public class Renderable {
         Runnable rrrr = render;
         render = () -> {
             rrrr.run();
-            DrawableHelper.fill(new MatrixStack(), this.getX() + startX, this.getY() + startY, this.getX() + endX, this.getY() + endY, color.getRGB());
+            UIUtil.drawRoundedRect(this.getX() + startX, this.getY() + startY, this.getX() + endX, this.getY() + endY, 5f, color.getRGB());
         };
 
         if(endX > width) {
@@ -41,7 +42,7 @@ public class Renderable {
 
     public void render() {
         if(this.renderBackground) {
-            DrawableHelper.fill(new MatrixStack(), x - 3, y - 3, x + width + 3, y + height + 3, this.backgroundColor.getRGB());
+            UIUtil.drawRoundedRect(this.x, this.y, this.x + width, this.y + height, 5f, this.backgroundColor.getRGB());
         }
 
         this.render.run();
@@ -55,7 +56,7 @@ public class Renderable {
         this.y = y;
 
         if(this.renderBackground) {
-            DrawableHelper.fill(new MatrixStack(), this.x, this.y, this.x + width, this.y + height, this.backgroundColor.getRGB());
+            UIUtil.drawRoundedRect(this.x, this.y, this.x + width, this.y + height, 5f, this.backgroundColor.getRGB());
         }
 
         this.render.run();
@@ -124,10 +125,30 @@ public class Renderable {
     }
 
     public boolean basicCollisionCheck(double mouseX, double mouseY) {
-        if (mouseX >= getX() & mouseX <= (getX() + width) & mouseY >= getY() & mouseY <= (getY() + height)) {
-            return true;
-        }else {
-            return false;
-        }
+        return UIUtil.basicCollisionCheck(
+                mouseX, mouseY,
+                this.getX(), this.getY(),
+                this.getX() + width, this.getY() + height
+        );
+    }
+
+    public int[] getIdealRenderingPosForText(String text, int x, int y, int endX, int endY) {
+        int[] pos = new int[2];
+
+        MinecraftClient minecraftClient = MinecraftClient.getInstance();
+        int textWidth = minecraftClient.textRenderer.getWidth(text);
+        int textHeight = minecraftClient.textRenderer.fontHeight;
+
+        int idealX = x + ((endX - x) / 2) - (textWidth / 2);
+        pos[0] = Math.max(x, Math.min(idealX, endX - textWidth));
+
+        int idealY = y + ((endY - y) / 2) - (textHeight / 2);
+        pos[1] = Math.max(y, Math.min(idealY, endY - textHeight));
+
+        return pos;
+    }
+
+    public void renderText(String text, int[] pos, Color color) {
+        this.renderText(text, pos[0], pos[1], color);
     }
 }

@@ -88,4 +88,8 @@ public class UIUtil {
         glEnd();
         glDisable(3042);
     }
+
+    public static boolean basicCollisionCheck(double mouseX, double mouseY, int x, int y, int endX, int endY) {
+        return mouseX >= x & mouseX <= endX & mouseY >= y & mouseY <= endY;
+    }
 }

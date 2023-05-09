@@ -1,6 +1,7 @@
 package io.github.betterclient.client.mod;
 
 import io.github.betterclient.client.mod.impl.FPSMod;
+import io.github.betterclient.client.mod.impl.KeyStrokesMod;
 
 import java.util.List;
 import java.util.Vector;
@@ -9,7 +10,8 @@ public class ModuleManager {
     public List<Module> moduleList  = new Vector<>();
 
     public ModuleManager() {
-        moduleList .add(new FPSMod());
+        moduleList.add(new FPSMod());
+        moduleList.add(new KeyStrokesMod());
     }
 
     public Module getModuleByName(String name) {
