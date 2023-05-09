@@ -1,5 +1,6 @@
 package io.github.betterclient.client.mod;
 
+import io.github.betterclient.client.mod.impl.CPSMod;
 import io.github.betterclient.client.mod.impl.FPSMod;
 import io.github.betterclient.client.mod.impl.KeyStrokesMod;
 
@@ -12,6 +13,7 @@ public class ModuleManager {
     public ModuleManager() {
         moduleList.add(new FPSMod());
         moduleList.add(new KeyStrokesMod());
+        moduleList.add(new CPSMod());
     }
 
     public Module getModuleByName(String name) {

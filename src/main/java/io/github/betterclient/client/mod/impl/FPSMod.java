@@ -10,7 +10,6 @@ public class FPSMod extends HUDModule {
 
     public FPSMod() {
         super("FPS", 10, 10);
-        this.toggle();
     }
 
     @Override

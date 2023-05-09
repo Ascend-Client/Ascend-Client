@@ -4,6 +4,7 @@
   "mixins": [
     "MixinGameOptions",
     "MixinInGameHud",
-    "MixinMinecraftClient"
+    "MixinMinecraftClient",
+    "MixinMouse"
   ]
 }

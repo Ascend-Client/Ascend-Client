@@ -28,22 +28,22 @@ public class KeyStrokesMod extends HUDModule {
         boolean d = op.keyRight.isPressed();
         boolean a = op.keyLeft.isPressed();
 
-        renderable.fillArea(30, 0, 50, 20, w ? backgroundColorPressed : backgroundColor); //W
-        renderable.fillArea(30, 22, 50, 42, s ? backgroundColorPressed : backgroundColor); //S
-        renderable.fillArea(5, 22, 25, 42, a ? backgroundColorPressed : backgroundColor); //A
-        renderable.fillArea(55, 22, 75, 42, d ? backgroundColorPressed : backgroundColor); //D
+        renderable.fillArea(25, 0, 45, 20, w ? backgroundColorPressed : backgroundColor); //W
+        renderable.fillArea(25, 22, 45, 42, s ? backgroundColorPressed : backgroundColor); //S
+        renderable.fillArea(0, 22, 20, 42, a ? backgroundColorPressed : backgroundColor); //A
+        renderable.fillArea(50, 22, 70, 42, d ? backgroundColorPressed : backgroundColor); //D
 
-        renderable.renderText("W", renderable.getIdealRenderingPosForText("W", 30, 0, 50, 20), textColor);
-        renderable.renderText("A", renderable.getIdealRenderingPosForText("A", 5, 22, 25, 42), textColor);
-        renderable.renderText("S", renderable.getIdealRenderingPosForText("S", 30, 22, 50, 42), textColor);
-        renderable.renderText("D", renderable.getIdealRenderingPosForText("D", 55, 22, 75, 42), textColor);
+        renderable.renderText("W", renderable.getIdealRenderingPosForText("W", 25, 0, 45, 20), textColor);
+        renderable.renderText("A", renderable.getIdealRenderingPosForText("A", 0, 22, 20, 42), textColor);
+        renderable.renderText("S", renderable.getIdealRenderingPosForText("S", 25, 22, 45, 42), textColor);
+        renderable.renderText("D", renderable.getIdealRenderingPosForText("D", 50, 22, 70, 42), textColor);
 
         if(mouseKeys){
-            renderable.fillArea(5, 44, 38, 64, leftClick ? backgroundColorPressed : backgroundColor); //Left
-            renderable.fillArea(42, 44, 75, 64, rightClick ? backgroundColorPressed : backgroundColor); //Right
+            renderable.fillArea(0, 44, 32, 64, leftClick ? backgroundColorPressed : backgroundColor); //Left
+            renderable.fillArea(38, 44, 70, 64, rightClick ? backgroundColorPressed : backgroundColor); //Right
 
-            renderable.renderText("LMB", renderable.getIdealRenderingPosForText("LMB", 5, 44, 38, 64), textColor);
-            renderable.renderText("RMB", renderable.getIdealRenderingPosForText("RMB", 42, 44, 75, 64), textColor);
+            renderable.renderText("LMB", renderable.getIdealRenderingPosForText("LMB", 0, 44, 32, 64), textColor);
+            renderable.renderText("RMB", renderable.getIdealRenderingPosForText("RMB", 38, 44, 70, 64), textColor);
         }
     }
 }

@@ -57,6 +57,16 @@ public class HUDMoveScreen extends Screen {
                     10f, new Color(0, 0, 0, 84).getRGB()
             );
 
+            /*
+            Renderable Bug fixing:
+
+            UIUtil.drawRoundedRect(
+                    render.x, render.y,
+                    render.x + render.width,
+                    render.y + render.height,
+                    0f, Color.WHITE.getRGB()
+            );*/
+
             matrices = new MatrixStack();
 
             matrices.push();
