@@ -4,6 +4,7 @@ import io.github.betterclient.client.event.EventTarget;
 import io.github.betterclient.client.event.impl.MouseEvent;
 import io.github.betterclient.client.mod.HUDModule;
 import io.github.betterclient.client.mod.Renderable;
+import io.github.betterclient.client.mod.setting.BooleanSetting;
 
 import java.awt.*;
 import java.util.List;
@@ -13,7 +14,7 @@ public class CPSMod extends HUDModule {
     public List<Long> rightClick = new Vector<>();
     public List<Long> leftClick = new Vector<>();
 
-    public boolean showBoth = true; //Setting
+    public BooleanSetting showBoth = new BooleanSetting("Show Both Keys", true);
 
     public CPSMod() {
         super("CPS", 100, 10);
@@ -24,7 +25,7 @@ public class CPSMod extends HUDModule {
         leftClick.removeIf(aLong -> aLong + 1000 < System.currentTimeMillis());
         rightClick.removeIf(aLong -> aLong + 1000 < System.currentTimeMillis());
 
-        String cpsText = leftClick.size() + " " + (showBoth ? "| " + rightClick.size() + " " : "") + "CPS";
+        String cpsText = leftClick.size() + " " + (showBoth.isValue() ? "| " + rightClick.size() + " " : "") + "CPS";
         renderable.renderText(cpsText, 0, 0, Color.WHITE);
     }
 

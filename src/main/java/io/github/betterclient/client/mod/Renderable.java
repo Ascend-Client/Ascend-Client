@@ -6,6 +6,8 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.item.ItemStack;
+import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 
@@ -150,5 +152,77 @@ public class Renderable {
 
     public void renderText(String text, int[] pos, Color color) {
         this.renderText(text, pos[0], pos[1], color);
+    }
+
+    public Renderable renderItemStack(int x, int y, ItemStack is, boolean renderText) {
+        Runnable oldRender = render;
+        render = () -> {
+            oldRender.run();
+            int endX = x + 16;
+            int endY = y + 16;
+
+            if (is.getItem().isDamageable() && renderText) {
+                double damage = ((is.getMaxDamage() - is.getDamage()) / (double) is.getMaxDamage()) * 100;
+                double renderDamage = ((is.getMaxDamage() - is.getDamage()) / (double) is.getMaxDamage()) * 16;
+                Color damageColor;
+
+                if (damage >= 25 && damage <= 70) {
+                    damageColor = new Color(255, 255, 0);
+                } else if (damage > 70) {
+                    damageColor = new Color(0, 255, 0);
+                } else {
+                    damageColor = new Color(255, 0, 0);
+                }
+
+                UIUtil.drawRoundedRect(this.getX() + x, this.getY() + endY, this.getX() + x + (float) (renderDamage), this.getY() + endY + 2, 1, damageColor.getRGB());
+                endY += 6;
+            }
+
+            GL11.glEnable(GL11.GL_BLEND);
+
+            MinecraftClient.getInstance().getItemRenderer().renderInGui(is, this.getX() + x, this.getY() + y);
+
+            GL11.glDisable(GL11.GL_BLEND);
+
+            if (endX > width) {
+                width = endX;
+            }
+            if (endY > height) {
+                height = endY;
+            }
+        };
+
+        return this;
+    }
+
+    public Renderable renderItemStack(int x, int y, ItemStack is, int count, Color color) {
+        Runnable oldRender = render;
+        render = () -> {
+            oldRender.run();
+            int endX = x + 16;
+            int endY = y + 16;
+
+            if (is.isStackable()) { //Render Amount
+                String text = count + "";
+                this.textRenderer.draw(new MatrixStack(), text, this.getX() + endX - 3, this.getY() + endY - 3, color.getRGB());
+                float[] width = new float[] {this.textRenderer.getWidth(text), this.textRenderer.fontHeight};
+
+                endX = (int) ((endX - 3) + width[0]);
+                endY = (int) ((endY - 3) + width[1]);
+            }
+
+            RenderSystem.enableBlend();
+            MinecraftClient.getInstance().getItemRenderer().renderInGui(is, this.getX() + x, this.getY() + y);
+            RenderSystem.disableBlend();
+
+            if (endX > width) {
+                width = endX;
+            }
+            if (endY > height) {
+                height = endY;
+            }
+        };
+
+        return this;
     }
 }

@@ -4,8 +4,11 @@ import io.github.betterclient.client.BallSack;
 import io.github.betterclient.client.event.impl.RenderEvent;
 import io.github.betterclient.client.mod.*;
 import io.github.betterclient.client.mod.Module;
+import io.github.betterclient.client.util.ModuleEnabler;
 import io.github.betterclient.client.util.UIUtil;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.gui.widget.CheckboxWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
@@ -25,6 +28,8 @@ public class HUDMoveScreen extends Screen {
     public boolean isEnabling = false;
     public int enableX = 0, enableY = 0;
 
+    public boolean isEnableOther = false;
+    public SettingsRenderer renderer;
 
     public HUDMoveScreen() {
         super(Text.of(""));
@@ -34,6 +39,13 @@ public class HUDMoveScreen extends Screen {
     @Override
     protected void init() {
         moving = null;
+
+        int x = width - 95;
+        int y = 30;
+        for (Module mod : BallSack.getInstance().moduleManager.getByCategory(Category.OTHER)) {
+            this.addButton(new ModuleEnabler(x, y, 150, 20, mod, this));
+            y+=35;
+        }
     }
 
     @Override
@@ -80,8 +92,7 @@ public class HUDMoveScreen extends Screen {
             matrices.pop();
 
             float scale = 0.85f;
-
-            x = (int) (x + render.width - (textRenderer.getWidth("Disable") * scale)) + 5;
+            y+= (9 * 0.85) + 1;
 
             boolean underLine = UIUtil.basicCollisionCheck(
                     mouseX, mouseY,
@@ -129,11 +140,27 @@ public class HUDMoveScreen extends Screen {
             }
         }
 
-        super.render(matrices, mouseX, mouseY, delta);
+        UIUtil.drawRoundedRect(width - 100, 5, width - 5, 25,
+                0F, new Color(0, 0, 0, 120).getRGB());
+
+        String text = (isEnableOther ? "˅" : ">") + " Enable Mods";
+
+        int[] renderPos = new Renderable(0, 0).
+                getIdealRenderingPosForText(text, width - 100, 5, width - 5, 25);
+
+        textRenderer.draw(new MatrixStack(), Text.of(text), renderPos[0], renderPos[1], -1);
+
+        if(renderer != null)
+            renderer.render(mouseX, mouseY);
+
+        super.render(new MatrixStack(), mouseX, mouseY, delta);
     }
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if(renderer != null)
+            renderer.mouseClick(mouseX, mouseY, button);
+
         if(button == 0 && isEnabling) {
             if(!UIUtil.basicCollisionCheck
                     (mouseX, mouseY,
@@ -162,30 +189,42 @@ public class HUDMoveScreen extends Screen {
             }
         }
 
+        if(button == 0 && UIUtil.basicCollisionCheck(mouseX, mouseY, width - 100, 5, width - 5, 25)) {
+            isEnableOther = !isEnableOther;
+        }
+
         for(HUDModule mod : hudMods) {
             if(!mod.toggled) continue;
 
-            if(button == 0 && mod.renderable.basicCollisionCheck(mouseX, mouseY)) {
-                moving = mod.renderable;
-                moveX = (int) (mouseX - moving.x);
-                moveY = (int) (mouseY - moving.y);
+            if(mod.renderable.basicCollisionCheck(mouseX, mouseY)) {
+                if(button == 0) {
+                    if(renderer != null) continue;
+                    moving = mod.renderable;
+                    moveX = (int) (mouseX - moving.x);
+                    moveY = (int) (mouseY - moving.y);
+                } else if(button == 1) {
+                    renderer = new SettingsRenderer(mouseX, mouseY, mod);
+                }
             }
 
-            int y = mod.renderable.y + mod.renderable.height + 6;
-            int startX = (mod.renderable.x + mod.renderable.width) - 5;
+            if(renderer != null) continue;
 
-            if(button == 0 &&
-                    UIUtil.basicCollisionCheck(
+            int x = mod.renderable.x;
+            int y = mod.renderable.y + mod.renderable.height + 6;
+            y+= (9 * 0.85) + 1;
+
+            if(UIUtil.basicCollisionCheck(
                             mouseX, mouseY,
-                            (int) (startX - (textRenderer.getWidth("Disable") * 0.85)), y,
-                            startX, (int) (y + (textRenderer.fontHeight * 0.85))
-                    )
-            ) {
-                mod.toggle();
+                            x, y,
+                            mod.renderable.x + mod.renderable.width,
+                            (int) (y + (textRenderer.fontHeight * 0.85F))
+            )) {
+                if(button == 0)
+                    mod.toggle();
             }
         }
 
-        if(button == 1) {
+        if(button == 1 && renderer == null) {
             isEnabling = true;
             enableX = (int) mouseX;
             enableY = (int) mouseY;
@@ -196,9 +235,36 @@ public class HUDMoveScreen extends Screen {
 
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        if(renderer != null)
+            renderer.mouseRelease(mouseX, mouseY, button);
+
         if(button == 0)
             moving = null;
 
         return super.mouseReleased(mouseX, mouseY, button);
     }
+
+    static class SettingsRenderer {
+        public double x, y;
+        public Module mod;
+
+        public SettingsRenderer(double x, double y, Module mod) {
+            this.x = x;
+            this.y = y;
+            this.mod = mod;
+        }
+
+        public void render(double mouseX, double mouseY) {
+            UIUtil.drawRoundedRect(x, y, x + 200, y + 200, 20f, new Color(0, 0, 0, 84).getRGB());
+        }
+
+        public void mouseClick(double mouseX, double mouseY, int button) {
+
+        }
+
+        public void mouseRelease(double mouseX, double mouseY, int button) {
+
+        }
+    }
+
 }

@@ -1,12 +1,18 @@
 package io.github.betterclient.client.mod;
 
 import io.github.betterclient.client.BallSack;
+import io.github.betterclient.client.mod.setting.Setting;
+
+import java.util.List;
+import java.util.Vector;
 
 public class Module {
     public String name;
     public boolean toggled;
     public Category cat;
     public BallSack sack = BallSack.getInstance();
+
+    private final List<Setting> settings = new Vector<>();
 
     public Module(String name, Category cat) {
         this.name = name;
@@ -23,6 +29,14 @@ public class Module {
 
     public Category getCategory() {
         return cat;
+    }
+
+    public List<Setting> getSettings() {
+        return settings;
+    }
+
+    public void addSetting(Setting s) {
+        this.settings.add(s);
     }
 
     public void toggle() {
