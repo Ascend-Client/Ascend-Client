@@ -25,7 +25,7 @@ public class ReachDisplayMod extends HUDModule {
             text = "No hits";
         }
 
-        renderable.renderText(text, 0, 0, Color.WHITE);
+        renderable.renderText(text, 0, 0, this.textColor.getColor());
     }
 
     @EventTarget

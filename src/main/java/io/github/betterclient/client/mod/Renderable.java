@@ -14,6 +14,7 @@ import java.awt.*;
 public class Renderable {
     public int x, y;
     public int width = 0, height = 0;
+    public int oldWidth = 0, oldHeight = 0;
     public boolean renderBackground = false;
     public Runnable render = () -> {};
     public Color backgroundColor;
@@ -44,7 +45,7 @@ public class Renderable {
 
     public void render() {
         if(this.renderBackground) {
-            UIUtil.drawRoundedRect(this.x, this.y, this.x + width, this.y + height, 5f, this.backgroundColor.getRGB());
+            UIUtil.drawRoundedRect(this.x, this.y, this.x + oldWidth, this.y + oldHeight, 5f, this.backgroundColor.getRGB());
         }
 
         this.render.run();
@@ -58,7 +59,7 @@ public class Renderable {
         this.y = y;
 
         if(this.renderBackground) {
-            UIUtil.drawRoundedRect(this.x, this.y, this.x + width, this.y + height, 5f, this.backgroundColor.getRGB());
+            UIUtil.drawRoundedRect(this.x, this.y, this.x + oldWidth, this.y + oldHeight, 5f, this.backgroundColor.getRGB());
         }
 
         this.render.run();
@@ -122,6 +123,8 @@ public class Renderable {
 
     public void reset() {
         this.render = () -> {};
+        this.oldHeight = height;
+        this.oldWidth = width;
         this.width = 0;
         this.height = 0;
     }

@@ -18,6 +18,7 @@ public class CPSMod extends HUDModule {
 
     public CPSMod() {
         super("CPS", 100, 10);
+        this.addSetting(showBoth);
     }
 
     @Override
@@ -26,7 +27,7 @@ public class CPSMod extends HUDModule {
         rightClick.removeIf(aLong -> aLong + 1000 < System.currentTimeMillis());
 
         String cpsText = leftClick.size() + " " + (showBoth.isValue() ? "| " + rightClick.size() + " " : "") + "CPS";
-        renderable.renderText(cpsText, 0, 0, Color.WHITE);
+        renderable.renderText(cpsText, 0, 0, this.textColor.getColor());
     }
 
     @EventTarget

@@ -14,6 +14,8 @@ public class ArmorStatusMod extends HUDModule {
         super("Armor Status", 20, 50);
         this.addSetting(leftToRight);
         this.addSetting(renderDurability);
+
+        this.getSettings().remove(this.textColor);
     }
 
     @Override

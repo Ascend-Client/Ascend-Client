@@ -4,8 +4,11 @@ import io.github.betterclient.client.BallSack;
 import io.github.betterclient.client.event.impl.RenderEvent;
 import io.github.betterclient.client.mod.*;
 import io.github.betterclient.client.mod.Module;
+import io.github.betterclient.client.mod.setting.*;
 import io.github.betterclient.client.util.ModuleEnabler;
 import io.github.betterclient.client.util.UIUtil;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.CheckboxWidget;
@@ -20,6 +23,7 @@ import java.util.Vector;
 
 public class HUDMoveScreen extends Screen {
     public ModuleManager modMan = BallSack.getInstance().moduleManager;
+    private static HUDMoveScreen instance;
 
     public Renderable moving = null;
     public int moveX = 0, moveY = 0;
@@ -33,6 +37,7 @@ public class HUDMoveScreen extends Screen {
 
     public HUDMoveScreen() {
         super(Text.of(""));
+        instance = this;
         hudMods.addAll(modMan.getByCategory(Category.HUD).stream().map(HUDModule::cast).toList());
     }
 
@@ -42,7 +47,7 @@ public class HUDMoveScreen extends Screen {
 
         int x = width - 95;
         int y = 30;
-        for (Module mod : BallSack.getInstance().moduleManager.getByCategory(Category.OTHER)) {
+        for (Module mod : modMan.getByCategory(Category.OTHER)) {
             this.addButton(new ModuleEnabler(x, y, 150, 20, mod, this));
             y+=35;
         }
@@ -141,12 +146,11 @@ public class HUDMoveScreen extends Screen {
         }
 
         UIUtil.drawRoundedRect(width - 100, 5, width - 5, 25,
-                0F, new Color(0, 0, 0, 120).getRGB());
+                5F, new Color(0, 0, 0, 120).getRGB());
 
         String text = (isEnableOther ? "˅" : ">") + " Enable Mods";
 
-        int[] renderPos = new Renderable(0, 0).
-                getIdealRenderingPosForText(text, width - 100, 5, width - 5, 25);
+        int[] renderPos = UIUtil.getIdealRenderingPosForText(text, width - 100, 5, width - 5, 25);
 
         textRenderer.draw(new MatrixStack(), Text.of(text), renderPos[0], renderPos[1], -1);
 
@@ -203,7 +207,7 @@ public class HUDMoveScreen extends Screen {
                     moveX = (int) (mouseX - moving.x);
                     moveY = (int) (mouseY - moving.y);
                 } else if(button == 1) {
-                    renderer = new SettingsRenderer(mouseX, mouseY, mod);
+                    renderer = new SettingsRenderer(mod.renderable.x + mod.renderable.width + 2, mod.renderable.y + mod.renderable.height + 2, mod);
                 }
             }
 
@@ -244,9 +248,29 @@ public class HUDMoveScreen extends Screen {
         return super.mouseReleased(mouseX, mouseY, button);
     }
 
+    public static HUDMoveScreen getCurrent() {
+        return instance;
+    }
+
     static class SettingsRenderer {
         public double x, y;
         public Module mod;
+        public TextRenderer tr = MinecraftClient.getInstance().textRenderer;
+
+        public boolean settingColor = false;
+        public ColorSetting setting = null;
+
+        public NumberSetting redColor = new NumberSetting("Red", 0, 0, 255);
+        public NumberSetting greenColor = new NumberSetting("Green", 0, 0, 255);
+        public NumberSetting blueColor = new NumberSetting("Blue", 0, 0, 255);
+        public NumberSetting alphaColor = new NumberSetting("Alpha", 0, 0, 255);
+
+        public boolean settingNumber = false;
+        public NumberSetting number = null;
+        public int holdX = 0;
+
+        public int width = 400;
+        public int height = 300;
 
         public SettingsRenderer(double x, double y, Module mod) {
             this.x = x;
@@ -255,16 +279,212 @@ public class HUDMoveScreen extends Screen {
         }
 
         public void render(double mouseX, double mouseY) {
-            UIUtil.drawRoundedRect(x, y, x + 200, y + 200, 20f, new Color(0, 0, 0, 84).getRGB());
+            UIUtil.drawRoundedRect(x, y, x + width, y + height, 20f, new Color(0, 0, 0, 84).getRGB());
+
+            UIUtil.drawRoundedRect(x + width - 50, y + height - 25, x + width - 5, y + height - 5, 10f, new Color(255, 255, 255, 120).getRGB());
+            int[] pos = UIUtil.getIdealRenderingPosForText("Close", x + width - 50, y + height - 25, x + width - 5, y + height - 5);
+
+            tr.draw(
+                    new MatrixStack(),
+                    new LiteralText("Close")
+                            .setStyle(
+                                    Style
+                                            .EMPTY
+                                            .withUnderline(
+                                                    UIUtil.basicCollisionCheck(
+                                                            mouseX, mouseY,
+                                                            x + width - 50, y + height - 25,
+                                                            x + width - 5, y + height - 5
+                                                    )
+                                            )
+                            ),
+                    pos[0],
+                    pos[1],
+                    -1
+            );
+
+            float y = (float) (this.y + 10F);
+            tr.draw(new MatrixStack(), mod.getName() + " - Settings", (float) (x + 10), y, new Color(255, 0, 0).getRGB());
+            y+=15;
+
+            for (Setting set : this.mod.getSettings()) {
+                tr.draw(new MatrixStack(), set.name, (float) (x + 10F), y, -1);
+
+                if(set instanceof BooleanSetting bool) {
+                    UIUtil.drawRoundedRect(x + width - 50, y, x + width - 2, y + 15, 5F, (bool.value ? new Color(255, 255, 255, 84) : new Color(0, 0, 0, 84)).getRGB());
+                    tr.draw(new MatrixStack(),  bool.value ? "Enabled" : "Disabled", (float) (x + width - 48), y + 1, -1);
+                }
+
+                if(set instanceof ModeSetting mode) {
+                    UIUtil.drawRoundedRect(x + width - 50, y, x + width - 2, y + 15, 5F, new Color(0, 0, 0, 84).getRGB());
+                    tr.draw(new MatrixStack(), mode.value, (float) (x + width - 48), y + 1, -1);
+                }
+
+                if(set instanceof ColorSetting color) {
+                    UIUtil.drawRoundedRect(x + width - 50, y, x + width - 2, y + 15, 5F, (setting == color ? new Color(255, 255, 255, 84) : new Color(0, 0, 0, 84)).getRGB());
+
+                    if(this.setting == color && settingColor) {
+                        y+=10;
+                        for (int i = 0; i < 4; i++) {
+                            y+=20;
+
+                            NumberSetting num;
+                            int red, green, blue, alpha;
+                            Color c = color.getColor();
+
+                            red = c.getRed();
+                            green = c.getGreen();
+                            blue = c.getBlue();
+                            alpha = c.getAlpha();
+
+                            if(i == 0) {
+                                num = redColor;
+                                red = num.value;
+                            } else if(i == 1) {
+                                num = greenColor;
+                                green = num.value;
+                            } else if(i == 2) {
+                                num = blueColor;
+                                blue = num.value;
+                            } else {
+                                num = alphaColor;
+                                alpha = num.value;
+                            }
+
+                            tr.draw(new MatrixStack(), num.name, (float) (x + 10F), y, -1);
+
+                            UIUtil.drawRoundedRect(x + width - 232, y + 6, x + width - 32, y + 9, 1F, new Color(0, 0, 0, 84).getRGB());
+                            tr.draw(new MatrixStack(), num.value + "", (float) (x + width - 28), y + 2, -1);
+
+                            int renderX = (int) (x + width - 232 + UIUtil.map(num.value, num.min, num.max, 0, 200));
+                            UIUtil.drawRoundedRect(renderX - 7, y, renderX + 7, y + 15, 15F, Color.BLUE.getRGB());
+
+                            color.setColor(new Color(red, green, blue, alpha));
+                        }
+                        y+=10;
+                    }
+                }
+
+                if(set instanceof NumberSetting num) {
+                    UIUtil.drawRoundedRect(x + width - 232, y + 6, x + width - 32, y + 9, 1F, new Color(0, 0, 0, 84).getRGB());
+                    tr.draw(new MatrixStack(), num.value + "", (float) (x + width - 28), y + 2, -1);
+
+                    int renderX = (int) (x + width - 232 + UIUtil.map(num.value, num.min, num.max, 0, 200));
+                    UIUtil.drawRoundedRect(renderX - 7, y, renderX + 7, y + 15, 15F, Color.BLUE.getRGB());
+                }
+
+                y+=20;
+            }
+
+            if(this.settingNumber) {
+                double val = ((mouseX - holdX) - (x + width - 232));
+
+                if(val > 200)
+                    val = 200;
+
+                if(val < 0)
+                    val = 0;
+
+                this.number.value = (int) UIUtil.map(val, 0, 200, this.number.min, this.number.max);
+            }
         }
 
         public void mouseClick(double mouseX, double mouseY, int button) {
+            float currentY = (float) (this.y + 25F);
 
+            for (Setting set : this.mod.getSettings()) {
+                if(set instanceof BooleanSetting bool) {
+                    if(UIUtil.basicCollisionCheck(mouseX, mouseY, x + width - 50, currentY, x + width - 2, currentY + 15) && button == 0) {
+                        bool.toggle();
+                    }
+                }
+
+                if(set instanceof ModeSetting mode) {
+                    if(UIUtil.basicCollisionCheck(mouseX, mouseY, x + width - 50, currentY, x + width - 2, currentY + 15) && button == 0) {
+                        mode.toggle();
+                    }
+                }
+
+                if(set instanceof ColorSetting color) {
+                    if(UIUtil.basicCollisionCheck(mouseX, mouseY, x + width - 50, currentY, x + width - 2, currentY + 15) && button == 0) {
+                        if(this.settingColor) {
+                            if(this.setting == color) {
+                                this.settingColor = false;
+                                this.setting = null;
+                            }
+                            else {
+                                this.setting = color;
+
+                                Color c = color.getColor();
+                                this.redColor.value = c.getRed();
+                                this.greenColor.value = c.getGreen();
+                                this.blueColor.value = c.getBlue();
+                                this.alphaColor.value = c.getAlpha();
+                            }
+                        } else {
+                            this.settingColor = true;
+                            this.setting = color;
+
+                            Color c = color.getColor();
+                            this.redColor.value = c.getRed();
+                            this.greenColor.value = c.getGreen();
+                            this.blueColor.value = c.getBlue();
+                            this.alphaColor.value = c.getAlpha();
+                        }
+                    }
+
+                    if(this.settingColor && this.setting == color) {
+                        currentY+=10;
+                        for (int i = 0; i < 4; i++) {
+                            currentY+=20;
+
+                            NumberSetting num;
+
+                            if(i == 0) {
+                                num = redColor;
+                            } else if(i == 1) {
+                                num = greenColor;
+                            } else if(i == 2) {
+                                num = blueColor;
+                            } else {
+                                num = alphaColor;
+                            }
+
+                            int renderX = (int) (x + width - 232 + UIUtil.map(num.value, num.min, num.max, 0, 200));
+                            if(UIUtil.basicCollisionCheck(mouseX, mouseY, renderX - 7, currentY, renderX + 7, currentY + 15) && button == 0) {
+                                this.settingNumber = true;
+                                this.number = num;
+                                this.holdX = (int) (mouseX - renderX);
+                            }
+
+                        }
+                        currentY+=10;
+                    }
+                }
+
+                if(set instanceof NumberSetting num) {
+                    int renderX = (int) (x + width - 232 + UIUtil.map(num.value, num.min, num.max, 0, 200));
+                    if(UIUtil.basicCollisionCheck(mouseX, mouseY, renderX - 7, currentY, renderX + 7, currentY + 15) && button == 0) {
+                        this.settingNumber = true;
+                        this.number = num;
+                        this.holdX = (int) (mouseX - renderX);
+                    }
+                }
+
+                currentY+=20;
+            }
         }
 
         public void mouseRelease(double mouseX, double mouseY, int button) {
+            if(UIUtil.basicCollisionCheck(mouseX, mouseY, x + width - 50, y + height - 25, x + width - 5, y + height - 5) && button == 0) {
+                HUDMoveScreen.getCurrent().renderer = null;
+            }
 
+            if(button == 0) {
+                number = null;
+                settingNumber = false;
+                holdX = 0;
+            }
         }
     }
-
 }

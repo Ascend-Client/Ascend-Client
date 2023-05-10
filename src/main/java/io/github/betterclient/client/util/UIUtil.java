@@ -9,12 +9,12 @@ public class UIUtil {
     /**
      * Totally not skidded from:
      * https://github.com/TitanicClient/Client/blob/bac90137dc4d7724a88eff07c1edde6b74215185/Shared/src/main/java/cc/noxiuam/titanic/client/ui/util/RenderUtil.java#L129
-     * @param x
-     * @param y
-     * @param width
-     * @param height
-     * @param radius
-     * @param color
+     * @param x x pos
+     * @param y y pos
+     * @param width this is actually the ending x (x + width)
+     * @param height this is actually the ending y (y + height)
+     * @param radius radius of round
+     * @param color rect color
      */
     public static void drawRoundedRect(double x, double y, double width, double height, double radius, int color) {
         int n2;
@@ -89,7 +89,34 @@ public class UIUtil {
         glDisable(3042);
     }
 
-    public static boolean basicCollisionCheck(double mouseX, double mouseY, int x, int y, int endX, int endY) {
+    public static boolean basicCollisionCheck(double mouseX, double mouseY, double x, double y, double endX, double endY) {
         return mouseX >= x & mouseX <= endX & mouseY >= y & mouseY <= endY;
+    }
+
+    public static int[] getIdealRenderingPosForText(String text, double x, double y, double endX, double endY) {
+        int[] pos = new int[2];
+
+        MinecraftClient minecraftClient = MinecraftClient.getInstance();
+        int textWidth = minecraftClient.textRenderer.getWidth(text);
+        int textHeight = minecraftClient.textRenderer.fontHeight;
+
+        int idealX = (int) (x + ((endX - x) / 2) - (textWidth / 2));
+        pos[0] = (int) Math.max(x, Math.min(idealX, endX - textWidth));
+
+        int idealY = (int) (y + ((endY - y) / 2) - (textHeight / 2));
+        pos[1] = (int) Math.max(y, Math.min(idealY, endY - textHeight));
+
+        return pos;
+    }
+
+    /*
+        found this in arduino source code
+        the value x is between in_min and in_max
+        and the value gets on out_min and out_max
+        idk how to tell you this
+     */
+    public static double map(double x, double in_min, double in_max, double out_min, double out_max)
+    {
+        return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
     }
 }

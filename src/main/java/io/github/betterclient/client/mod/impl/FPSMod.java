@@ -4,8 +4,6 @@ import io.github.betterclient.client.access.MinecraftAccess;
 import io.github.betterclient.client.mod.HUDModule;
 import io.github.betterclient.client.mod.Renderable;
 
-import java.awt.*;
-
 public class FPSMod extends HUDModule {
 
     public FPSMod() {
@@ -15,6 +13,6 @@ public class FPSMod extends HUDModule {
     @Override
     public void render(Renderable renderable) {
         MinecraftAccess access = MinecraftAccess.get();
-        renderable.renderText(access.getFPS() + " FPS", 0, 0, Color.WHITE);
+        renderable.renderText(access.getFPS() + " FPS", 0, 0, this.textColor.getColor());
     }
 }
