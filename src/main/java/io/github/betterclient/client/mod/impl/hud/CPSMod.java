@@ -1,4 +1,4 @@
-package io.github.betterclient.client.mod.impl;
+package io.github.betterclient.client.mod.impl.hud;
 
 import io.github.betterclient.client.event.EventTarget;
 import io.github.betterclient.client.event.impl.MouseEvent;

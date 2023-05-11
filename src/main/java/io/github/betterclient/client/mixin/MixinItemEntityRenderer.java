@@ -1,7 +1,7 @@
 package io.github.betterclient.client.mixin;
 
 import io.github.betterclient.client.access.ItemEntityRotator;
-import io.github.betterclient.client.mod.impl.ItemPhysics;
+import io.github.betterclient.client.mod.impl.other.ItemPhysics;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.ShapeContext;

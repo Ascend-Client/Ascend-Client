@@ -1,4 +1,4 @@
-package io.github.betterclient.client.mod.impl;
+package io.github.betterclient.client.mod.impl.other;
 
 import io.github.betterclient.client.BallSack;
 import io.github.betterclient.client.mod.Category;

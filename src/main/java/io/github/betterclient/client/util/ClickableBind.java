@@ -14,8 +14,10 @@ import java.util.Vector;
 
 public class ClickableBind extends KeyBinding {
     public Runnable action;
+    public Runnable unPress;
+    public boolean before = false;
 
-    public ClickableBind(String translationKey, int code, String category, Runnable action) {
+    public ClickableBind(String translationKey, int code, String category, Runnable action, Runnable onUnPress) {
         super(translationKey, code, category);
 
         try {
@@ -31,33 +33,35 @@ public class ClickableBind extends KeyBinding {
         }
 
         this.action = action;
+        this.unPress = onUnPress;
     }
 
-    public static void registerClientKeybinds() {
+    public static ClickableBind registerKeyBind(ClickableBind bind) {
         try {
             GameOptions ops = MinecraftClient.getInstance().options;
             Field f = ops.getClass().getField("keysAll");
 
-            f.set(ops, ArrayUtils.addAll(ops.keysAll, getBinds()));
+            f.set(ops, ArrayUtils.add(ops.keysAll, bind));
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
 
-    public static KeyBinding[] getBinds() {
-        List<KeyBinding> binds = new Vector<>();
-
-        binds.add(new ClickableBind("Open ClickGui", GLFW.GLFW_KEY_RIGHT_SHIFT, "BallSack Client", () -> {
-            MinecraftClient.getInstance().openScreen(new HUDMoveScreen());
-        }));
-
-        return binds.toArray(new KeyBinding[0]);
+        return bind;
     }
 
     @Override
     public void setPressed(boolean pressed) {
-        if(pressed)
-            this.action.run();
+        if(pressed) {
+            if(!before) {
+                this.action.run();
+            }
+            before = true;
+        } else {
+            if(before) {
+                this.unPress.run();
+            }
+            before = false;
+        }
 
         super.setPressed(pressed);
     }

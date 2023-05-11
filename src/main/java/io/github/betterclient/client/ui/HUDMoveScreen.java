@@ -5,17 +5,16 @@ import io.github.betterclient.client.event.impl.RenderEvent;
 import io.github.betterclient.client.mod.*;
 import io.github.betterclient.client.mod.Module;
 import io.github.betterclient.client.mod.setting.*;
-import io.github.betterclient.client.util.ModuleEnabler;
 import io.github.betterclient.client.util.UIUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.CheckboxWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
+import org.lwjgl.glfw.GLFW;
 
 import java.awt.*;
 import java.util.List;
@@ -33,6 +32,7 @@ public class HUDMoveScreen extends Screen {
     public int enableX = 0, enableY = 0;
 
     public boolean isEnableOther = false;
+    public int otherArea = 0;
     public SettingsRenderer renderer;
 
     public HUDMoveScreen() {
@@ -45,12 +45,13 @@ public class HUDMoveScreen extends Screen {
     protected void init() {
         moving = null;
 
-        int x = width - 95;
+        int x = width - 125;
         int y = 30;
         for (Module mod : modMan.getByCategory(Category.OTHER)) {
             this.addButton(new ModuleEnabler(x, y, 150, 20, mod, this));
-            y+=35;
+            y+=25;
         }
+        otherArea = y;
     }
 
     @Override
@@ -145,7 +146,7 @@ public class HUDMoveScreen extends Screen {
             }
         }
 
-        UIUtil.drawRoundedRect(width - 100, 5, width - 5, 25,
+        UIUtil.drawRoundedRect(width - 120, 5, width - 5, 25,
                 5F, new Color(0, 0, 0, 120).getRGB());
 
         String text = (isEnableOther ? "˅" : ">") + " Enable Mods";
@@ -207,7 +208,9 @@ public class HUDMoveScreen extends Screen {
                     moveX = (int) (mouseX - moving.x);
                     moveY = (int) (mouseY - moving.y);
                 } else if(button == 1) {
-                    renderer = new SettingsRenderer(mod.renderable.x + mod.renderable.width + 2, mod.renderable.y + mod.renderable.height + 2, mod);
+                    renderer = new SettingsRenderer(0, 0, mod);
+                    this.renderer.x = this.width - this.renderer.width - 10;
+                    this.renderer.y = this.height - this.renderer.height - 10;
                 }
             }
 
@@ -228,7 +231,11 @@ public class HUDMoveScreen extends Screen {
             }
         }
 
-        if(button == 1 && renderer == null) {
+        if(button == 1 && renderer == null &&
+                !UIUtil.basicCollisionCheck(mouseX, mouseY,
+                        width - 125, 0,
+                        width, otherArea
+                )) {
             isEnabling = true;
             enableX = (int) mouseX;
             enableY = (int) mouseY;
@@ -246,6 +253,14 @@ public class HUDMoveScreen extends Screen {
             moving = null;
 
         return super.mouseReleased(mouseX, mouseY, button);
+    }
+
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if(keyCode != GLFW.GLFW_KEY_ESCAPE && renderer != null)
+            renderer.onKeyboard(keyCode);
+
+        return super.keyPressed(keyCode, scanCode, modifiers);
     }
 
     public static HUDMoveScreen getCurrent() {
@@ -268,6 +283,9 @@ public class HUDMoveScreen extends Screen {
         public boolean settingNumber = false;
         public NumberSetting number = null;
         public int holdX = 0;
+
+        public boolean settingBind = false;
+        public KeyBindSetting bindSetting = null;
 
         public int width = 400;
         public int height = 300;
@@ -486,5 +504,48 @@ public class HUDMoveScreen extends Screen {
                 holdX = 0;
             }
         }
+
+        public void onKeyboard(int key) {
+
+        }
     }
+
+    static class ModuleEnabler extends CheckboxWidget {
+        public Module mod;
+        public HUDMoveScreen moveScreen;
+
+        public ModuleEnabler(int x, int y, int width, int height, Module mod, HUDMoveScreen thiz) {
+            super(x, y, width, height, Text.of(mod.name), mod.toggled);
+            this.mod = mod;
+            this.moveScreen = thiz;
+        }
+
+        @Override
+        public void onPress() {
+            if(!moveScreen.isEnableOther) return;
+
+            this.mod.toggle();
+            super.onPress();
+        }
+
+        @Override
+        public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+            if(moveScreen.isEnableOther)
+                super.render(matrices, mouseX, mouseY, delta);
+        }
+
+        @Override
+        public boolean mouseClicked(double mouseX, double mouseY, int button) {
+            if (this.moveScreen.isEnableOther && this.clicked(mouseX, mouseY) && button == 1) {
+                this.moveScreen.renderer = new HUDMoveScreen.SettingsRenderer(0, 0, this.mod);
+
+                this.moveScreen.renderer.x = this.moveScreen.width - this.moveScreen.renderer.width - 10;
+                this.moveScreen.renderer.y = this.moveScreen.height - this.moveScreen.renderer.height - 10;
+            }
+
+            return super.mouseClicked(mouseX, mouseY, button);
+        }
+    }
+
 }
+//only 535 lines smh

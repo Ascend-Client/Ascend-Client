@@ -1,6 +1,7 @@
 package io.github.betterclient.client.mod;
 
-import io.github.betterclient.client.mod.impl.*;
+import io.github.betterclient.client.mod.impl.hud.*;
+import io.github.betterclient.client.mod.impl.other.*;
 
 import java.util.List;
 import java.util.Vector;
@@ -15,6 +16,10 @@ public class ModuleManager {
         moduleList.add(new ReachDisplayMod());
         moduleList.add(new ItemPhysics());
         moduleList.add(new ArmorStatusMod());
+        moduleList.add(new BedrockBridgeMod());
+        moduleList.add(new FullBright());
+        moduleList.add(new FreeLook());
+        moduleList.add(new ItemTweaks());
     }
 
     public Module getModuleByName(String name) {

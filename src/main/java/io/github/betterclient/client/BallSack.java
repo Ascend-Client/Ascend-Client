@@ -2,8 +2,10 @@ package io.github.betterclient.client;
 
 import io.github.betterclient.client.event.EventBus;
 import io.github.betterclient.client.mod.ModuleManager;
+import io.github.betterclient.client.ui.HUDMoveScreen;
 import io.github.betterclient.client.util.ClickableBind;
 import net.minecraft.client.MinecraftClient;
+import org.lwjgl.glfw.GLFW;
 
 public class BallSack {
     public ModuleManager moduleManager;
@@ -16,7 +18,9 @@ public class BallSack {
         bus = new EventBus();
         moduleManager = new ModuleManager();
 
-        ClickableBind.registerClientKeybinds();
+        ClickableBind.registerKeyBind(new ClickableBind("Open ClickGui", GLFW.GLFW_KEY_RIGHT_SHIFT, "BallSack Client", () -> {
+            MinecraftClient.getInstance().openScreen(new HUDMoveScreen());
+        }, () -> {}));
     }
 
     public static BallSack getInstance() {

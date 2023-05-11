@@ -1,4 +1,4 @@
-package io.github.betterclient.client.mod.impl;
+package io.github.betterclient.client.mod.impl.hud;
 
 import io.github.betterclient.client.access.MinecraftAccess;
 import io.github.betterclient.client.mod.HUDModule;
