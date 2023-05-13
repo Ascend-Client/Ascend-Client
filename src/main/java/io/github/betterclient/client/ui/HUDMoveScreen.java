@@ -5,11 +5,13 @@ import io.github.betterclient.client.event.impl.RenderEvent;
 import io.github.betterclient.client.mod.*;
 import io.github.betterclient.client.mod.Module;
 import io.github.betterclient.client.mod.setting.*;
+import io.github.betterclient.client.util.ClickableBind;
 import io.github.betterclient.client.util.UIUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.CheckboxWidget;
+import net.minecraft.client.util.InputUtil;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
@@ -17,6 +19,7 @@ import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
 
 import java.awt.*;
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Vector;
 
@@ -391,6 +394,16 @@ public class HUDMoveScreen extends Screen {
                     UIUtil.drawRoundedRect(renderX - 7, y, renderX + 7, y + 15, 15F, Color.BLUE.getRGB());
                 }
 
+                if(set instanceof KeyBindSetting key) {
+                    UIUtil.drawRoundedRect(x + width - 60, y, x + width - 12, y + 15, 5F, new Color(0, 0, 0, 84).getRGB());
+                    String kys = GLFW.glfwGetKeyName(key.key, 0);
+                    if(settingBind)
+                        kys = "Listening";
+
+                    int[] poss = UIUtil.getIdealRenderingPosForText(kys, x + width - 60, y, x + width - 12, y + 15);
+                    tr.draw(new MatrixStack(), kys, poss[0], poss[1], -1);
+                }
+
                 y+=20;
             }
 
@@ -489,6 +502,13 @@ public class HUDMoveScreen extends Screen {
                     }
                 }
 
+                if(set instanceof KeyBindSetting key) {
+                    if(UIUtil.basicCollisionCheck(mouseX, mouseY, x + width - 60, currentY, x + width - 12, currentY + 15) && button == 0) {
+                        settingBind = true;
+                        bindSetting = key;
+                    }
+                }
+
                 currentY+=20;
             }
         }
@@ -506,7 +526,20 @@ public class HUDMoveScreen extends Screen {
         }
 
         public void onKeyboard(int key) {
+            if(settingBind) {
+                bindSetting.key = key;
+                try {
+                    Field f = bindSetting.getClass().getDeclaredField("bind");
+                    f.setAccessible(true);
 
+                    ClickableBind bind = (ClickableBind) f.get(bindSetting);
+                    bind.setBoundKey(InputUtil.fromKeyCode(key, 0));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            settingBind = false;
         }
     }
 

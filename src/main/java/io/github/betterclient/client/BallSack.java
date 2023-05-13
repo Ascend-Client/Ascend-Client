@@ -11,6 +11,7 @@ public class BallSack {
     public ModuleManager moduleManager;
     public EventBus bus;
     private static BallSack instance;
+    public String categoryName = "BallSack Client";
 
     public BallSack() {
         instance = this;
@@ -18,7 +19,7 @@ public class BallSack {
         bus = new EventBus();
         moduleManager = new ModuleManager();
 
-        ClickableBind.registerKeyBind(new ClickableBind("Open ClickGui", GLFW.GLFW_KEY_RIGHT_SHIFT, "BallSack Client", () -> {
+        ClickableBind.registerKeyBind(new ClickableBind("Open ClickGui", GLFW.GLFW_KEY_RIGHT_SHIFT, this.categoryName, () -> {
             MinecraftClient.getInstance().openScreen(new HUDMoveScreen());
         }, () -> {}));
     }

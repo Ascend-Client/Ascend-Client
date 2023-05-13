@@ -20,6 +20,7 @@ public class ModuleManager {
         moduleList.add(new FullBright());
         moduleList.add(new FreeLook());
         moduleList.add(new ItemTweaks());
+        moduleList.add(new Zoom());
     }
 
     public Module getModuleByName(String name) {

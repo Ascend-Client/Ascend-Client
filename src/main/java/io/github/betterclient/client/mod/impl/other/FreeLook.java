@@ -4,7 +4,7 @@ import io.github.betterclient.client.BallSack;
 import io.github.betterclient.client.access.GameOptionsAccess;
 import io.github.betterclient.client.mod.Category;
 import io.github.betterclient.client.mod.Module;
-import io.github.betterclient.client.util.ClickableBind;
+import io.github.betterclient.client.mod.setting.KeyBindSetting;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.options.Perspective;
 import org.lwjgl.glfw.GLFW;
@@ -13,7 +13,7 @@ public class FreeLook extends Module {
     public boolean perspectiveToggled = false;
     public Perspective previousPerspective = Perspective.FIRST_PERSON; //prev f5 state
 
-    public ClickableBind bind = ClickableBind.registerKeyBind(new ClickableBind("FreeLook", GLFW.GLFW_KEY_LEFT_ALT, "BallSack Client", () -> {
+    public KeyBindSetting bind = new KeyBindSetting("FreeLook Keybind", GLFW.GLFW_KEY_LEFT_ALT, () -> {
         if(!this.isToggled())
             return;
 
@@ -34,10 +34,11 @@ public class FreeLook extends Module {
 
         ((GameOptionsAccess) client.options)
                 .setPerspective(previousPerspective);
-    }));
+    });
 
     public FreeLook() {
         super("FreeLook", Category.OTHER);
+        this.addSetting(this.bind);
     }
 
     public static FreeLook get() {

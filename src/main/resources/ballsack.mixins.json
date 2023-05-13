@@ -1,11 +1,11 @@
 {
   "compatibilityLevel": "JAVA_8",
   "package": "io.github.betterclient.client.mixin",
-  "verbose": true,
   "mixins": [
     "MixinCamera",
     "MixinEntity",
     "MixinGameOptions",
+    "MixinGameRenderer",
     "MixinInGameHud",
     "MixinItemEntity",
     "MixinItemEntityRenderer",
