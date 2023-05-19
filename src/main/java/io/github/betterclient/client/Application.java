@@ -1,6 +1,8 @@
 package io.github.betterclient.client;
 
 import io.github.betterclient.client.asm.YarnFix;
+import io.github.betterclient.client.launch.FabricModsInitializer;
+import io.github.betterclient.fabric.FabricLoader;
 import io.github.betterclient.quixotic.QuixoticApplication;
 import io.github.betterclient.quixotic.QuixoticClassLoader;
 
@@ -25,11 +27,20 @@ public class Application implements QuixoticApplication {
 
     @Override
     public void loadApplicationManager(QuixoticClassLoader quixoticClassLoader) {
+        quixoticClassLoader.addExclusion("io.github.betterclient.client.asm.Better");
+
+        FabricModsInitializer.loadAllFabricModsIntoLoader(FabricLoader.getInstance());
+
         quixoticClassLoader.addPlainTransformer(new YarnFix());
+        FabricLoader.getInstance().loadApplicationManager(quixoticClassLoader);
     }
 
     @Override
     public List<String> getMixinConfigurations() {
-        return new ArrayList<>(List.of("ballsack.mixins.json"));
+        ArrayList<String> arrayList = new ArrayList<>(FabricLoader.getInstance().getMixinConfigurations());
+
+        arrayList.add("ballsack.mixins.json");
+
+        return arrayList;
     }
 }

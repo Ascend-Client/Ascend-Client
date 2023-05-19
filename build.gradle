@@ -4,6 +4,7 @@ import java.nio.file.StandardCopyOption
 plugins {
     id 'java'
     id "fabric-loom" version "1.1-SNAPSHOT"
+    id "com.github.johnrengelman.shadow" version "2.0.4"
 }
 
 group 'io.github.betterclient'
@@ -25,6 +26,11 @@ repositories {
 
 def mcVer = "1.16_combat-6"
 
+configurations {
+    shade
+    implementation.extendsFrom(shade)
+}
+
 loom {
     setCustomMinecraftManifest("https://gist.githubusercontent.com/rizecookey/4c6142baaccc3875f9b227fe22f2ace5/raw/c8ed74b19f7a5315813c9d4b199798b692a8f359/1.16_combat-6.json")
     setIntermediaryUrl("https://maven.rizecookey.net/net/fabricmc/intermediary/${mcVer}/intermediary-${mcVer}-v2.jar")
@@ -40,7 +46,7 @@ File downloadQuixotic() {
     if(f.exists()) return f
 
     f.createNewFile()
-    def is = new URL("https://github.com/betterclient/Quixotic-Loader/releases/download/validtag/Quixotic-1.0.jar").openStream()
+    def is = new URL("https://github.com/betterclient/Quixotic-Loader/releases/download/valedier/Quixotic-1.0.jar").openStream()
     Files.copy(
             is,
             f.toPath(),
@@ -54,13 +60,24 @@ dependencies {
     minecraft "com.mojang:minecraft:$mcVer"
     mappings "net.fabricmc:yarn:1.16_combat-6+build.2:v2"
 
-    implementation files(downloadQuixotic())
+    shade files(downloadQuixotic())
 
-    implementation "org.spongepowered:mixin:0.8.5"
+    shade 'org.json:json:20230227'
+    shade "org.spongepowered:mixin:0.8.5"
 
-    implementation "org.ow2.asm:asm:$asmVersion"
-    implementation "org.ow2.asm:asm-analysis:$asmVersion"
-    implementation "org.ow2.asm:asm-commons:$asmVersion"
-    implementation "org.ow2.asm:asm-tree:$asmVersion"
-    implementation "org.ow2.asm:asm-util:$asmVersion"
+    shade "org.ow2.asm:asm:$asmVersion"
+    shade "org.ow2.asm:asm-analysis:$asmVersion"
+    shade "org.ow2.asm:asm-commons:$asmVersion"
+    shade "org.ow2.asm:asm-tree:$asmVersion"
+    shade "org.ow2.asm:asm-util:$asmVersion"
+}
+
+shadowJar {
+    dependencies {
+
+    }
+    configurations = [project.configurations.shade]
+
+    duplicatesStrategy DuplicatesStrategy.EXCLUDE //prevent duplicates
+    classifier "" //prevent creation of unshadowed jar
 }

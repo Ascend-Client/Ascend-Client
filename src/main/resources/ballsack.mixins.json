@@ -12,6 +12,7 @@
     "MixinKeyBinding",
     "MixinLivingEntity",
     "MixinMinecraftClient",
-    "MixinMouse"
+    "MixinMouse",
+    "MixinSoundManager"
   ]
 }

@@ -1,5 +1,6 @@
 package io.github.betterclient.client.ui;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import io.github.betterclient.client.BallSack;
 import io.github.betterclient.client.event.impl.RenderEvent;
 import io.github.betterclient.client.mod.*;
