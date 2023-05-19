@@ -22,6 +22,7 @@ public class ModuleManager {
         moduleList.add(new ItemTweaks());
         moduleList.add(new Zoom());
         moduleList.add(new NoHurtCam());
+        moduleList.add(new CrystalOptimizer());
     }
 
     public Module getModuleByName(String name) {

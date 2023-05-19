@@ -1,16 +1,12 @@
 package io.github.betterclient.client.util;
 
-import io.github.betterclient.client.ui.HUDMoveScreen;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.options.GameOptions;
 import net.minecraft.client.options.KeyBinding;
 import org.apache.commons.lang3.ArrayUtils;
-import org.lwjgl.glfw.GLFW;
 
 import java.lang.reflect.Field;
-import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
 public class ClickableBind extends KeyBinding {
     public Runnable action;
