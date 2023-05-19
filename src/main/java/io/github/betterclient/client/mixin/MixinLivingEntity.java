@@ -13,7 +13,7 @@ public abstract class MixinLivingEntity {
 
     @Inject(method = "getHandSwingProgress", at = @At(value = "RETURN", shift = At.Shift.BEFORE), cancellable = true, locals = LocalCapture.CAPTURE_FAILEXCEPTION)
     public void changeAttackAnim(float f, CallbackInfoReturnable<Float> cir, float g, float h) {
-        if (ItemTweaks.get().oldSwing.isValue()) {
+        if (ItemTweaks.get().oldSwing.isValue() && ItemTweaks.get().isToggled()) {
             cir.setReturnValue(h);
         }
     }
