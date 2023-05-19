@@ -21,6 +21,7 @@ public class ModuleManager {
         moduleList.add(new FreeLook());
         moduleList.add(new ItemTweaks());
         moduleList.add(new Zoom());
+        moduleList.add(new NoHurtCam());
     }
 
     public Module getModuleByName(String name) {
