@@ -5,11 +5,15 @@ import io.github.betterclient.fabric.Util;
 
 public class FabricModsInitializer {
     public static void loadAllFabricModsIntoLoader(FabricLoader loader) {
-        String sodium = "https://github.com/betterclient/Minecraft-Client/releases/download/Testing%2FSodium/sodium-fabric-mc1.16.4-0.1.1+rev.5af41c1-dirty-dev.jar";
+        String sodium =
+        "https://github.com/betterclient/Minecraft-Client/releases/download/Stabler%2FSodium/sodium-fabric-mc1.16_combat-6-0.2.0+rev.448932a-dirty-dev.jar";
+
+        String sodiumExtras =
+        "https://github.com/betterclient/Minecraft-Client/releases/download/Stabler%2FSodium/sodium-extra-0.4.18+mc1.16_combat-6-unknown-dev.jar";
 
         try {
             loader.loadMod(Util.urlToFile(sodium));
-
+            loader.loadMod(Util.urlToFile(sodiumExtras));
         } catch (Exception e) {
             e.printStackTrace();
         }

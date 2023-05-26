@@ -1,7 +1,6 @@
 package io.github.betterclient.fabric;
 
 import io.github.betterclient.fabric.transformer.PrivateAccessTransformer;
-import io.github.betterclient.fabric.transformer.RedirectFabricCalls;
 import io.github.betterclient.fabric.transformer.RemoveEntryPointImplements;
 import io.github.betterclient.quixotic.Quixotic;
 import io.github.betterclient.quixotic.QuixoticApplication;
@@ -33,20 +32,21 @@ public class FabricLoader implements QuixoticApplication {
                 JSONArray mixes = obj.getJSONArray("mixins");
 
                 String name = obj.getString("name");
-                String accessWidener = obj.getString("accessWidener");
                 List<String> mainPoints = new ArrayList<>();
                 List<String> preMainPoints = new ArrayList<>();
                 List<String> mixins = new ArrayList<>(mixes.toList().stream().map(String.class::cast).toList());
 
-                JSONObject entrypoints = obj.getJSONObject("entrypoints");
+                if(obj.has("entrypoints")) {
+                    JSONObject entrypoints = obj.getJSONObject("entrypoints");
 
-                for (String key : entrypoints.keySet()) {
-                    if(key.equals("main") || key.equals("client")) {
-                        mainPoints.addAll(entrypoints.getJSONArray(key).toList().stream().map(String.class::cast).toList());
-                    }
+                    for (String key : entrypoints.keySet()) {
+                        if(key.equals("main") || key.equals("client")) {
+                            mainPoints.addAll(entrypoints.getJSONArray(key).toList().stream().map(String.class::cast).toList());
+                        }
 
-                    if(key.equals("preLaunch")) {
-                        preMainPoints.addAll(entrypoints.getJSONArray(key).toList().stream().map(String.class::cast).toList());
+                        if(key.equals("preLaunch")) {
+                            preMainPoints.addAll(entrypoints.getJSONArray(key).toList().stream().map(String.class::cast).toList());
+                        }
                     }
                 }
 
@@ -54,11 +54,6 @@ public class FabricLoader implements QuixoticApplication {
                     @Override
                     public String name() {
                         return name;
-                    }
-
-                    @Override
-                    public String accessWidener() {
-                        return accessWidener;
                     }
 
                     @Override
@@ -74,6 +69,11 @@ public class FabricLoader implements QuixoticApplication {
                     @Override
                     public List<String> mixinConfigs() {
                         return mixins;
+                    }
+
+                    @Override
+                    public File from() {
+                        return f;
                     }
                 };
             }
@@ -113,7 +113,6 @@ public class FabricLoader implements QuixoticApplication {
     @Override
     public void loadApplicationManager(QuixoticClassLoader quixoticClassLoader) {
         quixoticClassLoader.addPlainTransformer(new RemoveEntryPointImplements());
-        quixoticClassLoader.addPlainTransformer(new RedirectFabricCalls());
         quixoticClassLoader.addPlainTransformer(new PrivateAccessTransformer());
 
         try {
@@ -136,6 +135,8 @@ public class FabricLoader implements QuixoticApplication {
         for (FabricMod mod : loadedMods) {
             total.addAll(mod.mixinConfigs());
         }
+
+        total.add("fabric.mixins.json");
 
         return total;
     }

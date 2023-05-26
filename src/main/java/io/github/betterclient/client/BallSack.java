@@ -18,6 +18,8 @@ public class BallSack {
     public String categoryName = "BallSack Client";
 
     public BallSack() {
+        System.err.println("BALLSACK- INIT");
+
         instance = this;
 
         bus = new EventBus();
@@ -26,12 +28,6 @@ public class BallSack {
         ClickableBind.registerKeyBind(new ClickableBind("Open ClickGui", GLFW.GLFW_KEY_RIGHT_SHIFT, this.categoryName, () -> {
             MinecraftClient.getInstance().openScreen(new HUDMoveScreen());
         }, () -> {}));
-
-        try {
-            FabricLoader.getInstance().callClientMain();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 
     public static BallSack getInstance() {

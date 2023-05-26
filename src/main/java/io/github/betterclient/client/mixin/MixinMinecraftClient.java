@@ -5,7 +5,6 @@ import io.github.betterclient.client.access.MinecraftAccess;
 import io.github.betterclient.client.event.impl.HitEntityEvent;
 import io.github.betterclient.client.mod.impl.other.BedrockBridgeMod;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.RunArgs;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
@@ -16,6 +15,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
@@ -31,11 +31,6 @@ public abstract class MixinMinecraftClient implements MinecraftAccess {
     @Shadow
     @Nullable
     public HitResult crosshairTarget;
-
-    @Inject(method = "<init>", at = @At("RETURN"))
-    public void meWhenThe(RunArgs args, CallbackInfo ci) {
-        new BallSack();
-    }
 
     @Override
     public int getFPS() {
@@ -55,5 +50,12 @@ public abstract class MixinMinecraftClient implements MinecraftAccess {
             BedrockBridgeMod.get().checkReachAroundAndExecute(hand, itemStack);
 
         return itemStack;
+    }
+
+    @ModifyArg(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Mouse;<init>(Lnet/minecraft/client/MinecraftClient;)V"))
+    public MinecraftClient red(MinecraftClient client) {
+        new BallSack();
+
+        return client;
     }
 }

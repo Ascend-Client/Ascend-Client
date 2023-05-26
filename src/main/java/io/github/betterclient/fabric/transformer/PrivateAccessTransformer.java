@@ -13,8 +13,8 @@ import java.util.List;
  */
 public class PrivateAccessTransformer implements ClassTransformer {
     public List<String> transforming = new ArrayList<>(List.of(
-            "net.minecraft.client.render.Frustum",
-            "net.minecraft.client.texture.Sprite$Interpolation"));
+            "net.minecraft.client.texture.Sprite$Interpolation",
+            "net.minecraft.client.render.Frustum"));
 
     @Override
     public byte[] transform(String className, byte[] classFileBuffer) {
@@ -25,10 +25,11 @@ public class PrivateAccessTransformer implements ClassTransformer {
         MethodNode node = null;
 
         if(className.equals(transforming.get(0))) {
-            node = clazz.getMethod("isVisible", "(DDDDDD)Z").getOrigin();
-        }
-        if(className.equals(transforming.get(1))) {
             node = clazz.getMethod("apply", "()V").getOrigin();
+        }
+
+        if(className.equals(transforming.get(1))) {
+            node = clazz.getMethod("isVisible", "(DDDDDD)Z").getOrigin();
         }
 
         if(node == null)
