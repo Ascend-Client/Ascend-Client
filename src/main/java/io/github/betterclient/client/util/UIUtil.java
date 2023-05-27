@@ -11,8 +11,8 @@ public class UIUtil {
      * https://github.com/TitanicClient/Client/blob/bac90137dc4d7724a88eff07c1edde6b74215185/Shared/src/main/java/cc/noxiuam/titanic/client/ui/util/RenderUtil.java#L129
      * @param x x pos
      * @param y y pos
-     * @param width this is actually the ending x (x + width)
-     * @param height this is actually the ending y (y + height)
+     * @param width this is actually the ending x (x + uiwidth)
+     * @param height this is actually the ending y (y + uiheight)
      * @param radius radius of round
      * @param color rect color
      */

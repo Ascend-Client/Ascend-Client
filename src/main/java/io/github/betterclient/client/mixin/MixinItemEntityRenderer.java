@@ -73,7 +73,7 @@ public abstract class MixinItemEntityRenderer extends EntityRenderer<ItemEntity>
 
         // Certain BlockItems (Grass Block, Jukebox, Dirt, Ladders) are fine being rotated 180 degrees like standard items.
         // Other BlockItems (Carpet, Slab) do not like being rotated and should stay flat.
-        // To determine whether a block should be flat or rotated, we check the collision box height.
+        // To determine whether a block should be flat or rotated, we check the collision box uiheight.
         // Anything that takes up more than half a block vertically is rotated.
         boolean renderBlockFlat = false;
         if(dropped.getStack().getItem() instanceof BlockItem && !(dropped.getStack().getItem() instanceof AliasedBlockItem)) {
