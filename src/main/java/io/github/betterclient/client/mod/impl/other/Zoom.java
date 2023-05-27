@@ -34,6 +34,9 @@ public class Zoom extends Module {
 
     public double handleZoom(double fov) {
         MinecraftClient mc = MinecraftClient.getInstance();
+        if(mc.currentScreen != null)
+            return fov;
+
         if (InputUtil.isKeyPressed(mc.getWindow().getHandle(), bind.key)) {
 
             if (!isZoomed) {
