@@ -12,8 +12,8 @@ public class FabricModsInitializer {
         "https://github.com/betterclient/Minecraft-Client/releases/download/Stabler%2FSodium/sodium-extra-0.4.18+mc1.16_combat-6-unknown-dev.jar";
 
         try {
-            loader.loadMod(Util.urlToFile(sodium));
-            loader.loadMod(Util.urlToFile(sodiumExtras));
+            loader.loadMod(Util.checkHashOrDownload(sodium));
+            loader.loadMod(Util.checkHashOrDownload(sodiumExtras));
         } catch (Exception e) {
             e.printStackTrace();
         }

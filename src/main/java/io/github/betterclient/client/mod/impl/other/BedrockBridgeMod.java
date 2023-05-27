@@ -3,7 +3,6 @@ package io.github.betterclient.client.mod.impl.other;
 import io.github.betterclient.client.BallSack;
 import io.github.betterclient.client.mod.Category;
 import io.github.betterclient.client.mod.Module;
-import io.github.betterclient.client.mod.setting.NumberSetting;
 import net.minecraft.block.*;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
