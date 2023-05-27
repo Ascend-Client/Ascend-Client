@@ -1,6 +1,7 @@
 package io.github.betterclient.fabric;
 
 import com.google.common.collect.Lists;
+import io.github.betterclient.client.Application;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -47,8 +48,7 @@ public class Util {
         String hashUrl = url.substring(0, url.lastIndexOf(".")) + "-hash.txt";
         String hash = Files.readString(urlToFile(hashUrl).toPath());
 
-        Files.createDirectories(new File(".modjars").toPath());
-        File alreadyDownloaded = new File(".modjars/" + url.substring(url.lastIndexOf("/") + 1));
+        File alreadyDownloaded = new File(Application.modJarsFolder, url.substring(url.lastIndexOf("/") + 1));
         if(!alreadyDownloaded.exists()) {
             //file doesn't exist, probably first launch
 

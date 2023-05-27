@@ -5,7 +5,7 @@ import io.github.betterclient.client.util.ClickableBind;
 
 public class KeyBindSetting extends Setting {
     public int key;
-    private ClickableBind bind;
+    public ClickableBind bind;
 
     public KeyBindSetting(String name, int val, Runnable press, Runnable unPress) {
         super(name);

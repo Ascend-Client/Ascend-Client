@@ -428,12 +428,14 @@ public class HUDMoveScreen extends Screen {
                 if(set instanceof BooleanSetting bool) {
                     if(UIUtil.basicCollisionCheck(mouseX, mouseY, x + width - 50, currentY, x + width - 2, currentY + 15) && button == 0) {
                         bool.toggle();
+                        BallSack.getInstance().config.save();
                     }
                 }
 
                 if(set instanceof ModeSetting mode) {
                     if(UIUtil.basicCollisionCheck(mouseX, mouseY, x + width - 50, currentY, x + width - 2, currentY + 15) && button == 0) {
                         mode.toggle();
+                        BallSack.getInstance().config.save();
                     }
                 }
 
@@ -507,6 +509,7 @@ public class HUDMoveScreen extends Screen {
                     if(UIUtil.basicCollisionCheck(mouseX, mouseY, x + width - 60, currentY, x + width - 12, currentY + 15) && button == 0) {
                         settingBind = true;
                         bindSetting = key;
+                        BallSack.getInstance().config.save();
                     }
                 }
 
@@ -523,6 +526,7 @@ public class HUDMoveScreen extends Screen {
                 number = null;
                 settingNumber = false;
                 holdX = 0;
+                BallSack.getInstance().config.save();
             }
         }
 
@@ -530,11 +534,8 @@ public class HUDMoveScreen extends Screen {
             if(settingBind) {
                 bindSetting.key = key;
                 try {
-                    Field f = bindSetting.getClass().getDeclaredField("bind");
-                    f.setAccessible(true);
-
-                    ClickableBind bind = (ClickableBind) f.get(bindSetting);
-                    bind.setBoundKey(InputUtil.fromKeyCode(key, 0));
+                    bindSetting.bind.setBoundKey(InputUtil.fromKeyCode(key, 0));
+                    BallSack.getInstance().config.save();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -582,4 +583,3 @@ public class HUDMoveScreen extends Screen {
     }
 
 }
-//only 535 lines smh

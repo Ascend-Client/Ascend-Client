@@ -6,10 +6,17 @@ import io.github.betterclient.fabric.FabricLoader;
 import io.github.betterclient.quixotic.QuixoticApplication;
 import io.github.betterclient.quixotic.QuixoticClassLoader;
 
+import java.io.File;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Application implements QuixoticApplication {
+    public static File
+            clientFolder = new File(".ballsack"),
+            configFolder = new File(clientFolder, "config"),
+            modJarsFolder = new File(clientFolder, "modjars");
+
     @Override
     public String getApplicationName() {
         return "Minecraft";
@@ -28,6 +35,12 @@ public class Application implements QuixoticApplication {
     @Override
     public void loadApplicationManager(QuixoticClassLoader quixoticClassLoader) {
         quixoticClassLoader.addExclusion("io.github.betterclient.client.asm.Better");
+
+        try {
+            Files.createDirectories(clientFolder.toPath());
+            Files.createDirectories(modJarsFolder.toPath());
+            Files.createDirectories(configFolder.toPath());
+        } catch (Exception e) { e.printStackTrace(); }
 
         FabricModsInitializer.loadAllFabricModsIntoLoader(FabricLoader.getInstance());
 

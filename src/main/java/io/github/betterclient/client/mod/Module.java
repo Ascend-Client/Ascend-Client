@@ -39,6 +39,10 @@ public class Module {
         this.settings.add(s);
     }
 
+    public Setting getSetting(String name) {
+        return settings.stream().filter(setting -> setting.name.equalsIgnoreCase(name)).findFirst().orElse(null);
+    }
+
     public void toggle() {
         toggled = !toggled;
         if(toggled) {

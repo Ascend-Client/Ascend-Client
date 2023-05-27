@@ -27,6 +27,8 @@ public class Renderable {
     }
 
     public Renderable fillArea(int startX, int startY, int endX, int endY, Color color) {
+        this.preRender();
+
         Runnable rrrr = render;
         render = () -> {
             rrrr.run();
@@ -69,6 +71,8 @@ public class Renderable {
     }
 
     public Renderable renderText(String text, int x, int y, Color color) {
+        this.preRender();
+
         int endX = x + this.textRenderer.getWidth(text);
         int endY = y + this.textRenderer.fontHeight;
         Runnable rrrr = render;
@@ -88,6 +92,8 @@ public class Renderable {
     }
 
     public Renderable renderText(String text, int x, int y, Color color, float scale) {
+        this.preRender();
+
         double endX = x + (this.textRenderer.getWidth(text) * scale);
         double endY = y + (this.textRenderer.fontHeight * scale);
         Runnable rrrr = render;
@@ -138,6 +144,8 @@ public class Renderable {
     }
 
     public int[] getIdealRenderingPosForText(String text, int x, int y, int endX, int endY) {
+        this.preRender();
+
         int[] pos = new int[2];
 
         MinecraftClient minecraftClient = MinecraftClient.getInstance();
@@ -158,6 +166,8 @@ public class Renderable {
     }
 
     public Renderable renderItemStack(int x, int y, ItemStack is, boolean renderText) {
+        this.preRender();
+
         Runnable oldRender = render;
         render = () -> {
             oldRender.run();
@@ -199,6 +209,8 @@ public class Renderable {
     }
 
     public Renderable renderItemStack(int x, int y, ItemStack is, int count, Color color) {
+        this.preRender();
+
         Runnable oldRender = render;
         render = () -> {
             oldRender.run();
@@ -227,5 +239,9 @@ public class Renderable {
         };
 
         return this;
+    }
+
+    private void preRender() {
+        this.textRenderer = MinecraftClient.getInstance().textRenderer;
     }
 }
