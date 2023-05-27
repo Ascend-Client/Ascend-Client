@@ -238,8 +238,10 @@ public class HUDMoveScreen extends Screen {
 
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        if(button == 0)
+        if(button == 0 && moving != null) {
             moving = null;
+            BallSack.getInstance().config.save();
+        }
 
         return super.mouseReleased(mouseX, mouseY, button);
     }

@@ -3,6 +3,7 @@ package io.github.betterclient.client.config;
 import io.github.betterclient.client.Application;
 import io.github.betterclient.client.BallSack;
 import io.github.betterclient.client.config.impl.ClientImplementation;
+import io.github.betterclient.client.mod.HUDModule;
 import io.github.betterclient.client.mod.Module;
 import io.github.betterclient.client.mod.setting.*;
 import net.minecraft.client.util.InputUtil;
@@ -48,8 +49,15 @@ public class Config {
                 for (ClientConfig.Setting setting : mod.settings()) {
                     Setting s = clientMod.getSetting(setting.name());
 
-                    if(s == null)
-                        continue;
+                    if(s == null) {
+                        if(clientMod instanceof HUDModule hud) {
+                            if(setting.name().equals("X")) {
+                                hud.renderable.x = setting.numberVal();
+                            } else if(setting.name().equals("Y")) {
+                                hud.renderable.y = setting.numberVal();
+                            } else continue;
+                        } else continue;
+                    }
 
                     if(s instanceof BooleanSetting set && set.value != setting.boolVal()) {
                         set.toggle();
