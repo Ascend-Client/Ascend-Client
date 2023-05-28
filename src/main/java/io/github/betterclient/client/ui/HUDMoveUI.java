@@ -43,11 +43,6 @@ public class HUDMoveUI extends Screen {
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         super.renderBackground(matrices);
 
-        if(moving != null) {
-            moving.x = mouseX - moveX;
-            moving.y = mouseY - moveY;
-        }
-
         for(HUDModule mod : hudMods) {
             if(!mod.toggled) continue;
 
@@ -139,6 +134,39 @@ public class HUDMoveUI extends Screen {
         int[] renderPos = UIUtil.getIdealRenderingPosForText(text, width / 2 - 40, height / 2 - 55, width / 2 + 40, height / 2 - 30);
 
         textRenderer.draw(new MatrixStack(), Text.of(text), renderPos[0], renderPos[1], -1);
+
+        if(moving != null) {
+            int finalX = mouseX - moveX;
+            int finalY = mouseY - moveY;
+
+            for(HUDModule mod : hudMods) {
+                if (!mod.toggled) continue;
+                if (mod.renderable.equals(moving)) continue;
+
+                Renderable rend = mod.renderable;
+
+                if(mouseX >= rend.x - 5 && mouseX <= (rend.x + rend.width + 5) && Math.abs(mouseY - rend.y) < 150) {
+                    boolean renderPlusHeight = rend.y < moving.y;
+
+                    fill(new MatrixStack(), rend.x - 1, rend.y + 2 + (renderPlusHeight ? rend.height : 0), rend.x + 1, moving.y - 2 + (renderPlusHeight ? 0 : rend.height), -1);
+
+                    finalX = rend.x;
+                    break;
+                }
+
+                if(mouseY >= rend.y - 5 && mouseY <= (rend.y + rend.height + 5) && Math.abs(mouseX - rend.x) < 150) {
+                    boolean renderPlusWidth = rend.x < moving.x;
+
+                    fill(new MatrixStack(), rend.x + (renderPlusWidth ? rend.width : 0), rend.y + rend.height - (rend.height / 2) - 1, moving.x + (renderPlusWidth ? 0 : moving.width), rend.y + rend.height - (rend.height / 2) + 1, -1);
+
+                    finalY = rend.y;
+                    break;
+                }
+            }
+
+            moving.x = finalX;
+            moving.y = finalY;
+        }
 
         super.render(new MatrixStack(), mouseX, mouseY, delta);
     }
