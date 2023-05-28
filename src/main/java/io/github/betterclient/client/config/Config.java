@@ -42,7 +42,7 @@ public class Config {
             for (ClientConfig.Module mod : loaded.mods()) {
                 Module clientMod = BallSack.getInstance().moduleManager.getModuleByName(mod.name());
 
-                if(mod.toggled() && !clientMod.isToggled()) {
+                if(mod.toggled() != clientMod.toggled) {
                     clientMod.toggle();
                 }
 
@@ -96,6 +96,30 @@ public class Config {
             FileWriter writer = new FileWriter(loadedConfig);
             writer.write(json);
             writer.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void switchConfig(String to) {
+        try {
+            File config = new File(Application.configFolder, to + ".json");
+            if(!config.exists()) {
+                config.createNewFile();
+
+                FileWriter writer = new FileWriter(config);
+                writer.write(convertConfigToJson(generateConfig()).toString(4));
+                writer.close();
+            }
+
+            loadedConfig = config;
+            currentConfig.delete();
+            currentConfig.createNewFile();
+            FileWriter writer1 = new FileWriter(currentConfig);
+            writer1.write(to);
+            writer1.close();
+
+            load();
         } catch (Exception e) {
             e.printStackTrace();
         }

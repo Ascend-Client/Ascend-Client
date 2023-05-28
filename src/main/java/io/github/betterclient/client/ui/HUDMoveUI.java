@@ -1,32 +1,23 @@
 package io.github.betterclient.client.ui;
 
-import com.mojang.blaze3d.platform.GlStateManager;
 import io.github.betterclient.client.BallSack;
 import io.github.betterclient.client.event.impl.RenderEvent;
 import io.github.betterclient.client.mod.*;
-import io.github.betterclient.client.mod.Module;
-import io.github.betterclient.client.mod.setting.*;
-import io.github.betterclient.client.util.ClickableBind;
 import io.github.betterclient.client.util.UIUtil;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.CheckboxWidget;
-import net.minecraft.client.util.InputUtil;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
-import org.lwjgl.glfw.GLFW;
 
 import java.awt.*;
-import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Vector;
 
-public class HUDMoveScreen extends Screen {
+public class HUDMoveUI extends Screen {
     public ModuleManager modMan = BallSack.getInstance().moduleManager;
-    private static HUDMoveScreen instance;
+    private static HUDMoveUI instance;
 
     public Renderable moving = null;
     public int moveX = 0, moveY = 0;
@@ -36,9 +27,8 @@ public class HUDMoveScreen extends Screen {
     public int enableX = 0, enableY = 0;
 
     public boolean isEnableOther = false;
-    public int otherArea = 0;
 
-    public HUDMoveScreen() {
+    public HUDMoveUI() {
         super(Text.of(""));
         instance = this;
         hudMods.addAll(modMan.getByCategory(Category.HUD).stream().map(HUDModule::cast).toList());
@@ -47,14 +37,6 @@ public class HUDMoveScreen extends Screen {
     @Override
     protected void init() {
         moving = null;
-
-        int x = width - 125;
-        int y = 30;
-        for (Module mod : modMan.getByCategory(Category.OTHER)) {
-            this.addButton(new ModuleEnabler(x, y, 150, 20, mod, this));
-            y+=25;
-        }
-        otherArea = y;
     }
 
     @Override
@@ -149,12 +131,12 @@ public class HUDMoveScreen extends Screen {
             }
         }
 
-        UIUtil.drawRoundedRect(width - 120, 5, width - 5, 25,
+        UIUtil.drawRoundedRect(width / 2 - 40, height / 2 - 55, width / 2 + 40, height / 2 - 30,
                 5F, new Color(0, 0, 0, 120).getRGB());
 
         String text = (isEnableOther ? "˅" : ">") + " Enable Mods";
 
-        int[] renderPos = UIUtil.getIdealRenderingPosForText(text, width - 100, 5, width - 5, 25);
+        int[] renderPos = UIUtil.getIdealRenderingPosForText(text, width / 2 - 40, height / 2 - 55, width / 2 + 40, height / 2 - 30);
 
         textRenderer.draw(new MatrixStack(), Text.of(text), renderPos[0], renderPos[1], -1);
 
@@ -191,8 +173,8 @@ public class HUDMoveScreen extends Screen {
             }
         }
 
-        if(button == 0 && UIUtil.basicCollisionCheck(mouseX, mouseY, width - 100, 5, width - 5, 25)) {
-            isEnableOther = !isEnableOther;
+        if(button == 0 && UIUtil.basicCollisionCheck(mouseX, mouseY, width / 2 - 40, height / 2 - 55, width / 2 + 40, height / 2 - 30)) {
+            MinecraftClient.getInstance().openScreen(new OtherModsUI());
         }
 
         for(HUDModule mod : hudMods) {
@@ -223,11 +205,7 @@ public class HUDMoveScreen extends Screen {
             }
         }
 
-        if(button == 1 &&
-                !UIUtil.basicCollisionCheck(mouseX, mouseY,
-                        width - 125, 0,
-                        width, otherArea
-                )) {
+        if(button == 1) {
             isEnabling = true;
             enableX = (int) mouseX;
             enableY = (int) mouseY;
@@ -250,43 +228,4 @@ public class HUDMoveScreen extends Screen {
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         return super.keyPressed(keyCode, scanCode, modifiers);
     }
-
-    public static HUDMoveScreen getCurrent() {
-        return instance;
-    }
-
-    static class ModuleEnabler extends CheckboxWidget {
-        public Module mod;
-        public HUDMoveScreen moveScreen;
-
-        public ModuleEnabler(int x, int y, int width, int height, Module mod, HUDMoveScreen thiz) {
-            super(x, y, width, height, Text.of(mod.name), mod.toggled);
-            this.mod = mod;
-            this.moveScreen = thiz;
-        }
-
-        @Override
-        public void onPress() {
-            if(!moveScreen.isEnableOther) return;
-
-            this.mod.toggle();
-            super.onPress();
-        }
-
-        @Override
-        public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-            if(moveScreen.isEnableOther)
-                super.render(matrices, mouseX, mouseY, delta);
-        }
-
-        @Override
-        public boolean mouseClicked(double mouseX, double mouseY, int button) {
-            if (this.moveScreen.isEnableOther && this.clicked(mouseX, mouseY) && button == 1) {
-                MinecraftClient.getInstance().openScreen(new SettingsUI(this.mod));
-            }
-
-            return super.mouseClicked(mouseX, mouseY, button);
-        }
-    }
-
 }

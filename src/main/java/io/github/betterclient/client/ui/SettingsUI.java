@@ -39,9 +39,16 @@ public class SettingsUI extends Screen {
     public int uiwidth = 400;
     public int uiheight = 300;
 
+    boolean goBackToOtherMods = false;
+
     public SettingsUI(Module mod) {
         super(Text.of(""));
         this.mod = mod;
+
+        StackTraceElement[] elements = new Throwable().getStackTrace();
+        if(elements[1].getClassName().contains("OtherModsUI")) {
+            goBackToOtherMods = true;
+        }
     }
 
     @Override
@@ -298,7 +305,10 @@ public class SettingsUI extends Screen {
 
     public void mouseRelease(double mouseX, double mouseY, int button) {
         if(UIUtil.basicCollisionCheck(mouseX, mouseY, x + uiwidth - 50, y + uiheight - 25, x + uiwidth - 5, y + uiheight - 5) && button == 0) {
-            MinecraftClient.getInstance().openScreen(new HUDMoveScreen());
+            if(goBackToOtherMods)
+                MinecraftClient.getInstance().openScreen(new OtherModsUI());
+            else
+                MinecraftClient.getInstance().openScreen(new HUDMoveUI());
         }
 
         if(button == 0) {

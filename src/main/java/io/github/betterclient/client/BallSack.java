@@ -3,14 +3,10 @@ package io.github.betterclient.client;
 import io.github.betterclient.client.config.Config;
 import io.github.betterclient.client.event.EventBus;
 import io.github.betterclient.client.mod.ModuleManager;
-import io.github.betterclient.client.ui.HUDMoveScreen;
+import io.github.betterclient.client.ui.HUDMoveUI;
 import io.github.betterclient.client.util.ClickableBind;
-import io.github.betterclient.fabric.FabricLoader;
-import io.github.betterclient.fabric.FabricMod;
 import net.minecraft.client.MinecraftClient;
 import org.lwjgl.glfw.GLFW;
-
-import java.io.IOException;
 
 public class BallSack {
     private static BallSack instance;
@@ -30,7 +26,7 @@ public class BallSack {
         config.load();
 
         ClickableBind.registerKeyBind(new ClickableBind("Open ClickGui", GLFW.GLFW_KEY_RIGHT_SHIFT, this.categoryName, () -> {
-            MinecraftClient.getInstance().openScreen(new HUDMoveScreen());
+            MinecraftClient.getInstance().openScreen(new HUDMoveUI());
         }, () -> {}));
     }
 

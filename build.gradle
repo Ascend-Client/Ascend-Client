@@ -81,3 +81,4 @@ shadowJar {
     duplicatesStrategy DuplicatesStrategy.EXCLUDE //prevent duplicates
     classifier "" //prevent creation of unshadowed jar
 }
+

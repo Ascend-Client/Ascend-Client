@@ -1,6 +1,7 @@
 package io.github.betterclient.client.util;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.util.Identifier;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -94,19 +95,7 @@ public class UIUtil {
     }
 
     public static int[] getIdealRenderingPosForText(String text, double x, double y, double endX, double endY) {
-        int[] pos = new int[2];
-
-        MinecraftClient minecraftClient = MinecraftClient.getInstance();
-        int textWidth = minecraftClient.textRenderer.getWidth(text);
-        int textHeight = minecraftClient.textRenderer.fontHeight;
-
-        int idealX = (int) (x + ((endX - x) / 2) - (textWidth / 2));
-        pos[0] = (int) Math.max(x, Math.min(idealX, endX - textWidth));
-
-        int idealY = (int) (y + ((endY - y) / 2) - (textHeight / 2));
-        pos[1] = (int) Math.max(y, Math.min(idealY, endY - textHeight));
-
-        return pos;
+        return getIdealRenderingPosForText(text, x, y, endX, endY, 1f);
     }
 
     /*
@@ -119,4 +108,20 @@ public class UIUtil {
     {
         return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
     }
+
+    public static int[] getIdealRenderingPosForText(String text, double x, double y, double endX, double endY, float scale) {
+        int[] renderingPos = new int[2];
+
+        MinecraftClient minecraft = MinecraftClient.getInstance();
+        TextRenderer textRenderer = minecraft.textRenderer;
+        int textWidth = textRenderer.getWidth(text);
+        int textHeight = textRenderer.fontHeight;
+
+        // Adjust the rendering position based on the specified parameters and scale
+        renderingPos[0] = (int) ((x + endX) / 2 - textWidth / 2 * scale);
+        renderingPos[1] = (int) ((y + endY) / 2 - textHeight / 2 * scale);
+
+        return renderingPos;
+    }
+
 }
