@@ -15,6 +15,8 @@
     "MixinLivingEntity",
     "MixinMinecraftClient",
     "MixinMouse",
+    "MixinReloadableResourceManagerImpl",
+    "MixinShaderEffect",
     "MixinSoundManager"
   ]
 }

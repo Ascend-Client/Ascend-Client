@@ -23,6 +23,7 @@ public class ModuleManager {
         moduleList.add(new Zoom());
         moduleList.add(new NoHurtCam());
         moduleList.add(new CrystalOptimizer());
+        moduleList.add(new MotionBlur());
     }
 
     public Module getModuleByName(String name) {
