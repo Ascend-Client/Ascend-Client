@@ -110,7 +110,10 @@ public class OtherModsUI extends Screen {
 
                 boolean isHover = UIUtil.basicCollisionCheck(mouseX, mouseY, cx, cy, cx + (textRenderer.getWidth(cfg.getName())) + 2, cy + 10);
 
-                textRenderer.draw(new MatrixStack(), new LiteralText(cfg.getName().replace(".json", "")).setStyle(Style.EMPTY.withUnderline(isHover)), cx, cy, -1);
+                String text = cfg.getName().replace(".json", "");
+                String selected = (cfg.getName().equals(currentConfig) ? " - Selected" : "");
+                String current = (BallSack.getInstance().config.loadedConfig.getName().equals(cfg.getName()) ? (selected.equals("") ? " - Current" : ", Current") : "");
+                textRenderer.draw(new MatrixStack(), new LiteralText(text + selected + current).setStyle(Style.EMPTY.withUnderline(isHover)), cx, cy, -1);
                 cy+=10;
             }
         }
