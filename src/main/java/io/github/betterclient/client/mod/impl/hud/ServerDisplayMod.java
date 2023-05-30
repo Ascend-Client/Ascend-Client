@@ -11,7 +11,7 @@ public class ServerDisplayMod extends HUDModule {
 
     @Override
     public void render(Renderable renderable) {
-        boolean singlePlayer = MinecraftClient.getInstance().world.isClient;
+        boolean singlePlayer = MinecraftClient.getInstance().getCurrentServerEntry() == null;
 
         renderable.renderText(singlePlayer ? "Singleplayer" : MinecraftClient.getInstance().getCurrentServerEntry().address, 0, 0, textColor.getColor());
     }

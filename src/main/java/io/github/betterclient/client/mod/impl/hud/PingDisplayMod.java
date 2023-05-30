@@ -11,7 +11,7 @@ public class PingDisplayMod extends HUDModule {
 
     @Override
     public void render(Renderable renderable) {
-        boolean singlePlayer = MinecraftClient.getInstance().world.isClient;
+        boolean singlePlayer = MinecraftClient.getInstance().getCurrentServerEntry() == null;
 
         renderable.renderText(singlePlayer ? "Singleplayer" : (((int) MinecraftClient.getInstance().getCurrentServerEntry().ping) + "ms"), 0, 0, textColor.getColor());
     }
