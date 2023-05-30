@@ -24,6 +24,8 @@ public class ModuleManager {
         moduleList.add(new NoHurtCam());
         moduleList.add(new CrystalOptimizer());
         moduleList.add(new MotionBlur());
+        moduleList.add(new PingDisplayMod());
+        moduleList.add(new ServerDisplayMod());
     }
 
     public Module getModuleByName(String name) {
