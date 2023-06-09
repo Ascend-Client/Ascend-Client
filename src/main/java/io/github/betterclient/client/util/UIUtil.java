@@ -98,7 +98,7 @@ public class UIUtil {
         return getIdealRenderingPosForText(text, x, y, endX, endY, 1f);
     }
 
-    /*
+    /**
         found this in arduino source code
         the value x is between in_min and in_max
         and the value gets on out_min and out_max
