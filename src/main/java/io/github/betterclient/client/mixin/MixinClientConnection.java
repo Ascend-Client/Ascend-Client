@@ -86,7 +86,8 @@ public class MixinClientConnection {
                     if (
                             hitResult.getType() == HitResult.Type.ENTITY &&
                             (entity = ((EntityHitResult) hitResult).getEntity()) instanceof EndCrystalEntity &&
-                            CrystalOptimizer.get().isToggled() && packet.getType().equals(PlayerInteractEntityC2SPacket.InteractionType.ATTACK)) {
+                            CrystalOptimizer.get().isToggled() && packet.getType().equals(PlayerInteractEntityC2SPacket.InteractionType.ATTACK) &&
+                            !client.player.isSpectator()) {
 
                         StatusEffectInstance weakness = client.player.getStatusEffect(StatusEffects.WEAKNESS);
                         StatusEffectInstance strength = client.player.getStatusEffect(StatusEffects.STRENGTH);

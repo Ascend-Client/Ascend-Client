@@ -25,6 +25,8 @@ public class HUDMoveUI extends Screen {
 
     public boolean isEnabling = false;
     public int enableX = 0, enableY = 0;
+    public boolean isDropDown = false;
+    public int dropdownx, dropdowny;
 
     public boolean isEnableOther = false;
 
@@ -65,36 +67,30 @@ public class HUDMoveUI extends Screen {
                     0f, Color.WHITE.getRGB()
             );*/
 
-            matrices = new MatrixStack();
+            mod.render(new RenderEvent());
+        }
 
-            matrices.push();
-            int x = render.x;
-            int y = render.y + render.height + 6;
-
-            matrices.translate(x,y,1);
-            matrices.scale(0.85f,0.85f,1);
-            matrices.translate(-x,-y,1);
-            textRenderer.draw(matrices, mod.name, x, y, -1);
-            matrices.pop();
-
-            float scale = 0.85f;
-            y+= (9 * 0.85) + 1;
-
-            boolean underLine = UIUtil.basicCollisionCheck(
-                    mouseX, mouseY,
-                    x, y,
-                    render.x + render.width, (int) (y + (textRenderer.fontHeight * scale))
+        if(isDropDown) {
+            UIUtil.drawRoundedRect(
+                    dropdownx, dropdowny,
+                    dropdownx + 100, dropdowny + 70,
+                    20f, new Color(0, 0, 0, 150).getRGB()
             );
 
-            Style style = Style.EMPTY.withUnderline(underLine);
+            HUDModule dropDownMod = null;
+            for(HUDModule mod : hudMods) {
+                if(!mod.toggled) continue;
 
-            matrices.translate(x,y,1);
-            matrices.scale(scale,scale,1);
-            matrices.translate(-x,-y,1);
-            textRenderer.draw(matrices, new LiteralText("Disable").setStyle(style), x, y, Color.RED.getRGB());
-            matrices.pop();
+                if(UIUtil.basicCollisionCheck(dropdownx, dropdowny, mod.renderable.x, mod.renderable.y, mod.renderable.x + mod.renderable.width, mod.renderable.y + mod.renderable.height)) {
+                    dropDownMod = mod;
+                    break;
+                }
+            }
 
-            mod.render(new RenderEvent());
+            textRenderer.draw(new MatrixStack(), dropDownMod.name, dropdownx + 4, dropdowny + 10, -1);
+
+            textRenderer.draw(new MatrixStack(), new LiteralText("Settings").setStyle(Style.EMPTY.withUnderline(UIUtil.basicCollisionCheck(mouseX, mouseY, dropdownx, dropdowny + 20, dropdownx + 100, dropdowny + 40))), dropdownx + 4, dropdowny + 30, -1);
+            textRenderer.draw(new MatrixStack(), new LiteralText("Disable").setStyle(Style.EMPTY.withUnderline(UIUtil.basicCollisionCheck(mouseX, mouseY, dropdownx, dropdowny + 40, dropdownx + 100, dropdowny + 60))), dropdownx + 4, dropdowny + 50, -1);
         }
 
         if(isEnabling) {
@@ -129,7 +125,7 @@ public class HUDMoveUI extends Screen {
         UIUtil.drawRoundedRect(width / 2 - 40, height / 2 - 55, width / 2 + 40, height / 2 - 30,
                 5F, new Color(0, 0, 0, 120).getRGB());
 
-        String text = (isEnableOther ? "˅" : ">") + " Enable Mods";
+        String text = "Enable Mods";
 
         int[] renderPos = UIUtil.getIdealRenderingPosForText(text, width / 2 - 40, height / 2 - 55, width / 2 + 40, height / 2 - 30);
 
@@ -201,7 +197,29 @@ public class HUDMoveUI extends Screen {
             }
         }
 
-        if(button == 0 && UIUtil.basicCollisionCheck(mouseX, mouseY, width / 2 - 40, height / 2 - 55, width / 2 + 40, height / 2 - 30)) {
+        if(button == 0 && isDropDown) {
+            HUDModule dropDownMod = null;
+            for(HUDModule mod : hudMods) {
+                if(!mod.toggled) continue;
+
+                if(UIUtil.basicCollisionCheck(dropdownx, dropdowny, mod.renderable.x, mod.renderable.y, mod.renderable.x + mod.renderable.width, mod.renderable.y + mod.renderable.height)) {
+                    dropDownMod = mod;
+                    break;
+                }
+            }
+
+            if(UIUtil.basicCollisionCheck(mouseX, mouseY, dropdownx, dropdowny + 20, dropdownx + 100, dropdowny + 40)) {
+                MinecraftClient.getInstance().openScreen(new SettingsUI(dropDownMod));
+                isDropDown = false;
+            }
+
+            if(UIUtil.basicCollisionCheck(mouseX, mouseY, dropdownx, dropdowny + 40, dropdownx + 100, dropdowny + 60)) {
+                dropDownMod.toggle();
+                isDropDown = false;
+            }
+        }
+
+        if(button == 0 && UIUtil.basicCollisionCheck(mouseX, mouseY, width / 2 - 40, height / 2 - 55, width / 2 + 40, height / 2 - 30) && !isDropDown) {
             MinecraftClient.getInstance().openScreen(new OtherModsUI());
         }
 
@@ -213,28 +231,25 @@ public class HUDMoveUI extends Screen {
                     moving = mod.renderable;
                     moveX = (int) (mouseX - moving.x);
                     moveY = (int) (mouseY - moving.y);
+                    isDropDown = false;
                 } else if(button == 1) {
-                    MinecraftClient.getInstance().openScreen(new SettingsUI(mod));
+                    isDropDown = true;
+                    dropdownx = (int) mouseX;
+                    dropdowny = (int) mouseY;
+                    isEnabling = false;
+
+                    return super.mouseClicked(mouseX, mouseY, button);
                 }
-            }
-
-            int x = mod.renderable.x;
-            int y = mod.renderable.y + mod.renderable.height + 6;
-            y+= (9 * 0.85) + 1;
-
-            if(UIUtil.basicCollisionCheck(
-                            mouseX, mouseY,
-                            x, y,
-                            mod.renderable.x + mod.renderable.width,
-                            (int) (y + (textRenderer.fontHeight * 0.85F))
-            )) {
-                if(button == 0)
-                    mod.toggle();
+            } else {
+                if(button == 0) {
+                    isDropDown = false;
+                }
             }
         }
 
         if(button == 1) {
             isEnabling = true;
+            isDropDown = false;
             enableX = (int) mouseX;
             enableY = (int) mouseY;
         }
