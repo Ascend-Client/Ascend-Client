@@ -5,6 +5,7 @@
     "MixinCamera",
     "MixinClientConnection",
     "MixinClientPacketListener",
+    "MixinEndCrystal",
     "MixinEntity",
     "MixinGameOptions",
     "MixinGameRenderer",
