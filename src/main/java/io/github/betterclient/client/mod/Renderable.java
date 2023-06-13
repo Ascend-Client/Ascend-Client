@@ -47,7 +47,7 @@ public class Renderable {
 
     public void render() {
         if(this.renderBackground) {
-            UIUtil.drawRoundedRect(this.x, this.y, this.x + oldWidth, this.y + oldHeight, 5f, this.backgroundColor.getRGB());
+            UIUtil.drawRoundedRect(this.x - 4, this.y - 4, this.x + oldWidth + 4, this.y + oldHeight + 4, 10f, this.backgroundColor.getRGB());
         }
 
         this.render.run();
