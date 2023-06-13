@@ -19,7 +19,7 @@ public class ModuleManager {
         moduleList.add(new BedrockBridgeMod());
         moduleList.add(new FullBright());
         moduleList.add(new FreeLook());
-        moduleList.add(new ItemTweaks());
+        moduleList.add(new CookeyMod());
         moduleList.add(new Zoom());
         moduleList.add(new NoHurtCam());
         moduleList.add(new CrystalOptimizer());
@@ -30,6 +30,10 @@ public class ModuleManager {
 
     public Module getModuleByName(String name) {
         return this.moduleList.stream().filter(it -> it.name.equalsIgnoreCase(name)).findFirst().orElseThrow();
+    }
+
+    public boolean hasModule(String name) {
+        return this.moduleList.stream().anyMatch(module -> module.name.equalsIgnoreCase(name));
     }
 
     public List<Module> getByCategory(Category category) {

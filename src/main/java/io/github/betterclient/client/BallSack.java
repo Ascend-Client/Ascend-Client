@@ -1,5 +1,6 @@
 package io.github.betterclient.client;
 
+import io.github.betterclient.client.command.Commands;
 import io.github.betterclient.client.config.Config;
 import io.github.betterclient.client.event.EventBus;
 import io.github.betterclient.client.mod.ModuleManager;
@@ -9,6 +10,8 @@ import io.github.betterclient.client.util.GithubMan;
 import net.minecraft.client.MinecraftClient;
 import org.lwjgl.glfw.GLFW;
 
+import java.awt.*;
+
 public class BallSack {
     private static BallSack instance;
 
@@ -17,6 +20,7 @@ public class BallSack {
     public EventBus bus;
     public String categoryName = "BallSack Client";
     public GithubMan man;
+    public Commands commands;
 
     public BallSack() {
         instance = this;
@@ -25,6 +29,8 @@ public class BallSack {
         config = new Config();
         moduleManager = new ModuleManager();
         man = new GithubMan();
+
+        commands = new Commands();
 
         config.load();
 
