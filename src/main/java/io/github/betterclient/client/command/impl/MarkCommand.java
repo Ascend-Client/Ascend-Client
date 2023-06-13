@@ -5,6 +5,9 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.command.EntitySelector;
+import net.minecraft.command.argument.EntityArgumentType;
+import net.minecraft.entity.Entity;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 
@@ -20,11 +23,11 @@ public class MarkCommand {
                         .<ServerCommandSource>literal("mark")
                         .then(
                                 RequiredArgumentBuilder
-                                        .<ServerCommandSource, String>argument("player", StringArgumentType.string())
+                                        .<ServerCommandSource, EntitySelector>argument("player", EntityArgumentType.entity())
                                         .executes(context -> {
-                                            String playerName = StringArgumentType.getString(context, "player");
+                                            Entity playerName = EntityArgumentType.getPlayer(context, "player");
 
-                                            return execute(playerName);
+                                            return execute(playerName.getEntityName());
                                         })
                         )
         );
