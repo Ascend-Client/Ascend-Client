@@ -8,8 +8,6 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class UIUtil {
     /**
-     * Totally not skidded from:
-     * https://github.com/TitanicClient/Client/blob/bac90137dc4d7724a88eff07c1edde6b74215185/Shared/src/main/java/cc/noxiuam/titanic/client/ui/util/RenderUtil.java#L129
      * @param x x pos
      * @param y y pos
      * @param width this is actually the ending x (x + uiwidth)
@@ -57,8 +55,6 @@ public class UIUtil {
     }
 
     /**
-     * Totally not skidded from:
-     * https://github.com/TitanicClient/Client/blob/bac90137dc4d7724a88eff07c1edde6b74215185/Shared/src/main/java/cc/noxiuam/titanic/client/ui/util/RenderUtil.java#LL99C5-L119C6
      * @param resourceLocation
      * @param x
      * @param y
@@ -124,4 +120,20 @@ public class UIUtil {
         return renderingPos;
     }
 
+    public static void enableScissor(float x, float y, float endX, float endY) {
+        var width = endX - x;
+        var height = endY - y;
+
+        glEnable(GL_SCISSOR_TEST);
+        var res = MinecraftClient.getInstance().getWindow();
+        x = (float) (x * res.getScaleFactor());
+        height = (float) (height * res.getScaleFactor());
+        y = (float) (res.getHeight() - (y * res.getScaleFactor()) - height);
+        width = (float) (width * res.getScaleFactor());
+        glScissor((int) x, (int) y, (int) width, (int) height);
+    }
+
+    public static void disableScissor() {
+        glDisable(GL_SCISSOR_TEST);
+    }
 }

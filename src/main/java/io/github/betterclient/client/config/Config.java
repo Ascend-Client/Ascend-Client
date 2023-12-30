@@ -51,6 +51,8 @@ public class Config {
                 for (ClientConfig.Setting setting : mod.settings()) {
                     Setting s = clientMod.getSetting(setting.name());
 
+                    if(s instanceof NoneSetting) continue;
+
                     if(s == null) {
                         if(clientMod instanceof HUDModule hud) {
                             if(setting.name().equals("X")) {

@@ -15,7 +15,8 @@ public class Application implements QuixoticApplication {
     public static File
             clientFolder = new File(".ballsack"),
             configFolder = new File(clientFolder, "config"),
-            modJarsFolder = new File(clientFolder, "modjars");
+            modJarsFolder = new File(clientFolder, "modjars"),
+            errorsFolder = new File(clientFolder, "error-reports");
 
     @Override
     public String getApplicationName() {
@@ -40,6 +41,7 @@ public class Application implements QuixoticApplication {
             Files.createDirectories(clientFolder.toPath());
             Files.createDirectories(modJarsFolder.toPath());
             Files.createDirectories(configFolder.toPath());
+            Files.createDirectories(errorsFolder.toPath());
         } catch (Exception e) { e.printStackTrace(); }
 
         FabricModsInitializer.loadAllFabricModsIntoLoader(FabricLoader.getInstance());

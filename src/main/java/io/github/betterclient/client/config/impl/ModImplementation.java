@@ -3,6 +3,7 @@ package io.github.betterclient.client.config.impl;
 import io.github.betterclient.client.config.ClientConfig;
 import io.github.betterclient.client.mod.HUDModule;
 import io.github.betterclient.client.mod.Module;
+import io.github.betterclient.client.mod.setting.NoneSetting;
 import io.github.betterclient.client.mod.setting.NumberSetting;
 import io.github.betterclient.client.mod.setting.Setting;
 
@@ -22,6 +23,8 @@ public class ModImplementation implements ClientConfig.Module {
         }
 
         for (Setting setting : this.represent.getSettings()) {
+            if(setting instanceof NoneSetting) continue;
+
             settings.add(new SettingImplementation(setting));
         }
     }

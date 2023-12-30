@@ -24,6 +24,10 @@ public class SettingsUI extends Screen {
     public boolean settingColor = false;
     public ColorSetting setting = null;
 
+    public double max = 0;
+    public double currentScroll = 10;
+    public double buttonOffset = 65;
+
     public NumberSetting redColor = new NumberSetting("Red", 0, 0, 255);
     public NumberSetting greenColor = new NumberSetting("Green", 0, 0, 255);
     public NumberSetting blueColor = new NumberSetting("Blue", 0, 0, 255);
@@ -53,8 +57,29 @@ public class SettingsUI extends Screen {
 
     @Override
     protected void init() {
-        x = (width / 2) - (uiwidth / 2);
-        y = (height / 2) - (uiheight / 2);
+        x = (width / 2D) - (uiwidth / 2D);
+        y = (height / 2D) - (uiheight / 2D);
+
+        max = 35;
+        for (Setting modSetting : mod.getSettings()) {
+            if(modSetting instanceof NoneSetting) max+=10;
+
+            if(modSetting instanceof ColorSetting color) {
+                if(this.setting == color && settingColor) {
+                    max+=10;
+                    for (int i = 0; i < 4; i++) {
+                        max+=20;
+                    }
+                    max+=10;
+                }
+            }
+
+            max+=20;
+        }
+
+        max -= uiheight;
+
+        if(max < 0) max = 0;
     }
 
     @Override
@@ -111,25 +136,46 @@ public class SettingsUI extends Screen {
                 -1
         );
 
-        float y = (float) (this.y + 10F);
+        if(max != 0) {
+            double size = (this.y + 2) - (this.y + this.uiheight - 35);
+
+            UIUtil.drawRoundedRect(this.x + this.uiwidth - 5, this.y + 2, this.x + this.uiwidth - 2, this.y + this.uiheight - 35, 2f, new Color(0,0,0).getRGB());
+            double height = UIUtil.map(currentScroll, 0, max, 0, size);
+            UIUtil.drawRoundedRect(this.x + this.uiwidth - 5, this.y + 2 - height - 20, this.x + this.uiwidth - 2, this.y + 2 - height, 2f, -1);
+        } else {
+            currentScroll = 10;
+            buttonOffset = 0;
+        }
+
+        UIUtil.enableScissor((float) x, (float) this.y, (float) (x + uiwidth), (float) (this.y + uiheight));
+
+        float y = (float) (this.y + 20F);
+
+        y-= (float) currentScroll;
+
         tr.draw(new MatrixStack(), mod.getName() + " - Settings", (float) (x + 10), y, new Color(255, 0, 0).getRGB());
         y+=15;
 
         for (Setting set : this.mod.getSettings()) {
-            tr.draw(new MatrixStack(), set.name, (float) (x + 10F), y, -1);
+            if(set instanceof NoneSetting) {
+                y+=10;
+                tr.draw(new MatrixStack(), set.name, (float) (x + 10F), y, new Color(255, 0, 255).getRGB());
+            } else {
+                tr.draw(new MatrixStack(), set.name, (float) (x + 10F), y, -1);
+            }
 
             if(set instanceof BooleanSetting bool) {
-                UIUtil.drawRoundedRect(x + uiwidth - 50, y, x + uiwidth - 2, y + 15, 5F, (bool.value ? new Color(255, 255, 255, 84) : new Color(0, 0, 0, 84)).getRGB());
-                tr.draw(new MatrixStack(),  bool.value ? "Enabled" : "Disabled", (float) (x + uiwidth - 48), y + 1, -1);
+                UIUtil.drawRoundedRect(x + uiwidth - 50 - buttonOffset, y, x + uiwidth - 2 - buttonOffset, y + 15, 5F, (bool.value ? new Color(255, 255, 255, 84) : new Color(0, 0, 0, 84)).getRGB());
+                tr.draw(new MatrixStack(),  bool.value ? "Enabled" : "Disabled", (float) (x + uiwidth - 48 - buttonOffset), y + 1, -1);
             }
 
             if(set instanceof ModeSetting mode) {
-                UIUtil.drawRoundedRect(x + uiwidth - 50, y, x + uiwidth - 2, y + 15, 5F, new Color(0, 0, 0, 84).getRGB());
-                tr.draw(new MatrixStack(), mode.value, (float) (x + uiwidth - 48), y + 1, -1);
+                UIUtil.drawRoundedRect(x + uiwidth - 50 - buttonOffset, y, x + uiwidth - 2 - buttonOffset, y + 15, 5F, new Color(0, 0, 0, 84).getRGB());
+                tr.draw(new MatrixStack(), mode.value, (float) (x + uiwidth - 48 - buttonOffset), y + 1, -1);
             }
 
             if(set instanceof ColorSetting color) {
-                UIUtil.drawRoundedRect(x + uiwidth - 50, y, x + uiwidth - 2, y + 15, 5F, (setting == color ? new Color(255, 255, 255, 84) : new Color(0, 0, 0, 84)).getRGB());
+                UIUtil.drawRoundedRect(x + uiwidth - 50 - buttonOffset, y, x + uiwidth - 2 - buttonOffset, y + 15, 5F, (setting == color ? new Color(255, 255, 255, 84) : new Color(0, 0, 0, 84)).getRGB());
 
                 if(this.setting == color && settingColor) {
                     y+=10;
@@ -182,17 +228,19 @@ public class SettingsUI extends Screen {
             }
 
             if(set instanceof KeyBindSetting key) {
-                UIUtil.drawRoundedRect(x + uiwidth - 60, y, x + uiwidth - 12, y + 15, 5F, new Color(0, 0, 0, 84).getRGB());
+                UIUtil.drawRoundedRect(x + uiwidth - 60 - buttonOffset, y, x + uiwidth - 12 - buttonOffset, y + 15, 5F, new Color(0, 0, 0, 84).getRGB());
                 String kys = GLFW.glfwGetKeyName(key.key, 0);
                 if(settingBind)
                     kys = "Listening";
 
-                int[] poss = UIUtil.getIdealRenderingPosForText(kys, x + uiwidth - 60, y, x + uiwidth - 12, y + 15);
+                int[] poss = UIUtil.getIdealRenderingPosForText(kys, x + uiwidth - 60 - buttonOffset, y, x + uiwidth - 12 - buttonOffset, y + 15);
                 tr.draw(new MatrixStack(), kys, poss[0], poss[1], -1);
             }
 
             y+=20;
         }
+
+        UIUtil.disableScissor();
 
         if(this.settingNumber) {
             double val = ((mouseX - holdX) - (x + uiwidth - 232));
@@ -208,25 +256,37 @@ public class SettingsUI extends Screen {
     }
 
     public void mouseClick(double mouseX, double mouseY, int button) {
-        float currentY = (float) (this.y + 25F);
+        float currentY = (float) (this.y + 35F);
+        currentY-= (float) currentScroll;
 
         for (Setting set : this.mod.getSettings()) {
+            if(set instanceof NoneSetting) currentY += 10;
+
+            if(currentY > (this.y + this.uiheight)) {
+                currentY+=20;
+                continue;
+            }
+            if(currentY < this.y) {
+                currentY+=20;
+                continue;
+            }
+
             if(set instanceof BooleanSetting bool) {
-                if(UIUtil.basicCollisionCheck(mouseX, mouseY, x + uiwidth - 50, currentY, x + uiwidth - 2, currentY + 15) && button == 0) {
+                if(UIUtil.basicCollisionCheck(mouseX, mouseY, x + uiwidth - 50 - buttonOffset, currentY, x + uiwidth - 2 - buttonOffset, currentY + 15) && button == 0) {
                     bool.toggle();
                     BallSack.getInstance().config.save();
                 }
             }
 
             if(set instanceof ModeSetting mode) {
-                if(UIUtil.basicCollisionCheck(mouseX, mouseY, x + uiwidth - 50, currentY, x + uiwidth - 2, currentY + 15) && button == 0) {
+                if(UIUtil.basicCollisionCheck(mouseX, mouseY, x + uiwidth - 50 - buttonOffset, currentY, x + uiwidth - 2 - buttonOffset, currentY + 15) && button == 0) {
                     mode.toggle();
                     BallSack.getInstance().config.save();
                 }
             }
 
             if(set instanceof ColorSetting color) {
-                if(UIUtil.basicCollisionCheck(mouseX, mouseY, x + uiwidth - 50, currentY, x + uiwidth - 2, currentY + 15) && button == 0) {
+                if(UIUtil.basicCollisionCheck(mouseX, mouseY, x + uiwidth - 50 - buttonOffset, currentY, x + uiwidth - 2 - buttonOffset, currentY + 15) && button == 0) {
                     if(this.settingColor) {
                         if(this.setting == color) {
                             this.settingColor = false;
@@ -292,7 +352,7 @@ public class SettingsUI extends Screen {
             }
 
             if(set instanceof KeyBindSetting key) {
-                if(UIUtil.basicCollisionCheck(mouseX, mouseY, x + uiwidth - 60, currentY, x + uiwidth - 12, currentY + 15) && button == 0) {
+                if(UIUtil.basicCollisionCheck(mouseX, mouseY, x + uiwidth - 60 - buttonOffset, currentY, x + uiwidth - 12 - buttonOffset, currentY + 15) && button == 0) {
                     settingBind = true;
                     bindSetting = key;
                     BallSack.getInstance().config.save();
@@ -305,6 +365,8 @@ public class SettingsUI extends Screen {
 
     public void mouseRelease(double mouseX, double mouseY, int button) {
         if(UIUtil.basicCollisionCheck(mouseX, mouseY, x + uiwidth - 50, y + uiheight - 25, x + uiwidth - 5, y + uiheight - 5) && button == 0) {
+            currentScroll = 0;
+
             if(goBackToOtherMods)
                 MinecraftClient.getInstance().openScreen(new OtherModsUI());
             else
@@ -331,5 +393,34 @@ public class SettingsUI extends Screen {
         }
 
         settingBind = false;
+    }
+
+    private void increment() {
+        double newValue = currentScroll + 10;
+        if (newValue > max) {
+            newValue = max;
+        }
+        currentScroll = newValue;
+    }
+
+    private void decrement() {
+        double newValue = currentScroll - 10;
+        if (newValue < 10) {
+            newValue = 10;
+        }
+        currentScroll = newValue;
+    }
+
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
+        if(UIUtil.basicCollisionCheck(mouseX, mouseY, x, y, x + uiwidth, y + uiheight)) {
+            if(amount == -1) {
+                increment();
+            } else {
+                decrement();
+            }
+        }
+
+        return super.mouseScrolled(mouseX, mouseY, amount);
     }
 }
