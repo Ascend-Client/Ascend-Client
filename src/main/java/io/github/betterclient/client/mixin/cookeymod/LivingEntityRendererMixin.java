@@ -11,6 +11,7 @@ import net.minecraft.client.render.entity.feature.FeatureRenderer;
 import net.minecraft.client.render.entity.feature.FeatureRendererContext;
 import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -43,7 +44,7 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, M extend
                                   MatrixStack matrices,
                                   VertexConsumerProvider vertexConsumers,
                                   int light,
-                                  T entity,
+                                  Entity entity,
                                   float limbAngle,
                                   float limbDistance,
                                   float tickDelta,
@@ -51,11 +52,11 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, M extend
                                   float headYaw,
                                   float headPitch) {
         if (instance instanceof OverlayRendered) {
-            int overlayCoords = getOverlay((T) entity, this.getAnimationProgress(entity, limbDistance));
+            int overlayCoords = getOverlay((T) entity, this.getAnimationProgress((T) entity, limbDistance));
             ((OverlayRendered<T>) instance).renderWithOverlay(matrices, vertexConsumers, light, (T) entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch, overlayCoords);
         }
         else {
-            instance.render(matrices, vertexConsumers, light, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch);
+            instance.render(matrices, vertexConsumers, light, (T) entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch);
         }
     }
 }
