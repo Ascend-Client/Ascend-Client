@@ -63,6 +63,31 @@ public abstract class ItemInHandRendererMixin {
                 ci.cancel();
             }
         }
+
+        if (CookeyMod.get().shieldlessToolBlocking.isValue()) {
+            ItemStack otherHandItem = hand == Hand.MAIN_HAND ? this.offHand : this.mainHand;
+            if (!(item.getItem() instanceof ShieldItem)) {
+                if (otherHandItem.getItem() instanceof ToolItem && CookeyMod.isBlockingRightClick()) {
+                    ci.cancel();
+                }
+            }
+            if (player.getActiveHand() != hand && CookeyMod.isBlockingRightClick() && item.getItem() instanceof ToolItem) {
+                matrices.push();
+                Arm humanoidArm = hand == Hand.MAIN_HAND
+                        ? player.getMainArm()
+                        : player.getMainArm().getOpposite();
+                this.applyEquipOffset(matrices, humanoidArm, equipProgress);
+                this.applyItemBlockTransform(matrices, humanoidArm);
+                if (CookeyMod.get().swingAndUseItem.isValue()) {
+                    this.applySwingOffset(matrices, humanoidArm, swingProgress);
+                }
+                boolean isRightHand = humanoidArm == Arm.RIGHT;
+                this.renderItem(player, item, isRightHand ? ModelTransformation.Mode.FIRST_PERSON_RIGHT_HAND : ModelTransformation.Mode.FIRST_PERSON_LEFT_HAND, !isRightHand, matrices, vertexConsumers, light);
+
+                matrices.pop();
+                ci.cancel();
+            }
+        }
     }
 
     @Redirect(method = "renderFirstPersonItem",

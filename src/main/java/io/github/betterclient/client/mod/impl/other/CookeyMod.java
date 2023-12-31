@@ -1,6 +1,7 @@
 package io.github.betterclient.client.mod.impl.other;
 
 import io.github.betterclient.client.BallSack;
+import io.github.betterclient.client.access.KeyBindingAccess;
 import io.github.betterclient.client.mod.Category;
 import io.github.betterclient.client.mod.Module;
 import io.github.betterclient.client.mod.setting.BooleanSetting;
@@ -8,6 +9,8 @@ import io.github.betterclient.client.mod.setting.ColorSetting;
 import io.github.betterclient.client.mod.setting.NoneSetting;
 import io.github.betterclient.client.mod.setting.NumberSetting;
 import io.github.betterclient.client.util.cookeymod.OverlayReloadListener;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.util.InputUtil;
 
 import java.awt.*;
 
@@ -18,6 +21,7 @@ public class CookeyMod extends Module {
     public NumberSetting sneakAnimationSpeed = new NumberSetting("Sneak animation speed", 100, 0, 200);
     public BooleanSetting disableCameraBobbing = new BooleanSetting("Disable camera bobbing", false);
     public BooleanSetting enableToolBlocking = new BooleanSetting("Enable tool blocking", false);
+    public BooleanSetting shieldlessToolBlocking = new BooleanSetting("Enable tool blocking (no shield)", false);
     public BooleanSetting showEatingInThirdPerson = new BooleanSetting("Show eating in third person (broken)", false);
     public BooleanSetting enableDamageCameraTilt = new BooleanSetting("Enable damage camera tilt", false);
 
@@ -47,6 +51,7 @@ public class CookeyMod extends Module {
         this.addSetting(sneakAnimationSpeed);
         this.addSetting(disableCameraBobbing);
         this.addSetting(enableToolBlocking);
+        this.addSetting(shieldlessToolBlocking);
         this.addSetting(showEatingInThirdPerson);
         this.addSetting(enableDamageCameraTilt);
 
@@ -65,5 +70,11 @@ public class CookeyMod extends Module {
 
     public static CookeyMod get() {
         return (CookeyMod) BallSack.getInstance().moduleManager.getModuleByName("CookeyMod");
+    }
+
+    public static boolean isBlockingRightClick() {
+        MinecraftClient client = MinecraftClient.getInstance();
+
+        return client.options.keyUse.isPressed();
     }
 }

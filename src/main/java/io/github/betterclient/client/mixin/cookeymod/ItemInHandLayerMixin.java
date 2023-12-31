@@ -24,6 +24,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(HeldItemFeatureRenderer.class)
 public abstract class ItemInHandLayerMixin<T extends LivingEntity, M extends EntityModel<T> & ModelWithArms> extends FeatureRenderer<T, M> {
     BooleanSetting enableToolBlocking = CookeyMod.get().enableToolBlocking;
+    BooleanSetting shieldlesstool = CookeyMod.get().shieldlessToolBlocking;
 
     public ItemInHandLayerMixin(FeatureRendererContext<T, M> context) {
         super(context);
@@ -35,6 +36,14 @@ public abstract class ItemInHandLayerMixin<T extends LivingEntity, M extends Ent
             Hand otherHand = arm == entity.getMainArm() ? Hand.OFF_HAND : Hand.MAIN_HAND;
             ItemStack otherHandStack = entity.getStackInHand(otherHand);
             if (stack.getItem() instanceof ShieldItem && otherHandStack.getItem() instanceof ToolItem && entity.isBlocking()) {
+                ci.cancel();
+            }
+        }
+
+        if (this.shieldlesstool.isValue()) {
+            Hand otherHand = arm == entity.getMainArm() ? Hand.OFF_HAND : Hand.MAIN_HAND;
+            ItemStack otherHandStack = entity.getStackInHand(otherHand);
+            if (!(stack.getItem() instanceof ShieldItem) && otherHandStack.getItem() instanceof ToolItem && CookeyMod.isBlockingRightClick()) {
                 ci.cancel();
             }
         }
