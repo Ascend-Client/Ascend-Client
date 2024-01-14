@@ -64,7 +64,7 @@ dependencies {
 
     shade files(downloadQuixotic())
 
-    shade 'org.json:json:20230227'
+    shade 'org.json:json:20231013'
     shade "org.spongepowered:mixin:0.8.5"
 
     shade "org.ow2.asm:asm:$asmVersion"
