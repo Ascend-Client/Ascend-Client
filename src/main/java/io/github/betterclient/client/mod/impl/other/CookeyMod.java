@@ -22,7 +22,7 @@ public class CookeyMod extends Module {
     public BooleanSetting disableCameraBobbing = new BooleanSetting("Disable camera bobbing", false);
     public BooleanSetting enableToolBlocking = new BooleanSetting("Enable tool blocking", false);
     public BooleanSetting shieldlessToolBlocking = new BooleanSetting("Enable tool blocking (no shield)", false);
-    public BooleanSetting showEatingInThirdPerson = new BooleanSetting("Show eating in third person (broken)", false);
+    public BooleanSetting showEatingInThirdPerson = new BooleanSetting("Show eating in third person", false);
     public BooleanSetting enableDamageCameraTilt = new BooleanSetting("Enable damage camera tilt", false);
 
     public NoneSetting text2 = new NoneSetting("Hud Rendering");
