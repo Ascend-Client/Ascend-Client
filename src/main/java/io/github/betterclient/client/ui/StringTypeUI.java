@@ -1,5 +1,6 @@
 package io.github.betterclient.client.ui;
 
+import io.github.betterclient.client.ui.clickgui.OtherModsUI;
 import io.github.betterclient.client.util.UIUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;

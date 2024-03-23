@@ -4,13 +4,11 @@ import io.github.betterclient.client.command.Commands;
 import io.github.betterclient.client.config.Config;
 import io.github.betterclient.client.event.EventBus;
 import io.github.betterclient.client.mod.ModuleManager;
-import io.github.betterclient.client.ui.HUDMoveUI;
+import io.github.betterclient.client.ui.clickgui.HUDMoveUI;
 import io.github.betterclient.client.util.ClickableBind;
 import io.github.betterclient.client.util.GithubMan;
 import net.minecraft.client.MinecraftClient;
 import org.lwjgl.glfw.GLFW;
-
-import java.awt.*;
 
 public class BallSack {
     private static BallSack instance;
