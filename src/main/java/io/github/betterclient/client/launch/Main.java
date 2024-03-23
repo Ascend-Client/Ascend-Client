@@ -11,6 +11,6 @@ public class Main {
         List<String> launchArgs = new ArrayList<>(Arrays.asList(args));
         launchArgs.add("--quixoticapp");
         launchArgs.add("io.github.betterclient.client.Application");
-        Quixotic.main(launchArgs.toArray(String[]::new));
+        Quixotic.main(launchArgs.toArray(new String[0]));
     }
 }
