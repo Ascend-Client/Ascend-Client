@@ -55,6 +55,7 @@ public class Application implements QuixoticApplication {
         ArrayList<String> arrayList = new ArrayList<>(FabricLoader.getInstance().getMixinConfigurations());
 
         arrayList.add("ballsack.mixins.json");
+        arrayList.add("cookeymod.mixins.json");
 
         return arrayList;
     }
