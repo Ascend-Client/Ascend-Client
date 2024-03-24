@@ -22,7 +22,7 @@ public abstract class MixinEndCrystal extends Entity {
             return;
         }
 
-        remove();
+        remove(RemovalReason.KILLED);
         cir.setReturnValue(true);
     }
 }

@@ -1,8 +1,8 @@
 package io.github.betterclient.client.util;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.options.GameOptions;
-import net.minecraft.client.options.KeyBinding;
+import net.minecraft.client.option.GameOptions;
+import net.minecraft.client.option.KeyBinding;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.lang.reflect.Field;
@@ -17,7 +17,7 @@ public class ClickableBind extends KeyBinding {
         super(translationKey, code, category);
 
         try {
-            Field f = KeyBinding.class.getDeclaredField("categoryOrderMap");
+            Field f = KeyBinding.class.getDeclaredField("CATEGORY_ORDER_MAP");
             f.setAccessible(true);
             Map<String, Integer> ff = (Map<String, Integer>) f.get(null);
 
@@ -35,9 +35,9 @@ public class ClickableBind extends KeyBinding {
     public static ClickableBind registerKeyBind(ClickableBind bind) {
         try {
             GameOptions ops = MinecraftClient.getInstance().options;
-            Field f = ops.getClass().getField("keysAll");
+            Field f = ops.getClass().getField("allKeys");
 
-            f.set(ops, ArrayUtils.add(ops.keysAll, bind));
+            f.set(ops, ArrayUtils.add(ops.allKeys, bind));
         } catch (Exception e) {
             e.printStackTrace();
         }

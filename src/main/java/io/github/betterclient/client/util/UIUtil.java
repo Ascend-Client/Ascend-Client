@@ -1,10 +1,17 @@
 package io.github.betterclient.client.util;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
+import org.joml.Matrix4f;
+import org.lwjgl.opengl.GL11;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -29,42 +36,44 @@ public class UIUtil {
         y+=stY;
         endX+=stX;
         endY+=stY;
+
+        double store = x;
+        x = Math.min(x, endX);
+        endX = Math.max(store, endX);
+
+        store = y;
+        y = Math.min(y, endY);
+        endY = Math.max(store, endY);
+
+        radius/=2;
+
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder builder = tessellator.getBuffer();
+
         int n2;
-        float f = (float) (color >> 24 & 0xFF) / (float) 255;
-        float f2 = (float) (color >> 16 & 0xFF) / (float) 255;
-        float f3 = (float) (color >> 8 & 0xFF) / (float) 255;
-        float f4 = (float) (color & 0xFF) / (float) 255;
-        glPushAttrib(0);
-        glScaled(0.5, 0.5, 0.5);
-        x *= 2;
-        y *= 2;
-        endX *= 2;
-        endY *= 2;
-        glEnable(3042);
-        glDisable(3553);
-        glColor4f(f2, f3, f4, f);
-        glEnable(2848);
-        glBegin(9);
+
+        Matrix4f mat = new MatrixStack().peek().getPositionMatrix();
+
+        RenderSystem.enableBlend();
+        RenderSystem.setShader(GameRenderer::getPositionColorProgram);
+
+        builder.begin(VertexFormat.DrawMode.TRIANGLE_FAN, VertexFormats.POSITION_COLOR);
+
         for (n2 = 0; n2 <= 90; n2 += 3) {
-            glVertex2d(x + radius + Math.sin((double) n2 * (6.5973445528769465 * 0.4761904776096344) / (double) 180) * (radius * (double) -1), y + radius + Math.cos((double) n2 * (42.5 * 0.07391982714328925) / (double) 180) * (radius * (double) -1));
+            builder.vertex(mat, (float) (x + radius + Math.sin((double) n2 * Math.PI / (double) 180) * (radius * (double) -1)), (float) (y + radius + Math.cos((double) n2 * Math.PI / (double) 180) * (radius * (double) -1)), 0).color(color).next();
         }
         for (n2 = 90; n2 <= 180; n2 += 3) {
-            glVertex2d(x + radius + Math.sin((double) n2 * (0.5711986642890533 * 5.5) / (double) 180) * (radius * (double) -1), endY - radius + Math.cos((double) n2 * (0.21052631735801697 * 14.922564993369743) / (double) 180) * (radius * (double) -1));
+            builder.vertex(mat, (float) (x + radius + Math.sin((double) n2 * Math.PI / (double) 180) * (radius * (double) -1)), (float) (endY - radius + Math.cos((double) n2 * Math.PI / (double) 180) * (radius * (double) -1)), 0).color(color).next();
         }
         for (n2 = 0; n2 <= 90; n2 += 3) {
-            glVertex2d(endX - radius + Math.sin((double) n2 * (4.466951941998311 * 0.7032967209815979) / (double) 180) * radius, endY - radius + Math.cos((double) n2 * (28.33333396911621 * 0.11087973822685955) / (double) 180) * radius);
+            builder.vertex(mat, (float) (endX - radius + Math.sin((double) n2 * Math.PI / (double) 180) * radius), (float) (endY - radius + Math.cos((double) n2 * Math.PI / (double) 180) * radius), 0).color(color).next();
         }
         for (n2 = 90; n2 <= 180; n2 += 3) {
-            glVertex2d(endX - radius + Math.sin((double) n2 * ((double) 0.6f * 5.2359875479235365) / (double) 180) * radius, y + radius + Math.cos((double) n2 * (2.8529412746429443 * 1.1011767685204017) / (double) 180) * radius);
+            builder.vertex(mat, (float) (endX - radius + Math.sin((double) n2 * Math.PI / (double) 180) * radius), (float) (y + radius + Math.cos((double) n2 * Math.PI / (double) 180) * radius), 0).color(color).next();
         }
-        glEnd();
-        glEnable(3553);
-        glDisable(3042);
-        glDisable(2848);
-        glDisable(3042);
-        glEnable(3553);
-        glScaled(2, 2, 2);
-        glPopAttrib();
+
+        BufferRenderer.drawWithGlobalProgram(builder.end());
+        RenderSystem.disableBlend();
     }
 
     public static void renderOutline(MatrixStack i, int x, int y, int endingX, int endingY, int color) {
@@ -76,38 +85,6 @@ public class UIUtil {
 
     public static void renderCircle(double x, double y, float halfRadius, int color) {
         drawRoundedRect(x - halfRadius, y - halfRadius, x + halfRadius, y + halfRadius, halfRadius * 2, color);
-    }
-
-    /**
-     * @param resourceLocation
-     * @param x
-     * @param y
-     * @param width
-     * @param height
-     */
-    public static void drawImage(String resourceLocation, float x, float y, float width, float height) {
-        float f5 = width / 2.0f;
-        float f6 = 0.0f;
-        float f7 = 0.0f;
-        glEnable(3042);
-
-        glBindTexture(GL_TEXTURE_2D, MinecraftClient.getInstance()
-                        .getTextureManager()
-                        .getTexture(new Identifier(resourceLocation))
-                        .getGlId()
-        );
-
-        glBegin(7);
-        glTexCoord2d(f6 / f5, f7 / f5);
-        glVertex2d(x, y);
-        glTexCoord2d(f6 / f5, (f7 + f5) / f5);
-        glVertex2d(x, y + height);
-        glTexCoord2d((f6 + f5) / f5, (f7 + f5) / f5);
-        glVertex2d(x + width, y + height);
-        glTexCoord2d((f6 + f5) / f5, f7 / f5);
-        glVertex2d(x + width, y);
-        glEnd();
-        glDisable(3042);
     }
 
     public static boolean basicCollisionCheck(double mouseX, double mouseY, double x, double y, double endX, double endY) {

@@ -7,7 +7,7 @@ import io.github.betterclient.client.ui.clickgui.HUDMoveUI;
 import io.github.betterclient.client.util.UIUtil;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.multiplayer.MultiplayerScreen;
-import net.minecraft.client.gui.screen.options.OptionsScreen;
+import net.minecraft.client.gui.screen.option.OptionsScreen;
 import net.minecraft.client.gui.screen.world.SelectWorldScreen;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
@@ -129,9 +129,9 @@ public class CustomTitleMenu extends Screen {
             panY = (int) map(animatedMouseY, 0, height, -100, 0);
         }
 
-        this.client.getTextureManager().bindTexture(chosenBackground);
+        RenderSystem.setShaderTexture(0, chosenBackground);
         RenderSystem.enableBlend();
-        RenderSystem.color4f(1, 1, 1, 0.7f);
+        RenderSystem.setShaderColor(1, 1, 1, 0.7f);
         drawTexture(matrices, panX, panY, 0, 0, width + 100, height + 100, width + 100, height + 100);
         RenderSystem.disableBlend();
 
@@ -173,19 +173,19 @@ public class CustomTitleMenu extends Screen {
         lastMouseY = (int) mouseY;
         if(button == 0 && (System.currentTimeMillis() > endAnim || !CustomLoadingOverlay.isDoingAnimation)) {
             if(isMouseOn(width / 2 - 100, height / 2 - 55, width / 2 + 100, height / 2 - 35)) {
-                this.client.openScreen(new SelectWorldScreen(this));
+                this.client.setScreen(new SelectWorldScreen(this));
             }
 
             if(isMouseOn(width / 2 - 100, height / 2 - 25, width / 2 + 100, height / 2 - 5)) {
-                this.client.openScreen(new MultiplayerScreen(this));
+                this.client.setScreen(new MultiplayerScreen(this));
             }
 
             if(isMouseOn(width / 2 - 100, height / 2 + 5, width / 2 + 100, height / 2 + 25)) {
-                this.client.openScreen(new HUDMoveUI());
+                this.client.setScreen(new HUDMoveUI());
             }
 
             if(isMouseOn(width / 2 - 100, height / 2 + 35, width / 2 - 5, height / 2 + 55)) {
-                this.client.openScreen(new OptionsScreen(this, this.client.options));
+                this.client.setScreen(new OptionsScreen(this, this.client.options));
             }
 
             if(isMouseOn(width / 2 + 5, height / 2 + 35, width / 2 + 100, height / 2 + 55)) {

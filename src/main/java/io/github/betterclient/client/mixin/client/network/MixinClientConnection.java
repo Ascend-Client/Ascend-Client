@@ -1,5 +1,6 @@
 package io.github.betterclient.client.mixin.client.network;
 
+import io.github.betterclient.client.access.PlayerInteractEntityC2SPacketAccessor;
 import io.github.betterclient.client.mod.impl.other.CrystalOptimizer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
@@ -8,8 +9,9 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.item.*;
 import net.minecraft.network.ClientConnection;
-import net.minecraft.network.Packet;
+import net.minecraft.network.PacketCallbacks;
 import net.minecraft.network.listener.ServerPlayPacketListener;
+import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.c2s.play.*;
 import net.minecraft.text.Text;
 import net.minecraft.util.hit.EntityHitResult;
@@ -21,8 +23,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ClientConnection.class)
 public class MixinClientConnection {
-    @Inject(method = "send(Lnet/minecraft/network/Packet;)V", at = @At("HEAD"))
-    private void onPacketSend(Packet<?> packet, CallbackInfo ci) {
+    @Inject(method = "send(Lnet/minecraft/network/packet/Packet;Lnet/minecraft/network/PacketCallbacks;)V", at = @At("HEAD"))
+    private void onPacketSend(Packet<?> packet, PacketCallbacks callbacks, CallbackInfo ci) {
         MinecraftClient client = MinecraftClient.getInstance();
         if (packet instanceof PlayerInteractEntityC2SPacket interactPacket) {
             interactPacket.apply(new ServerPlayPacketListener() {
@@ -32,7 +34,17 @@ public class MixinClientConnection {
                 }
 
                 @Override
-                public void onGameMessage(ChatMessageC2SPacket packet) {
+                public void onChatMessage(ChatMessageC2SPacket packet) {
+
+                }
+
+                @Override
+                public void onCommandExecution(CommandExecutionC2SPacket packet) {
+
+                }
+
+                @Override
+                public void onMessageAcknowledgment(MessageAcknowledgmentC2SPacket packet) {
 
                 }
 
@@ -47,17 +59,12 @@ public class MixinClientConnection {
                 }
 
                 @Override
-                public void onConfirmTransaction(ConfirmGuiActionC2SPacket packet) {
-
-                }
-
-                @Override
                 public void onButtonClick(ButtonClickC2SPacket packet) {
 
                 }
 
                 @Override
-                public void onClickWindow(ClickWindowC2SPacket packet) {
+                public void onClickSlot(ClickSlotC2SPacket packet) {
 
                 }
 
@@ -67,7 +74,7 @@ public class MixinClientConnection {
                 }
 
                 @Override
-                public void onGuiClose(GuiCloseC2SPacket packet) {
+                public void onCloseHandledScreen(CloseHandledScreenC2SPacket packet) {
 
                 }
 
@@ -85,9 +92,9 @@ public class MixinClientConnection {
                     }
                     if (
                             hitResult.getType() == HitResult.Type.ENTITY &&
-                            (entity = ((EntityHitResult) hitResult).getEntity()) instanceof EndCrystalEntity &&
-                            CrystalOptimizer.get().isToggled() && packet.getType().equals(PlayerInteractEntityC2SPacket.InteractionType.ATTACK) &&
-                            !client.player.isSpectator()) {
+                                    (entity = ((EntityHitResult) hitResult).getEntity()) instanceof EndCrystalEntity &&
+                                    CrystalOptimizer.get().isToggled() && ((PlayerInteractEntityC2SPacketAccessor) packet).isAttack() &&
+                                    !client.player.isSpectator()) {
 
                         StatusEffectInstance weakness = client.player.getStatusEffect(StatusEffects.WEAKNESS);
                         StatusEffectInstance strength = client.player.getStatusEffect(StatusEffects.STRENGTH);
@@ -109,7 +116,12 @@ public class MixinClientConnection {
                 }
 
                 @Override
-                public void onPlayerAbilities(UpdatePlayerAbilitiesC2SPacket packet) {
+                public void onPong(PlayPongC2SPacket packet) {
+
+                }
+
+                @Override
+                public void onUpdatePlayerAbilities(UpdatePlayerAbilitiesC2SPacket packet) {
 
                 }
 
@@ -139,7 +151,7 @@ public class MixinClientConnection {
                 }
 
                 @Override
-                public void onSignUpdate(UpdateSignC2SPacket packet) {
+                public void onUpdateSign(UpdateSignC2SPacket packet) {
 
                 }
 
@@ -224,12 +236,12 @@ public class MixinClientConnection {
                 }
 
                 @Override
-                public void onStructureBlockUpdate(UpdateStructureBlockC2SPacket packet) {
+                public void onUpdateStructureBlock(UpdateStructureBlockC2SPacket packet) {
 
                 }
 
                 @Override
-                public void onMerchantTradeSelect(SelectMerchantTradeC2SPacket packet) {
+                public void onSelectMerchantTrade(SelectMerchantTradeC2SPacket packet) {
 
                 }
 
@@ -249,7 +261,7 @@ public class MixinClientConnection {
                 }
 
                 @Override
-                public void onJigsawUpdate(UpdateJigsawC2SPacket packet) {
+                public void onUpdateJigsaw(UpdateJigsawC2SPacket packet) {
 
                 }
 
@@ -269,13 +281,18 @@ public class MixinClientConnection {
                 }
 
                 @Override
+                public void onPlayerSession(PlayerSessionC2SPacket packet) {
+
+                }
+
+                @Override
                 public void onDisconnected(Text reason) {
 
                 }
 
                 @Override
-                public ClientConnection getConnection() {
-                    return null;
+                public boolean isConnectionOpen() {
+                    return false;
                 }
             });
         }

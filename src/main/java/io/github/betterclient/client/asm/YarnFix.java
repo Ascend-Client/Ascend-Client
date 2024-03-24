@@ -15,7 +15,7 @@ public class YarnFix implements ClassTransformer {
         if(basicClass.length == 0)
             return new byte[0];
 
-        if(!name.startsWith("net.minecraft"))
+        if(!name.startsWith("net.minecraft") && !name.startsWith("com.mojang.blaze3d."))
             return basicClass;
 
         BetterClassNode bnode = new BetterClassNode(basicClass);

@@ -19,7 +19,6 @@ public class ModuleManager {
         moduleList.add(new BedrockBridgeMod());
         moduleList.add(new FullBright());
         moduleList.add(new FreeLook());
-        moduleList.add(new CookeyMod());
         moduleList.add(new Zoom());
         moduleList.add(new NoHurtCam());
         moduleList.add(new CrystalOptimizer());

@@ -99,7 +99,7 @@ public class Renderable {
         Runnable rrrr = render;
         render = () -> {
             rrrr.run();
-            RenderSystem.color4f(1, 1, 1, 1);
+            RenderSystem.setShaderColor(1, 1, 1, 1);
             MatrixStack matrices = new MatrixStack();
             matrices.push();
             matrices.translate(x,y,1);
@@ -193,7 +193,7 @@ public class Renderable {
 
             GL11.glEnable(GL11.GL_BLEND);
 
-            MinecraftClient.getInstance().getItemRenderer().renderInGui(is, this.getX() + x, this.getY() + y);
+            MinecraftClient.getInstance().getItemRenderer().renderInGui(new MatrixStack(), is, this.getX() + x, this.getY() + y);
 
             GL11.glDisable(GL11.GL_BLEND);
 
@@ -227,7 +227,7 @@ public class Renderable {
             }
 
             RenderSystem.enableBlend();
-            MinecraftClient.getInstance().getItemRenderer().renderInGui(is, this.getX() + x, this.getY() + y);
+            MinecraftClient.getInstance().getItemRenderer().renderInGui(new MatrixStack(), is, this.getX() + x, this.getY() + y);
             RenderSystem.disableBlend();
 
             if (endX > width) {

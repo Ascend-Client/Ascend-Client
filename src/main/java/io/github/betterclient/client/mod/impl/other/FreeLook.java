@@ -6,7 +6,7 @@ import io.github.betterclient.client.mod.Category;
 import io.github.betterclient.client.mod.Module;
 import io.github.betterclient.client.mod.setting.KeyBindSetting;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.options.Perspective;
+import net.minecraft.client.option.Perspective;
 import org.lwjgl.glfw.GLFW;
 
 public class FreeLook extends Module {

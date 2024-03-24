@@ -5,6 +5,7 @@ import io.github.betterclient.client.mod.Renderable;
 import io.github.betterclient.client.mod.setting.BooleanSetting;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 
 public class ArmorStatusMod extends HUDModule {
     public BooleanSetting leftToRight = new BooleanSetting("Left To Right", false);
@@ -20,11 +21,19 @@ public class ArmorStatusMod extends HUDModule {
 
     @Override
     public void render(Renderable r) {
-        assert MinecraftClient.getInstance().player != null;
-        ItemStack helm = MinecraftClient.getInstance().player.inventory.getArmorStack(3);
-        ItemStack chest = MinecraftClient.getInstance().player.inventory.getArmorStack(2);
-        ItemStack legging = MinecraftClient.getInstance().player.inventory.getArmorStack(1);
-        ItemStack boots = MinecraftClient.getInstance().player.inventory.getArmorStack(0);
+        ItemStack helm, chest, legging, boots;
+
+        if(MinecraftClient.getInstance().player == null) {
+            helm = new ItemStack(Items.DIAMOND_HELMET);
+            chest = new ItemStack(Items.DIAMOND_CHESTPLATE);
+            legging = new ItemStack(Items.DIAMOND_LEGGINGS);
+            boots = new ItemStack(Items.DIAMOND_BOOTS);
+        } else {
+            helm = MinecraftClient.getInstance().player.getInventory().getArmorStack(3);
+            chest = MinecraftClient.getInstance().player.getInventory().getArmorStack(2);
+            legging = MinecraftClient.getInstance().player.getInventory().getArmorStack(1);
+            boots = MinecraftClient.getInstance().player.getInventory().getArmorStack(0);
+        }
 
         if(leftToRight.isValue()){
             r.renderItemStack(60, 0, helm, renderDurability.isValue());

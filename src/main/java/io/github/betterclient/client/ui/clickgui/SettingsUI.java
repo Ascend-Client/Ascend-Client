@@ -9,7 +9,6 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
@@ -84,6 +83,8 @@ public class SettingsUI extends Screen {
 
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        super.renderBackground(matrices);
+
         render(mouseX, mouseY);
 
         super.render(matrices, mouseX, mouseY, delta);
@@ -119,7 +120,7 @@ public class SettingsUI extends Screen {
 
         tr.draw(
                 new MatrixStack(),
-                new LiteralText("Close")
+                Text.literal("Close")
                         .setStyle(
                                 Style
                                         .EMPTY
@@ -368,9 +369,9 @@ public class SettingsUI extends Screen {
             currentScroll = 0;
 
             if(goBackToOtherMods)
-                MinecraftClient.getInstance().openScreen(new OtherModsUI());
+                MinecraftClient.getInstance().setScreen(new OtherModsUI());
             else
-                MinecraftClient.getInstance().openScreen(new HUDMoveUI());
+                MinecraftClient.getInstance().setScreen(new HUDMoveUI());
         }
 
         if(button == 0) {

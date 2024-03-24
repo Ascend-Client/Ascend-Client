@@ -6,13 +6,13 @@ import io.github.betterclient.client.mod.Module;
 import net.minecraft.block.*;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Direction;
+import org.joml.Vector3f;
 
 public class BedrockBridgeMod extends Module {
     public MinecraftClient client;
@@ -39,11 +39,11 @@ public class BedrockBridgeMod extends Module {
         if (canReachAround()) {
             BlockHitResult blockHitResult;
             if(isNonFullBlock()){
-                blockHitResult = new BlockHitResult(player.getPos().add(facing.getX(), facing.getY()-1, facing.getZ()), Direction.fromVector((int) -facing.getX(), 0, (int) -facing.getZ()), player.getBlockPos().offset(player.getHorizontalFacing()), false);
+                blockHitResult = new BlockHitResult(player.getPos().add(facing.x(), facing.y()-1, facing.z()), Direction.fromVector((int) -facing.x(), 0, (int) -facing.z()), player.getBlockPos().offset(player.getHorizontalFacing()), false);
             }else{
-                blockHitResult = new BlockHitResult(player.getPos().add(facing.getX(), facing.getY(), facing.getZ()), Direction.fromVector((int) -facing.getX(), 0, (int) -facing.getZ()), player.getBlockPos().down().offset(player.getHorizontalFacing()), false);
+                blockHitResult = new BlockHitResult(player.getPos().add(facing.x(), facing.y(), facing.z()), Direction.fromVector((int) -facing.x(), 0, (int) -facing.z()), player.getBlockPos().down().offset(player.getHorizontalFacing()), false);
             }
-            ActionResult result = client.interactionManager.interactBlock(player, client.world, hand, blockHitResult);
+            ActionResult result = client.interactionManager.interactBlock(player, hand, blockHitResult);
             if (result.isAccepted()) {
                 if (result.shouldSwingHand()) {
                     player.swingHand(hand);
@@ -58,7 +58,7 @@ public class BedrockBridgeMod extends Module {
     private boolean canReachAround() {
         if (client.player == null || client.world == null || client.crosshairTarget == null)
             return false;
-        return client.player.pitch > 44.5 && (!(client.world.getBlockState(client.player.getBlockPos().down()).isAir() || client.world.getBlockState(client.player.getBlockPos().down()).getBlock() instanceof FluidBlock) || isNonFullBlock()) && client.crosshairTarget.getType().equals(HitResult.Type.MISS) && checkRelativeBlockPosition() && ((client.world.getBlockState(client.player.getBlockPos().down().offset(client.player.getHorizontalFacing())).getBlock() instanceof FluidBlock) || (client.world.getBlockState(client.player.getBlockPos().down().offset(client.player.getHorizontalFacing())).getBlock() instanceof AirBlock));
+        return client.player.getPitch() > 44.5 && (!(client.world.getBlockState(client.player.getBlockPos().down()).isAir() || client.world.getBlockState(client.player.getBlockPos().down()).getBlock() instanceof FluidBlock) || isNonFullBlock()) && client.crosshairTarget.getType().equals(HitResult.Type.MISS) && checkRelativeBlockPosition() && ((client.world.getBlockState(client.player.getBlockPos().down().offset(client.player.getHorizontalFacing())).getBlock() instanceof FluidBlock) || (client.world.getBlockState(client.player.getBlockPos().down().offset(client.player.getHorizontalFacing())).getBlock() instanceof AirBlock));
     }
 
     private boolean isNonFullBlock(){
@@ -78,7 +78,7 @@ public class BedrockBridgeMod extends Module {
     private boolean checkRelativeBlockPosition() {
         if (client.player == null)
             return false;
-        return checkRelativeBlockPosition((client.player.getPos().getX() - client.player.getBlockPos().getX()), client.player.getHorizontalFacing().getUnitVector().getX()) || checkRelativeBlockPosition((client.player.getPos().getZ() - client.player.getBlockPos().getZ()), client.player.getHorizontalFacing().getUnitVector().getZ());
+        return checkRelativeBlockPosition((client.player.getPos().getX() - client.player.getBlockPos().getX()), client.player.getHorizontalFacing().getUnitVector().x()) || checkRelativeBlockPosition((client.player.getPos().getZ() - client.player.getBlockPos().getZ()), client.player.getHorizontalFacing().getUnitVector().z());
     }
 
     private boolean checkRelativeBlockPosition(double pos, float direction) {

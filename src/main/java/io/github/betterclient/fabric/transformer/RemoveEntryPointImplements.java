@@ -17,7 +17,7 @@ public class RemoveEntryPointImplements implements ClassTransformer {
         ClassReader  read = new ClassReader(classFileBuffer);
         List<String> matchedClasses = new ArrayList<>();
         boolean flag = Arrays.stream(read.getInterfaces()).noneMatch(s -> {
-            if(s.contains("net/fabricmc/api") && (s.contains("Initializer") || s.contains("Entrypoint"))) {
+            if(s.contains("net/fabricmc/") && (s.contains("Initializer") || s.contains("Entrypoint"))) {
                 matchedClasses.add(s);
                 return true;
             }

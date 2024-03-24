@@ -25,7 +25,7 @@ public class CrystalOptimizer extends Module {
     }
 
     public boolean explodesClientSide(EndCrystalEntity crystal, DamageSource source, float amount) {
-        if (!this.toggled || !crystal.world.isClient || crystal.removed ||
+        if (!this.toggled || !crystal.world.isClient || crystal.isRemoved() ||
                 crystal.isInvulnerableTo(source) || source.getSource() instanceof EnderDragonEntity || amount <= 0) return false;
 
         if (source.getSource() instanceof PlayerEntity player) {

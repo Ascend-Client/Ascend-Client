@@ -24,18 +24,12 @@ repositories {
     }
 }
 
-
-def mcVer = "1.16_combat-6"
-
 configurations {
     shade
     implementation.extendsFrom(shade)
 }
 
 loom {
-    setCustomMinecraftManifest("https://gist.githubusercontent.com/rizecookey/4c6142baaccc3875f9b227fe22f2ace5/raw/c8ed74b19f7a5315813c9d4b199798b692a8f359/1.16_combat-6.json")
-    setIntermediaryUrl("https://maven.rizecookey.net/net/fabricmc/intermediary/${mcVer}/intermediary-${mcVer}-v2.jar")
-
     runConfigs.configureEach {
         client()
         setDefaultMainClass("io.github.betterclient.client.launch.IDEMain")
@@ -59,8 +53,8 @@ File downloadQuixotic() {
 def asmVersion = "9.5"
 
 dependencies {
-    minecraft "com.mojang:minecraft:$mcVer"
-    mappings "net.fabricmc:yarn:1.16_combat-6+build.2:v2"
+    minecraft "com.mojang:minecraft:1.19.4"
+    mappings "net.fabricmc:yarn:1.19.4+build.2:v2"
 
     shade files(downloadQuixotic())
 

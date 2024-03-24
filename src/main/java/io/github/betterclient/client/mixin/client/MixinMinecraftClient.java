@@ -4,6 +4,7 @@ import io.github.betterclient.client.BallSack;
 import io.github.betterclient.client.access.MinecraftAccess;
 import io.github.betterclient.client.event.impl.HitEntityEvent;
 import io.github.betterclient.client.mod.impl.other.BedrockBridgeMod;
+import io.github.betterclient.fabric.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -17,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.Redirect;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(MinecraftClient.class)
 public abstract class MixinMinecraftClient implements MinecraftAccess {
@@ -38,7 +39,7 @@ public abstract class MixinMinecraftClient implements MinecraftAccess {
     }
 
     @Inject(method = "doAttack", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerInteractionManager;attackEntity(Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/entity/Entity;)V"))
-    public void attackSwing(CallbackInfo ci) {
+    public void attackSwing(CallbackInfoReturnable<Boolean> cir) {
         BallSack.getInstance().bus.call(new HitEntityEvent(this.player, ((EntityHitResult) this.crosshairTarget).getEntity()));
     }
 
@@ -55,6 +56,17 @@ public abstract class MixinMinecraftClient implements MinecraftAccess {
     @ModifyArg(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Mouse;<init>(Lnet/minecraft/client/MinecraftClient;)V"))
     public MinecraftClient red(MinecraftClient client) {
         new BallSack();
+
+        return client;
+    }
+
+    @ModifyArg(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/tutorial/TutorialManager;<init>(Lnet/minecraft/client/MinecraftClient;Lnet/minecraft/client/option/GameOptions;)V"))
+    public MinecraftClient hi(MinecraftClient client) {
+        try {
+            FabricLoader.getInstance().callClientMain();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         return client;
     }

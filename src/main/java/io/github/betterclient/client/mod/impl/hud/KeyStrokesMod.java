@@ -5,7 +5,7 @@ import io.github.betterclient.client.mod.Renderable;
 import io.github.betterclient.client.mod.setting.BooleanSetting;
 import io.github.betterclient.client.mod.setting.ColorSetting;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.options.GameOptions;
+import net.minecraft.client.option.GameOptions;
 
 import java.awt.*;
 
@@ -27,10 +27,10 @@ public class KeyStrokesMod extends HUDModule {
         boolean rightClick = MinecraftClient.getInstance().mouse.wasRightButtonClicked();
         GameOptions op = MinecraftClient.getInstance().options;
 
-        boolean w = op.keyForward.isPressed();
-        boolean s = op.keyBack.isPressed();
-        boolean d = op.keyRight.isPressed();
-        boolean a = op.keyLeft.isPressed();
+        boolean w = op.forwardKey.isPressed();
+        boolean s = op.backKey.isPressed();
+        boolean d = op.rightKey.isPressed();
+        boolean a = op.leftKey.isPressed();
 
         renderable.fillArea(25, 0, 45, 20, w ? backgroundColorPressed.getColor() : backgroundColor.getColor()); //W
         renderable.fillArea(25, 22, 45, 42, s ? backgroundColorPressed.getColor() : backgroundColor.getColor()); //S

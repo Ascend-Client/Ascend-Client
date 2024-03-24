@@ -15,16 +15,16 @@ public class FullBright extends Module {
 
     @Override
     public void onEnabled() {
-        before = MinecraftClient.getInstance().options.gamma;
+        before = MinecraftClient.getInstance().options.getGamma().getValue();
     }
 
     @EventTarget
     public void onRender(RenderEvent ev) {
-        MinecraftClient.getInstance().options.gamma = 1000D;
+        MinecraftClient.getInstance().options.getGamma().setValue(100D);
     }
 
     @Override
     public void onDisabled() {
-        MinecraftClient.getInstance().options.gamma = before;
+        MinecraftClient.getInstance().options.getGamma().setValue(before);
     }
 }

@@ -16,6 +16,6 @@ public class MixinTitleScreen {
 
     @Inject(method = "init", at = @At("HEAD"))
     public void switchToOtherScreen(CallbackInfo ci) {
-        MinecraftClient.getInstance().openScreen(new CustomTitleMenu(this.doBackgroundFade));
+        MinecraftClient.getInstance().setScreen(new CustomTitleMenu(this.doBackgroundFade));
     }
 }

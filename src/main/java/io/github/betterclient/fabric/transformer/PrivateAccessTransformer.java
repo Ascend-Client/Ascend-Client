@@ -3,6 +3,7 @@ package io.github.betterclient.fabric.transformer;
 import io.github.betterclient.client.asm.BetterClassNode;
 import io.github.betterclient.quixotic.ClassTransformer;
 import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.tree.FieldNode;
 import org.objectweb.asm.tree.MethodNode;
 
 import java.util.ArrayList;
@@ -13,29 +14,26 @@ import java.util.List;
  */
 public class PrivateAccessTransformer implements ClassTransformer {
     public List<String> transforming = new ArrayList<>(List.of(
-            "net.minecraft.client.texture.Sprite$Interpolation",
-            "net.minecraft.client.render.Frustum"));
+            "com.mojang.blaze3d.platform.GlStateManager"
+    ));
 
     @Override
     public byte[] transform(String className, byte[] classFileBuffer) {
-        if(!transforming.contains(className))
-            return classFileBuffer;
+        if(!className.equals("com.mojang.blaze3d.platform.GlStateManager")) {
+            if(!className.equals("net.minecraft.client.render.chunk.ChunkOcclusionData"))
+                return classFileBuffer;
+
+            BetterClassNode clazz = new BetterClassNode(classFileBuffer);
+
+            clazz.getField("visibility").access = Opcodes.ACC_PUBLIC;
+
+            return clazz.output();
+        }
+
 
         BetterClassNode clazz = new BetterClassNode(classFileBuffer);
-        MethodNode node = null;
 
-        if(className.equals(transforming.get(0))) {
-            node = clazz.getMethod("apply", "()V").getOrigin();
-        }
-
-        if(className.equals(transforming.get(1))) {
-            node = clazz.getMethod("isVisible", "(DDDDDD)Z").getOrigin();
-        }
-
-        if(node == null)
-            return classFileBuffer;
-
-        node.access = Opcodes.ACC_PUBLIC;
+        clazz.getField("TEXTURES").access = Opcodes.ACC_STATIC + Opcodes.ACC_PUBLIC;
 
         return clazz.output();
     }

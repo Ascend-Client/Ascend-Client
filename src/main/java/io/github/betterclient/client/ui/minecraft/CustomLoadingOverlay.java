@@ -1,11 +1,18 @@
 package io.github.betterclient.client.ui.minecraft;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import io.github.betterclient.client.BallSack;
+import io.github.betterclient.client.util.FileResource;
+import io.github.betterclient.client.util.UIUtil;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.texture.AbstractTexture;
+import net.minecraft.client.texture.ResourceTexture;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
 
 import java.awt.*;
+import java.io.IOException;
 
 import static net.minecraft.client.gui.DrawableHelper.drawTexture;
 import static net.minecraft.client.gui.DrawableHelper.fill;
@@ -21,9 +28,11 @@ public class CustomLoadingOverlay {
     public static boolean isDoingAnimation = false;
     public static boolean doRender = true;
     public static boolean isPackReload = false;
+    public static Identifier BALLSACK = new Identifier("minecraft:textures/ballsack/load.png");
 
     public static void init() {
         isPackReload = false;
+        BallSack.getInstance().resources.put(BALLSACK, new FileResource("/assets/ballsack/load.png"));
     }
 
     public static void render(MatrixStack stack, float progress) {
@@ -31,7 +40,7 @@ public class CustomLoadingOverlay {
         if(!doRender) {
             isPackReload = true;
             if(MinecraftClient.getInstance().currentScreen != null)
-                MinecraftClient.getInstance().currentScreen.render(stack, 0, 0, 0); //it's our screen anyway who cares
+                MinecraftClient.getInstance().currentScreen.render(stack, (int) MinecraftClient.getInstance().mouse.getX(), (int) MinecraftClient.getInstance().mouse.getY(), 0); //it's our screen anyway who cares
             return;
         }
         isDoingAnimation = false;
@@ -43,9 +52,9 @@ public class CustomLoadingOverlay {
         fill(stack, 0, 0, width, height, Color.black.getRGB());
 
         if(progress < 0.9 || isPackReload) {
-            client.getTextureManager().bindTexture(new Identifier("textures/ballsack/load.png"));
+            RenderSystem.setShaderTexture(0, BALLSACK);
             RenderSystem.enableBlend();
-            RenderSystem.color4f(1, 1, 1, 1);
+            RenderSystem.setShaderColor(1, 1, 1, 1);
             drawTexture(stack, 0, 0, 0, 0, width, height, width, height);
             RenderSystem.disableBlend();
 

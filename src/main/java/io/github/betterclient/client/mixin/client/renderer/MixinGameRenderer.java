@@ -29,7 +29,7 @@ public class MixinGameRenderer {
 
     }
 
-    @ModifyConstant(method = "bobViewWhenHurt", constant = @Constant(floatValue = 14.0F))
+    @ModifyConstant(method = "tiltViewWhenHurt", constant = @Constant(floatValue = 14.0F))
     public float changeArg(float fourTeen) {
         if(NoHurtCam.get().isToggled()) {
             return 14 * (NoHurtCam.get().setting.value / 100F);
@@ -46,7 +46,6 @@ public class MixinGameRenderer {
             MotionBlur blur = MotionBlur.get();
             blur.onUpdate();
             blur.shader.render(tickDelta);
-            RenderSystem.enableTexture();
         }
 
         this.client.getProfiler().pop();

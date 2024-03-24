@@ -39,7 +39,7 @@ public class HitEntityEvent extends Event {
         Box box = attacking.getBoundingBox().stretch(rotation.multiply(d)).expand(1.0, 1.0, 1.0);
 
         EntityHitResult result = ProjectileUtil.raycast(attacking, camera, possibleHits, box,
-                entity -> entity.getEntityId() == receiving.getEntityId(), d);
+                entity -> entity.getId() == receiving.getId(), d);
         if (result == null || result.getEntity() == null) {
             return -1;
         }

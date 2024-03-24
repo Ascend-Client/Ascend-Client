@@ -31,8 +31,8 @@ public abstract class MixinCamera {
             MinecraftClient client = MinecraftClient.getInstance();
 
             if (firstTime && client.player != null) {
-                cameraControl.setCameraPitch(client.player.pitch);
-                cameraControl.setCameraYaw(client.player.yaw);
+                cameraControl.setCameraPitch(client.player.getPitch());
+                cameraControl.setCameraYaw(client.player.getYaw());
                 firstTime = false;
             }
 

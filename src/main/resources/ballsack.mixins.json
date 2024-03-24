@@ -9,19 +9,18 @@
     "client.entity.MixinEndCrystal",
     "client.entity.MixinEntity",
     "client.entity.MixinItemEntity",
-    "client.fixes.MixinReloadableResourceManagerImpl",
+    "client.fixes.MixinLifecycledResourceManagerImpl",
     "client.fixes.MixinSoundManager",
     "client.gui.MixinInGameHud",
     "client.gui.MixinScreen",
-    "client.gui.MixinSplashScreen",
+    "client.gui.MixinSplashOverlay",
     "client.gui.MixinTitleScreen",
     "client.network.MixinClientConnection",
-    "client.network.MixinClientPacketListener",
     "client.network.MixinCommandManager",
     "client.renderer.MixinCamera",
     "client.renderer.MixinEntityRenderer",
     "client.renderer.MixinGameRenderer",
     "client.renderer.MixinItemEntityRenderer",
-    "client.renderer.MixinShaderEffect"
+    "client.renderer.MixinPostEffectProcessor"
   ]
 }

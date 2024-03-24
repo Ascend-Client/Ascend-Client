@@ -22,10 +22,11 @@ public class StringTypeUI extends Screen {
 
     @Override
     protected void init() {
-        this.addButton(new ButtonWidget(width / 2 - 50, height / 2 + 30, 98, 20, Text.of("Accept"), button -> {
+        ButtonWidget widget = ButtonWidget.builder(Text.literal("Accept"), button -> {
             ui.currentConfig = text;
-            MinecraftClient.getInstance().openScreen(ui);
-        }));
+            MinecraftClient.getInstance().setScreen(ui);
+        }).dimensions(width / 2 - 50, height / 2 + 30, 98, 20).build();
+        this.addDrawableChild(widget);
     }
 
     @Override
@@ -44,7 +45,7 @@ public class StringTypeUI extends Screen {
         if(keyCode != GLFW.GLFW_KEY_ESCAPE) {
             if(keyCode == GLFW.GLFW_KEY_ENTER) {
                 ui.currentConfig = text;
-                MinecraftClient.getInstance().openScreen(ui);
+                MinecraftClient.getInstance().setScreen(ui);
             } else if(keyCode == GLFW.GLFW_KEY_BACKSPACE) {
                 if(!text.equals(""))
                     this.text = this.text.substring(0, this.text.length() - 1);
@@ -63,7 +64,7 @@ public class StringTypeUI extends Screen {
         if(keyCode != GLFW.GLFW_KEY_ESCAPE) {
             if(keyCode == GLFW.GLFW_KEY_ENTER) {
                 ui.currentConfig = text;
-                MinecraftClient.getInstance().openScreen(ui);
+                MinecraftClient.getInstance().setScreen(ui);
             } else if(keyCode == GLFW.GLFW_KEY_BACKSPACE) {
                 if(!text.equals(""))
                     this.text = this.text.substring(0, this.text.length() - 1);

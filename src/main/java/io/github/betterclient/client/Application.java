@@ -1,12 +1,16 @@
 package io.github.betterclient.client;
 
+import io.github.betterclient.client.asm.PlayerInteractEntityC2SPacketEditor;
 import io.github.betterclient.client.asm.YarnFix;
 import io.github.betterclient.client.launch.FabricModsInitializer;
 import io.github.betterclient.fabric.FabricLoader;
+import io.github.betterclient.quixotic.Quixotic;
 import io.github.betterclient.quixotic.QuixoticApplication;
 import io.github.betterclient.quixotic.QuixoticClassLoader;
 
 import java.io.File;
+import java.lang.reflect.Method;
+import java.net.URL;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +40,7 @@ public class Application implements QuixoticApplication {
     @Override
     public void loadApplicationManager(QuixoticClassLoader quixoticClassLoader) {
         quixoticClassLoader.addExclusion("io.github.betterclient.client.asm.Better");
+        quixoticClassLoader.addExclusion("org.slf4j.");
 
         try {
             Files.createDirectories(clientFolder.toPath());
@@ -47,6 +52,7 @@ public class Application implements QuixoticApplication {
         FabricModsInitializer.loadAllFabricModsIntoLoader(FabricLoader.getInstance());
 
         quixoticClassLoader.addPlainTransformer(new YarnFix());
+        quixoticClassLoader.addPlainTransformer(new PlayerInteractEntityC2SPacketEditor());
         FabricLoader.getInstance().loadApplicationManager(quixoticClassLoader);
     }
 
@@ -55,7 +61,6 @@ public class Application implements QuixoticApplication {
         ArrayList<String> arrayList = new ArrayList<>(FabricLoader.getInstance().getMixinConfigurations());
 
         arrayList.add("ballsack.mixins.json");
-        arrayList.add("cookeymod.mixins.json");
 
         return arrayList;
     }

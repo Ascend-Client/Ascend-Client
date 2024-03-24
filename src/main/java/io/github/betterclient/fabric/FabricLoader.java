@@ -22,6 +22,11 @@ public class FabricLoader implements QuixoticApplication {
     public List<FabricMod> loadedMods = new ArrayList<>();
 
     public void loadMod(File f) {
+        if(f == null) {
+            FabricErrorReporter.exception("", new RuntimeException("f == null")).print();
+            return;
+        }
+
         try {
             JarFile mod = new JarFile(f);
             List<JarEntry> entries = Util.getEntries(mod);
@@ -87,6 +92,7 @@ public class FabricLoader implements QuixoticApplication {
                 Method m = QuixoticClassLoader.class.getDeclaredMethod("addURL", URL.class);
                 m.setAccessible(true);
                 m.invoke(Quixotic.classLoader, f.toURI().toURL());
+                System.out.println("Successfully loaded mod: " + loaded.name());
             }
         } catch (Exception e) {
             FabricErrorReporter.exception(f.getAbsolutePath(), e).print();

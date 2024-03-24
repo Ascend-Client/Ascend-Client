@@ -7,7 +7,6 @@ import io.github.betterclient.client.util.UIUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 
@@ -87,8 +86,8 @@ public class HUDMoveUI extends Screen {
 
             textRenderer.draw(new MatrixStack(), dropDownMod.name, dropdownx + 4, dropdowny + 10, -1);
 
-            textRenderer.draw(new MatrixStack(), new LiteralText("Settings").setStyle(Style.EMPTY.withUnderline(UIUtil.basicCollisionCheck(mouseX, mouseY, dropdownx, dropdowny + 20, dropdownx + 100, dropdowny + 40))), dropdownx + 4, dropdowny + 30, -1);
-            textRenderer.draw(new MatrixStack(), new LiteralText("Disable").setStyle(Style.EMPTY.withUnderline(UIUtil.basicCollisionCheck(mouseX, mouseY, dropdownx, dropdowny + 40, dropdownx + 100, dropdowny + 60))), dropdownx + 4, dropdowny + 50, -1);
+            textRenderer.draw(new MatrixStack(), Text.literal("Settings").setStyle(Style.EMPTY.withUnderline(UIUtil.basicCollisionCheck(mouseX, mouseY, dropdownx, dropdowny + 20, dropdownx + 100, dropdowny + 40))), dropdownx + 4, dropdowny + 30, -1);
+            textRenderer.draw(new MatrixStack(), Text.literal("Disable").setStyle(Style.EMPTY.withUnderline(UIUtil.basicCollisionCheck(mouseX, mouseY, dropdownx, dropdowny + 40, dropdownx + 100, dropdowny + 60))), dropdownx + 4, dropdowny + 50, -1);
         }
 
         if(isEnabling) {
@@ -112,7 +111,7 @@ public class HUDMoveUI extends Screen {
                 }
 
                 textRenderer.draw(new MatrixStack(),
-                        new LiteralText(m.name).setStyle(Style.EMPTY.withUnderline(withStyle)),
+                        Text.literal(m.name).setStyle(Style.EMPTY.withUnderline(withStyle)),
                          x, y, -1
                 );
 
@@ -207,7 +206,7 @@ public class HUDMoveUI extends Screen {
             }
 
             if(UIUtil.basicCollisionCheck(mouseX, mouseY, dropdownx, dropdowny + 20, dropdownx + 100, dropdowny + 40)) {
-                MinecraftClient.getInstance().openScreen(new SettingsUI(dropDownMod));
+                MinecraftClient.getInstance().setScreen(new SettingsUI(dropDownMod));
                 isDropDown = false;
             }
 
@@ -218,7 +217,7 @@ public class HUDMoveUI extends Screen {
         }
 
         if(button == 0 && UIUtil.basicCollisionCheck(mouseX, mouseY, width / 2 - 40, height / 2 - 55, width / 2 + 40, height / 2 - 30) && !isDropDown) {
-            MinecraftClient.getInstance().openScreen(new OtherModsUI());
+            MinecraftClient.getInstance().setScreen(new OtherModsUI());
         }
 
         for(HUDModule mod : hudMods) {

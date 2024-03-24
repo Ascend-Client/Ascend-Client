@@ -98,4 +98,12 @@ public class Util {
             return null;
         }
     }
+
+    public static File checkHashOrDownloadNoException(String url) {
+        try {
+            return checkHashOrDownload(url);
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }

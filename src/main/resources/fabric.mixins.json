@@ -2,8 +2,9 @@
   "compatibilityLevel": "JAVA_11",
   "package": "net.fabricmc.fabric.api.mixins",
   "mixins": [
+    "MixinFluidRenderer",
+    "MixinInGameHud",
     "MixinMinecraftClient",
-    "MixinTranslationStorage",
-    "MixinInGameHud"
+    "MixinTranslationStorage"
   ]
 }
