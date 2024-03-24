@@ -108,9 +108,9 @@ public class CustomTitleMenu extends Screen {
         if(CustomLoadingOverlay.isDoingAnimation && this.isFirstLaunch && System.currentTimeMillis() <= (endAnim + 250)) { //continue the animation for extra time so its smoother
             CustomLoadingOverlay.doRender = false;
 
-            panoramaY = (int) map(System.currentTimeMillis(), startAnim, endAnim, width, prepanY);
-            buttonWallY = (int) map(System.currentTimeMillis(), startAnim, endAnim, width, 0);
-            if(System.currentTimeMillis() > endAnim) {
+            panoramaY = (int) map(System.currentTimeMillis() - startAnim, 0, 2000, width, prepanY);
+            buttonWallY = (int) map(System.currentTimeMillis() - startAnim, 0, 2000, width, 0);
+            if(System.currentTimeMillis() >= endAnim) {
                 panoramaY = prepanY;
                 buttonWallY = 0;
 
