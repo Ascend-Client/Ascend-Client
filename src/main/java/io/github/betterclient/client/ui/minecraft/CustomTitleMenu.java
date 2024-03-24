@@ -36,9 +36,7 @@ public class CustomTitleMenu extends Screen {
 
     @Override
     protected void init() {
-        startAnim = System.currentTimeMillis();
-
-        endAnim = System.currentTimeMillis() + 2000; //2 second animation
+        startAnim = 0;
     }
 
     /**
@@ -80,6 +78,12 @@ public class CustomTitleMenu extends Screen {
 
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        if(startAnim == 0) {
+            startAnim = System.currentTimeMillis();
+
+            endAnim = System.currentTimeMillis() + 2000; //2 second animation
+        }
+
         lastMouseX = mouseX;
         lastMouseY = mouseY;
         fill(matrices, 0, 0, width, height, Color.black.getRGB());
