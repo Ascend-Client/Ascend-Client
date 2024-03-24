@@ -16,6 +16,7 @@ import net.minecraft.util.Identifier;
 import javax.sound.sampled.*;
 import java.awt.*;
 import java.io.File;
+import java.util.Random;
 
 import static io.github.betterclient.client.util.UIUtil.*;
 
@@ -27,11 +28,20 @@ public class CustomTitleMenu extends Screen {
     private int lastMouseX, lastMouseY;
     private float animatedMouseX, animatedMouseY;
     private int buttonWallY = 0;
-    private final int bgcolor = new Color(0, 0, 0, 84).getRGB();
+
+    /**
+     * choose a background image from the folder
+     * background images are AI generated
+     */
+    public final Identifier chosenBackground;
+    private final int bgcolor = new Color(0, 0, 0, 120).getRGB();
 
     public CustomTitleMenu(boolean firstLaunch) {
         super(Text.of(""));
         this.isFirstLaunch = firstLaunch;
+
+        int backgroundNumber = new Random().nextInt(4);
+        this.chosenBackground = new Identifier("textures/ballsack/backgrounds/background" + backgroundNumber + ".png");
     }
 
     @Override
@@ -119,9 +129,9 @@ public class CustomTitleMenu extends Screen {
             panY = (int) map(animatedMouseY, 0, height, -100, 0);
         }
 
-        this.client.getTextureManager().bindTexture(new Identifier("textures/ballsack/background.png"));
+        this.client.getTextureManager().bindTexture(chosenBackground);
         RenderSystem.enableBlend();
-        RenderSystem.color4f(1, 1, 1, 1);
+        RenderSystem.color4f(1, 1, 1, 0.7f);
         drawTexture(matrices, panX, panY, 0, 0, width + 100, height + 100, width + 100, height + 100);
         RenderSystem.disableBlend();
 
