@@ -4,7 +4,7 @@ import io.github.betterclient.client.event.EventTarget;
 import io.github.betterclient.client.event.impl.RenderEvent;
 import io.github.betterclient.client.mod.Category;
 import io.github.betterclient.client.mod.Module;
-import net.minecraft.client.MinecraftClient;
+import io.github.betterclient.client.bridge.IBridge.*;
 
 public class FullBright extends Module {
     public double before;
@@ -15,16 +15,16 @@ public class FullBright extends Module {
 
     @Override
     public void onEnabled() {
-        before = MinecraftClient.getInstance().options.getGamma().getValue();
+        before = MinecraftClient.getInstance().getOptions().getGamma();
     }
 
     @EventTarget
     public void onRender(RenderEvent ev) {
-        MinecraftClient.getInstance().options.getGamma().setValue(100D);
+        MinecraftClient.getInstance().getOptions().setGamma(1D);
     }
 
     @Override
     public void onDisabled() {
-        MinecraftClient.getInstance().options.getGamma().setValue(before);
+        MinecraftClient.getInstance().getOptions().setGamma(before);
     }
 }

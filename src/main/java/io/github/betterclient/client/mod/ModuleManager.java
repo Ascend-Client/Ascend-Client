@@ -1,5 +1,6 @@
 package io.github.betterclient.client.mod;
 
+import io.github.betterclient.client.bridge.IBridge;
 import io.github.betterclient.client.mod.impl.hud.*;
 import io.github.betterclient.client.mod.impl.other.*;
 
@@ -16,7 +17,6 @@ public class ModuleManager {
         moduleList.add(new ReachDisplayMod());
         moduleList.add(new ItemPhysics());
         moduleList.add(new ArmorStatusMod());
-        moduleList.add(new BedrockBridgeMod());
         moduleList.add(new FullBright());
         moduleList.add(new FreeLook());
         moduleList.add(new Zoom());
@@ -25,6 +25,9 @@ public class ModuleManager {
         moduleList.add(new MotionBlur());
         moduleList.add(new PingDisplayMod());
         moduleList.add(new ServerDisplayMod());
+        moduleList.add(new SuperSecretSettings());
+
+        IBridge.getPreLaunch().registerVersionBallsackMods(this);
     }
 
     public Module getModuleByName(String name) {

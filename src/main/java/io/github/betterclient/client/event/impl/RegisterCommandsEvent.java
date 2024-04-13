@@ -1,13 +1,12 @@
 package io.github.betterclient.client.event.impl;
 
-import com.mojang.brigadier.CommandDispatcher;
+import io.github.betterclient.client.bridge.IBridge;
 import io.github.betterclient.client.event.Event;
-import net.minecraft.server.command.ServerCommandSource;
 
 public class RegisterCommandsEvent extends Event {
-    public CommandDispatcher<ServerCommandSource> dispatcher;
+    public IBridge.CommandDispatcher dispatcher;
 
-    public RegisterCommandsEvent(CommandDispatcher<ServerCommandSource> dispatcher) {
+    public RegisterCommandsEvent(IBridge.CommandDispatcher dispatcher) {
         this.dispatcher = dispatcher;
     }
 }

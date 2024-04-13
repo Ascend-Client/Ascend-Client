@@ -1,19 +1,7 @@
 package io.github.betterclient.client.util;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawableHelper;
-import net.minecraft.client.render.*;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Identifier;
-import org.joml.Matrix4f;
-import org.lwjgl.opengl.GL11;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.lwjgl.opengl.GL11.*;
+import io.github.betterclient.client.bridge.IBridge;
+import io.github.betterclient.client.bridge.IBridge.*;
 
 public class UIUtil {
     private static int stX = 0,stY = 0;
@@ -47,40 +35,35 @@ public class UIUtil {
 
         radius/=2;
 
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder builder = tessellator.getBuffer();
+        BufferBuilder builder = MinecraftClient.getInstance().getBufferBuilder();
 
         int n2;
 
-        Matrix4f mat = new MatrixStack().peek().getPositionMatrix();
+        MatrixStack mat = IBridge.newMatrixStack();
 
-        RenderSystem.enableBlend();
-        RenderSystem.setShader(GameRenderer::getPositionColorProgram);
-
-        builder.begin(VertexFormat.DrawMode.TRIANGLE_FAN, VertexFormats.POSITION_COLOR);
+        builder.begin(BeginMode.TRIANGLE_FAN);
 
         for (n2 = 0; n2 <= 90; n2 += 3) {
-            builder.vertex(mat, (float) (x + radius + Math.sin((double) n2 * Math.PI / (double) 180) * (radius * (double) -1)), (float) (y + radius + Math.cos((double) n2 * Math.PI / (double) 180) * (radius * (double) -1)), 0).color(color).next();
+            builder.vertex(mat, (float) (x + radius + Math.sin((double) n2 * Math.PI / (double) 180) * (radius * (double) -1)), (float) (y + radius + Math.cos((double) n2 * Math.PI / (double) 180) * (radius * (double) -1)), 0, color);
         }
         for (n2 = 90; n2 <= 180; n2 += 3) {
-            builder.vertex(mat, (float) (x + radius + Math.sin((double) n2 * Math.PI / (double) 180) * (radius * (double) -1)), (float) (endY - radius + Math.cos((double) n2 * Math.PI / (double) 180) * (radius * (double) -1)), 0).color(color).next();
+            builder.vertex(mat, (float) (x + radius + Math.sin((double) n2 * Math.PI / (double) 180) * (radius * (double) -1)), (float) (endY - radius + Math.cos((double) n2 * Math.PI / (double) 180) * (radius * (double) -1)), 0, color);
         }
         for (n2 = 0; n2 <= 90; n2 += 3) {
-            builder.vertex(mat, (float) (endX - radius + Math.sin((double) n2 * Math.PI / (double) 180) * radius), (float) (endY - radius + Math.cos((double) n2 * Math.PI / (double) 180) * radius), 0).color(color).next();
+            builder.vertex(mat, (float) (endX - radius + Math.sin((double) n2 * Math.PI / (double) 180) * radius), (float) (endY - radius + Math.cos((double) n2 * Math.PI / (double) 180) * radius), 0, color);
         }
         for (n2 = 90; n2 <= 180; n2 += 3) {
-            builder.vertex(mat, (float) (endX - radius + Math.sin((double) n2 * Math.PI / (double) 180) * radius), (float) (y + radius + Math.cos((double) n2 * Math.PI / (double) 180) * radius), 0).color(color).next();
+            builder.vertex(mat, (float) (endX - radius + Math.sin((double) n2 * Math.PI / (double) 180) * radius), (float) (y + radius + Math.cos((double) n2 * Math.PI / (double) 180) * radius), 0, color);
         }
-
-        BufferRenderer.drawWithGlobalProgram(builder.end());
-        RenderSystem.disableBlend();
+        
+        builder.draw();
     }
 
     public static void renderOutline(MatrixStack i, int x, int y, int endingX, int endingY, int color) {
-        DrawableHelper.fill(i, x, y, endingX, y + 1, color);
-        DrawableHelper.fill(i, x, endingY, endingX, endingY + 1, color);
-        DrawableHelper.fill(i, x, y, x + 1, endingY, color);
-        DrawableHelper.fill(i, endingX, y, endingX + 1, endingY, color);
+        IBridge.internal().screen_fill(i, x, y, endingX, y + 1, color);
+        IBridge.internal().screen_fill(i, x, endingY, endingX, endingY + 1, color);
+        IBridge.internal().screen_fill(i, x, y, x + 1, endingY, color);
+        IBridge.internal().screen_fill(i, endingX, y, endingX + 1, endingY, color);
     }
 
     public static void renderCircle(double x, double y, float halfRadius, int color) {
@@ -101,18 +84,18 @@ public class UIUtil {
         and the value gets on out_min and out_max
         idk how to tell you this
      */
-    public static double map(double x, double in_min, double in_max, double out_min, double out_max)
+    public static double map(double val, double in_min, double in_max, double out_min, double out_max)
     {
-        return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+        return (val - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
     }
 
     public static int[] getIdealRenderingPosForText(String text, double x, double y, double endX, double endY, float scale) {
         int[] renderingPos = new int[2];
 
         MinecraftClient minecraft = MinecraftClient.getInstance();
-        TextRenderer textRenderer = minecraft.textRenderer;
+        TextRenderer textRenderer = minecraft.getTextRenderer();
         int textWidth = textRenderer.getWidth(text);
-        int textHeight = textRenderer.fontHeight;
+        int textHeight = textRenderer.fontHeight();
 
         // Adjust the rendering position based on the specified parameters and scale
         renderingPos[0] = (int) ((x + endX) / 2 - textWidth / 2 * scale);
@@ -125,16 +108,10 @@ public class UIUtil {
         var width = endX - x;
         var height = endY - y;
 
-        glEnable(GL_SCISSOR_TEST);
-        var res = MinecraftClient.getInstance().getWindow();
-        x = (float) (x * res.getScaleFactor());
-        height = (float) (height * res.getScaleFactor());
-        y = (float) (res.getHeight() - (y * res.getScaleFactor()) - height);
-        width = (float) (width * res.getScaleFactor());
-        glScissor((int) x, (int) y, (int) width, (int) height);
+        IBridge.internal().GL11_enableScissor((int) x, (int) y, (int) width, (int) height);
     }
 
     public static void disableScissor() {
-        glDisable(GL_SCISSOR_TEST);
+        IBridge.internal().GL11_disableScissor();
     }
 }

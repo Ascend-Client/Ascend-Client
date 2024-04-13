@@ -2,26 +2,23 @@ package io.github.betterclient.client.ui.clickgui;
 
 import io.github.betterclient.client.Application;
 import io.github.betterclient.client.BallSack;
+import io.github.betterclient.client.bridge.IBridge;
+import io.github.betterclient.client.bridge.IBridge.*;
 import io.github.betterclient.client.mod.Category;
 import io.github.betterclient.client.mod.Module;
 import io.github.betterclient.client.ui.StringTypeUI;
 import io.github.betterclient.client.util.UIUtil;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
 
 import java.awt.*;
 import java.io.File;
 
-public class OtherModsUI extends Screen {
+public class OtherModsUI extends IBridge.Screen {
     public Mode currentMode = Mode.MOD_ENABLE;
     public String currentConfig = "";
     public boolean isWaitingForString = false;
 
     public OtherModsUI() {
-        super(Text.of(""));
+        super();
     }
 
     @Override
@@ -40,15 +37,15 @@ public class OtherModsUI extends Screen {
         super.renderBackground(matrices);
         UIUtil.drawRoundedRect(width / 2 - 200, height / 2 - 200, width / 2 + 200, height / 2 + 200, 10f, new Color(0, 0, 0, 81).getRGB());
 
-        fill(new MatrixStack(), width / 2 - 200, height / 2 - 177, width / 2 + 200, height / 2 - 180, -1);
+        fill(IBridge.newMatrixStack(), width / 2 - 200, height / 2 - 177, width / 2 + 200, height / 2 - 180, -1);
 
         boolean enMods = UIUtil.basicCollisionCheck(mouseX, mouseY, width / 2 - 190, height / 2 - 200, width / 2 - 190 + 10 + (textRenderer.getWidth("Enable Mods")),height / 2 - 180);
         boolean config = UIUtil.basicCollisionCheck(mouseX, mouseY, width / 2 - 120, height / 2 - 200, width / 2 - 120 + 10 + (textRenderer.getWidth("Config")),height / 2 - 180);
         boolean back = UIUtil.basicCollisionCheck(mouseX, mouseY, width / 2 + 190 + (-10 - (textRenderer.getWidth("Go Back"))), height / 2 - 200, width / 2 + 190,height / 2 - 180);
 
-        textRenderer.draw(new MatrixStack(), Text.literal("Enable Mods").setStyle(Style.EMPTY.withUnderline(enMods)),width / 2 - 190, height / 2 - 191, -1);
-        textRenderer.draw(new MatrixStack(), Text.literal("Config").setStyle(Style.EMPTY.withUnderline(config)),width / 2 - 120, height / 2 - 191, -1);
-        textRenderer.draw(new MatrixStack(), Text.literal("Go Back").setStyle(Style.EMPTY.withUnderline(back)), width / 2 + 190 - (textRenderer.getWidth("Go Back")), height / 2 - 191, -1);
+        textRenderer.draw(IBridge.newMatrixStack(), Text.literal("Enable Mods").withStyle(Style.withUnderline(enMods)),width / 2 - 190, height / 2 - 191, -1);
+        textRenderer.draw(IBridge.newMatrixStack(), Text.literal("Config").withStyle(Style.withUnderline(config)),width / 2 - 120, height / 2 - 191, -1);
+        textRenderer.draw(IBridge.newMatrixStack(), Text.literal("Go Back").withStyle(Style.withUnderline(back)), width / 2 + 190 - (textRenderer.getWidth("Go Back")), height / 2 - 191, -1);
 
         if(currentMode == Mode.MOD_ENABLE) {
             int cy = height / 2 - 170;
@@ -61,7 +58,7 @@ public class OtherModsUI extends Screen {
                     cy += 25;
                 }
 
-                fill(new MatrixStack(), start + (index * 77), cy, start + ((index) * 77) + 72, cy + 20, new Color(0, 0, 0, 81).getRGB());
+                fill(IBridge.newMatrixStack(), start + (index * 77), cy, start + ((index) * 77) + 72, cy + 20, new Color(0, 0, 0, 81).getRGB());
                 float scale = (72f / textRenderer.getWidth(mod.name));
                 if(scale > 1)
                     scale = 1;
@@ -71,7 +68,7 @@ public class OtherModsUI extends Screen {
                 int x = pos[0];
                 int y = pos[1];
 
-                MatrixStack pose = new MatrixStack();
+                MatrixStack pose = IBridge.newMatrixStack();
 
                 pose.push();
                 pose.translate(x,y,1);
@@ -98,11 +95,11 @@ public class OtherModsUI extends Screen {
 
             int[] ideal = UIUtil.getIdealRenderingPosForText("+", cx, height / 2 - 170, cx + 16, height / 2 - 155);
             UIUtil.drawRoundedRect(cx, height / 2 - 170, cx + 16, height / 2 - 155, 2f, -1); //+
-            textRenderer.draw(new MatrixStack(), "+", ideal[0], ideal[1], Color.black.getRGB());
+            textRenderer.draw(IBridge.newMatrixStack(), "+", ideal[0], ideal[1], Color.black.getRGB());
 
             ideal = UIUtil.getIdealRenderingPosForText("Load", cx + 24, height / 2 - 170, cx + 64, height / 2 - 155);
             UIUtil.drawRoundedRect(cx + 24, height / 2 - 170, cx + 64, height / 2 - 155, 2f, -1); //Load
-            textRenderer.draw(new MatrixStack(), "Load", ideal[0], ideal[1], Color.black.getRGB());
+            textRenderer.draw(IBridge.newMatrixStack(), "Load", ideal[0], ideal[1], Color.black.getRGB());
 
             UIUtil.drawRoundedRect(cx - 4, cy - 2, cx + 380, cy + ((Application.configFolder.listFiles().length - 1) * 10) + 2, 5f, new Color(0, 0, 0, 81).getRGB());
 
@@ -114,7 +111,7 @@ public class OtherModsUI extends Screen {
                 String text = cfg.getName().replace(".json", "");
                 String selected = (cfg.getName().equals(currentConfig) ? " - Selected" : "");
                 String current = (BallSack.getInstance().config.loadedConfig.getName().equals(cfg.getName()) ? (selected.equals("") ? " - Current" : ", Current") : "");
-                textRenderer.draw(new MatrixStack(), Text.literal(text + selected + current).setStyle(Style.EMPTY.withUnderline(isHover)), cx, cy, -1);
+                textRenderer.draw(IBridge.newMatrixStack(), Text.literal(text + selected + current).withStyle(Style.withUnderline(isHover)), cx, cy, -1);
                 cy+=10;
             }
         }
@@ -129,7 +126,7 @@ public class OtherModsUI extends Screen {
         if(button == 0) {
             if(enMods) currentMode = Mode.MOD_ENABLE;
             if(config) currentMode = Mode.CONFIG;
-            if(back) MinecraftClient.getInstance().setScreen(new HUDMoveUI());
+            if(back) MinecraftClient.getInstance().setGuiScreen(new HUDMoveUI());
         }
 
         if(currentMode == Mode.MOD_ENABLE) {
@@ -148,7 +145,7 @@ public class OtherModsUI extends Screen {
                         mod.toggle();
                     }
                     if(button == 1) {
-                        MinecraftClient.getInstance().setScreen(new SettingsUI(mod));
+                        MinecraftClient.getInstance().setGuiScreen(new SettingsUI(mod));
                     }
                 }
 
@@ -160,7 +157,7 @@ public class OtherModsUI extends Screen {
 
             if(UIUtil.basicCollisionCheck(mouseX, mouseY, cx, height / 2 - 170, cx + 16, height / 2 - 155) && button == 0) {
                 isWaitingForString = true;
-                MinecraftClient.getInstance().setScreen(new StringTypeUI(this));
+                MinecraftClient.getInstance().setGuiScreen(new StringTypeUI(this));
             }
 
             if(UIUtil.basicCollisionCheck(mouseX, mouseY, cx + 24, height / 2 - 170, cx + 64, height / 2 - 155) && !currentConfig.equals("") && button == 0) {

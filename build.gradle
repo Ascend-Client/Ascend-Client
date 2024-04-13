@@ -1,47 +1,38 @@
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption
 
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "com.github.johnrengelman:shadow:8.1.1"
+    }
+}
+
 plugins {
     id 'java'
-    id "fabric-loom" version "1.1-SNAPSHOT"
-    id "com.github.johnrengelman.shadow" version "2.0.4"
     id("com.gorylenko.gradle-git-properties") version "2.4.1"
 }
 
 group 'io.github.betterclient'
-version '1.0-SNAPSHOT'
+version '1.0'
 
 repositories {
     mavenCentral()
 
     maven {
-        url "https://repo.spongepowered.org/repository/maven-public/"
-    }
-
-    maven {
-        name "CombatReforged"
-        url "https://maven.rizecookey.net"
-    }
-}
-
-configurations {
-    shade
-    implementation.extendsFrom(shade)
-}
-
-loom {
-    runConfigs.configureEach {
-        client()
-        setDefaultMainClass("io.github.betterclient.client.launch.IDEMain")
+        name = 'Fabric'
+        url = 'https://maven.fabricmc.net/'
     }
 }
 
 File downloadQuixotic() {
-    File f = file("quixotic.jar") as File
+    File f = file("quixotic.jar")
     if(f.exists()) return f
 
     f.createNewFile()
-    def is = new URL("https://github.com/betterclient/Quixotic-Loader/releases/download/valedier/Quixotic-1.0.jar").openStream()
+    def is = new URL("https://github.com/betterclient/Quixotic-Loader/releases/download/hi/Quixotic-1.0.jar").openStream()
     Files.copy(
             is,
             f.toPath(),
@@ -50,40 +41,83 @@ File downloadQuixotic() {
     return f
 }
 
-def asmVersion = "9.5"
+def asmVersion = "9.7"
 
 dependencies {
-    minecraft "com.mojang:minecraft:1.19.4"
-    mappings "net.fabricmc:yarn:1.19.4+build.2:v2"
+    implementation files(downloadQuixotic())
 
-    shade files(downloadQuixotic())
+    implementation "org.json:json:20231013"
 
-    shade 'org.json:json:20231013'
-    shade "org.spongepowered:mixin:0.8.5"
+    implementation "org.ow2.asm:asm:$asmVersion"
+    implementation "org.ow2.asm:asm-analysis:$asmVersion"
+    implementation "org.ow2.asm:asm-commons:$asmVersion"
+    implementation "org.ow2.asm:asm-tree:$asmVersion"
+    implementation "org.ow2.asm:asm-util:$asmVersion"
 
-    shade "org.ow2.asm:asm:$asmVersion"
-    shade "org.ow2.asm:asm-analysis:$asmVersion"
-    shade "org.ow2.asm:asm-commons:$asmVersion"
-    shade "org.ow2.asm:asm-tree:$asmVersion"
-    shade "org.ow2.asm:asm-util:$asmVersion"
+    annotationProcessor "org.ow2.asm:asm:$asmVersion"
+    annotationProcessor "org.ow2.asm:asm-analysis:$asmVersion"
+    annotationProcessor "org.ow2.asm:asm-commons:$asmVersion"
+    annotationProcessor "org.ow2.asm:asm-tree:$asmVersion"
+    annotationProcessor "org.ow2.asm:asm-util:$asmVersion"
+
+    implementation "net.fabricmc:sponge-mixin:0.12.5+mixin.0.8.5"
+    implementation "net.fabricmc:tiny-remapper:0.10.1"
 }
 
-tasks.dependencies {
+tasks.processResources {
     dependsOn(generateGitProperties)
-}
-
-shadowJar {
-    dependencies {
-
-    }
-    configurations = [project.configurations.shade]
-
-    duplicatesStrategy DuplicatesStrategy.EXCLUDE //prevent duplicates
-    classifier "" //prevent creation of unshadowed jar
 }
 
 gitProperties {
     gitPropertiesName = "github.txt"
     gitPropertiesResourceDir = file("src/main/resources/ballsack/github")
     keys = ["git.branch", "git.commit.id.abbrev"]
+}
+
+allprojects {
+    targetCompatibility = sourceCompatibility = 17
+}
+
+subprojects {
+    repositories {
+        mavenCentral()
+    }
+
+    apply plugin: 'java'
+    apply plugin: "com.github.johnrengelman.shadow"
+
+    configurations {
+        shade
+        implementation.extendsFrom(shade)
+    }
+
+    dependencies {
+        shade parent
+        shade files(downloadQuixotic())
+
+        shade "org.json:json:20231013"
+
+        shade "org.ow2.asm:asm:$asmVersion"
+        shade "org.ow2.asm:asm-analysis:$asmVersion"
+        shade "org.ow2.asm:asm-commons:$asmVersion"
+        shade "org.ow2.asm:asm-tree:$asmVersion"
+        shade "org.ow2.asm:asm-util:$asmVersion"
+
+        annotationProcessor "org.ow2.asm:asm:$asmVersion"
+        annotationProcessor "org.ow2.asm:asm-analysis:$asmVersion"
+        annotationProcessor "org.ow2.asm:asm-commons:$asmVersion"
+        annotationProcessor "org.ow2.asm:asm-tree:$asmVersion"
+        annotationProcessor "org.ow2.asm:asm-util:$asmVersion"
+
+        shade "net.fabricmc:sponge-mixin:0.12.5+mixin.0.8.5"
+        shade "io.github.llamalad7:mixinextras-fabric:0.3.5"
+        shade "net.fabricmc:tiny-remapper:0.10.1"
+    }
+
+    shadowJar {
+        dependencies {}
+        configurations = [project.configurations.shade]
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+        archiveClassifier = project.objects.property(String.class).convention("")
+    }
 }

@@ -1,24 +1,18 @@
 package io.github.betterclient.client.ui.clickgui;
 
 import io.github.betterclient.client.BallSack;
+import io.github.betterclient.client.bridge.IBridge;
+import io.github.betterclient.client.bridge.IBridge.*;
 import io.github.betterclient.client.mod.Module;
 import io.github.betterclient.client.mod.setting.*;
 import io.github.betterclient.client.util.UIUtil;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.util.InputUtil;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import org.lwjgl.glfw.GLFW;
 
 import java.awt.*;
 
-public class SettingsUI extends Screen {
+public class SettingsUI extends IBridge.Screen {
     public double x, y;
     public Module mod;
-    public TextRenderer tr = MinecraftClient.getInstance().textRenderer;
+    public TextRenderer tr = MinecraftClient.getInstance().getTextRenderer();
 
     public boolean settingColor = false;
     public ColorSetting setting = null;
@@ -45,7 +39,7 @@ public class SettingsUI extends Screen {
     boolean goBackToOtherMods = false;
 
     public SettingsUI(Module mod) {
-        super(Text.of(""));
+        super();
         this.mod = mod;
 
         StackTraceElement[] elements = new Throwable().getStackTrace();
@@ -106,7 +100,7 @@ public class SettingsUI extends Screen {
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if(keyCode != GLFW.GLFW_KEY_ESCAPE)
+        if(keyCode != IBridge.getKeys().KEY_ESCAPE)
             onKeyboard(keyCode);
 
         return super.keyPressed(keyCode, scanCode, modifiers);
@@ -119,12 +113,10 @@ public class SettingsUI extends Screen {
         int[] pos = UIUtil.getIdealRenderingPosForText("Close", x + uiwidth - 50, y + uiheight - 25, x + uiwidth - 5, y + uiheight - 5);
 
         tr.draw(
-                new MatrixStack(),
-                Text.literal("Close")
-                        .setStyle(
-                                Style
-                                        .EMPTY
-                                        .withUnderline(
+                IBridge.newMatrixStack(),
+                IBridge.Text.literal("Close")
+                        .withStyle(
+                                IBridge.Style.withUnderline(
                                                 UIUtil.basicCollisionCheck(
                                                         mouseX, mouseY,
                                                         x + uiwidth - 50, y + uiheight - 25,
@@ -154,25 +146,25 @@ public class SettingsUI extends Screen {
 
         y-= (float) currentScroll;
 
-        tr.draw(new MatrixStack(), mod.getName() + " - Settings", (float) (x + 10), y, new Color(255, 0, 0).getRGB());
+        tr.draw(IBridge.newMatrixStack(), mod.getName() + " - Settings", (float) (x + 10), y, new Color(255, 0, 0).getRGB());
         y+=15;
 
         for (Setting set : this.mod.getSettings()) {
             if(set instanceof NoneSetting) {
                 y+=10;
-                tr.draw(new MatrixStack(), set.name, (float) (x + 10F), y, new Color(255, 0, 255).getRGB());
+                tr.draw(IBridge.newMatrixStack(), set.name, (float) (x + 10F), y, new Color(255, 0, 255).getRGB());
             } else {
-                tr.draw(new MatrixStack(), set.name, (float) (x + 10F), y, -1);
+                tr.draw(IBridge.newMatrixStack(), set.name, (float) (x + 10F), y, -1);
             }
 
             if(set instanceof BooleanSetting bool) {
                 UIUtil.drawRoundedRect(x + uiwidth - 50 - buttonOffset, y, x + uiwidth - 2 - buttonOffset, y + 15, 5F, (bool.value ? new Color(255, 255, 255, 84) : new Color(0, 0, 0, 84)).getRGB());
-                tr.draw(new MatrixStack(),  bool.value ? "Enabled" : "Disabled", (float) (x + uiwidth - 48 - buttonOffset), y + 1, -1);
+                tr.draw(IBridge.newMatrixStack(),  bool.value ? "Enabled" : "Disabled", (float) (x + uiwidth - 48 - buttonOffset), y + 1, -1);
             }
 
             if(set instanceof ModeSetting mode) {
                 UIUtil.drawRoundedRect(x + uiwidth - 50 - buttonOffset, y, x + uiwidth - 2 - buttonOffset, y + 15, 5F, new Color(0, 0, 0, 84).getRGB());
-                tr.draw(new MatrixStack(), mode.value, (float) (x + uiwidth - 48 - buttonOffset), y + 1, -1);
+                tr.draw(IBridge.newMatrixStack(), mode.value, (float) (x + uiwidth - 48 - buttonOffset), y + 1, -1);
             }
 
             if(set instanceof ColorSetting color) {
@@ -206,10 +198,10 @@ public class SettingsUI extends Screen {
                             alpha = num.value;
                         }
 
-                        tr.draw(new MatrixStack(), num.name, (float) (x + 10F), y, -1);
+                        tr.draw(IBridge.newMatrixStack(), num.name, (float) (x + 10F), y, -1);
 
                         UIUtil.drawRoundedRect(x + uiwidth - 232, y + 6, x + uiwidth - 32, y + 9, 1F, new Color(0, 0, 0, 84).getRGB());
-                        tr.draw(new MatrixStack(), num.value + "", (float) (x + uiwidth - 28), y + 2, -1);
+                        tr.draw(IBridge.newMatrixStack(), num.value + "", (float) (x + uiwidth - 28), y + 2, -1);
 
                         int renderX = (int) (x + uiwidth - 232 + UIUtil.map(num.value, num.min, num.max, 0, 200));
                         UIUtil.drawRoundedRect(renderX - 7, y, renderX + 7, y + 15, 15F, Color.BLUE.getRGB());
@@ -222,7 +214,7 @@ public class SettingsUI extends Screen {
 
             if(set instanceof NumberSetting num) {
                 UIUtil.drawRoundedRect(x + uiwidth - 232, y + 6, x + uiwidth - 32, y + 9, 1F, new Color(0, 0, 0, 84).getRGB());
-                tr.draw(new MatrixStack(), num.value + "", (float) (x + uiwidth - 28), y + 2, -1);
+                tr.draw(IBridge.newMatrixStack(), num.value + "", (float) (x + uiwidth - 28), y + 2, -1);
 
                 int renderX = (int) (x + uiwidth - 232 + UIUtil.map(num.value, num.min, num.max, 0, 200));
                 UIUtil.drawRoundedRect(renderX - 7, y, renderX + 7, y + 15, 15F, Color.BLUE.getRGB());
@@ -230,12 +222,12 @@ public class SettingsUI extends Screen {
 
             if(set instanceof KeyBindSetting key) {
                 UIUtil.drawRoundedRect(x + uiwidth - 60 - buttonOffset, y, x + uiwidth - 12 - buttonOffset, y + 15, 5F, new Color(0, 0, 0, 84).getRGB());
-                String kys = GLFW.glfwGetKeyName(key.key, 0);
+                String kys = MinecraftClient.getInstance().getKeyName(key.key, 0);
                 if(settingBind)
                     kys = "Listening";
 
                 int[] poss = UIUtil.getIdealRenderingPosForText(kys, x + uiwidth - 60 - buttonOffset, y, x + uiwidth - 12 - buttonOffset, y + 15);
-                tr.draw(new MatrixStack(), kys, poss[0], poss[1], -1);
+                tr.draw(IBridge.newMatrixStack(), kys, poss[0], poss[1], -1);
             }
 
             y+=20;
@@ -369,9 +361,9 @@ public class SettingsUI extends Screen {
             currentScroll = 0;
 
             if(goBackToOtherMods)
-                MinecraftClient.getInstance().setScreen(new OtherModsUI());
+                MinecraftClient.getInstance().setGuiScreen(new OtherModsUI());
             else
-                MinecraftClient.getInstance().setScreen(new HUDMoveUI());
+                MinecraftClient.getInstance().setGuiScreen(new HUDMoveUI());
         }
 
         if(button == 0) {
@@ -386,7 +378,7 @@ public class SettingsUI extends Screen {
         if(settingBind) {
             bindSetting.key = key;
             try {
-                bindSetting.bind.setBoundKey(InputUtil.fromKeyCode(key, 0));
+                bindSetting.bind.setKey(key);
                 BallSack.getInstance().config.save();
             } catch (Exception e) {
                 e.printStackTrace();

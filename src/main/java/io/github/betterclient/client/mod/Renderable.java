@@ -1,13 +1,8 @@
 package io.github.betterclient.client.mod;
 
-import com.mojang.blaze3d.systems.RenderSystem;
+import io.github.betterclient.client.bridge.IBridge;
 import io.github.betterclient.client.util.UIUtil;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawableHelper;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.ItemStack;
-import org.lwjgl.opengl.GL11;
+import io.github.betterclient.client.bridge.IBridge.*;
 
 import java.awt.*;
 
@@ -23,7 +18,7 @@ public class Renderable {
     public Renderable(int x, int y) {
         this.x = x;
         this.y = y;
-        this.textRenderer = MinecraftClient.getInstance().textRenderer;
+        this.textRenderer = MinecraftClient.getInstance().getTextRenderer();
     }
 
     public Renderable fillArea(int startX, int startY, int endX, int endY, Color color) {
@@ -74,11 +69,11 @@ public class Renderable {
         this.preRender();
 
         int endX = x + this.textRenderer.getWidth(text);
-        int endY = y + this.textRenderer.fontHeight;
+        int endY = y + this.textRenderer.fontHeight();
         Runnable rrrr = render;
         render = () -> {
             rrrr.run();
-            textRenderer.draw(new MatrixStack(), text, this.getX() + x, this.getY() + y, color.getRGB());
+            textRenderer.draw(IBridge.newMatrixStack(), text, this.getX() + x, this.getY() + y, color.getRGB());
         };
 
         if(endX > width) {
@@ -95,17 +90,17 @@ public class Renderable {
         this.preRender();
 
         double endX = x + (this.textRenderer.getWidth(text) * scale);
-        double endY = y + (this.textRenderer.fontHeight * scale);
+        double endY = y + (this.textRenderer.fontHeight() * scale);
         Runnable rrrr = render;
         render = () -> {
             rrrr.run();
-            RenderSystem.setShaderColor(1, 1, 1, 1);
-            MatrixStack matrices = new MatrixStack();
+            IBridge.getInstance().getClient().emptyShaderColor();
+            MatrixStack matrices = IBridge.newMatrixStack();
             matrices.push();
             matrices.translate(x,y,1);
             matrices.scale(scale,scale,1);
             matrices.translate(-x,-y,1);
-            MinecraftClient.getInstance().textRenderer.draw(matrices, text, x, y, color.getRGB());
+            MinecraftClient.getInstance().getTextRenderer().draw(matrices, text, x, y, color.getRGB());
             matrices.pop();
         };
 
@@ -149,8 +144,8 @@ public class Renderable {
         int[] pos = new int[2];
 
         MinecraftClient minecraftClient = MinecraftClient.getInstance();
-        int textWidth = minecraftClient.textRenderer.getWidth(text);
-        int textHeight = minecraftClient.textRenderer.fontHeight;
+        int textWidth = minecraftClient.getTextRenderer().getWidth(text);
+        int textHeight = minecraftClient.getTextRenderer().fontHeight();
 
         int idealX = x + ((endX - x) / 2) - (textWidth / 2);
         pos[0] = Math.max(x, Math.min(idealX, endX - textWidth));
@@ -174,9 +169,9 @@ public class Renderable {
             int endX = x + 16;
             int endY = y + 16;
 
-            if (is.getItem().isDamageable() && renderText) {
-                double damage = ((is.getMaxDamage() - is.getDamage()) / (double) is.getMaxDamage()) * 100;
-                double renderDamage = ((is.getMaxDamage() - is.getDamage()) / (double) is.getMaxDamage()) * 16;
+            if (is.itemDamagable && renderText) {
+                double damage = ((is.maxDamage - is.damage) / (double) is.maxDamage) * 100;
+                double renderDamage = ((is.maxDamage - is.damage) / (double) is.maxDamage) * 16;
                 Color damageColor;
 
                 if (damage >= 25 && damage <= 70) {
@@ -191,11 +186,7 @@ public class Renderable {
                 endY += 6;
             }
 
-            GL11.glEnable(GL11.GL_BLEND);
-
-            MinecraftClient.getInstance().getItemRenderer().renderInGui(new MatrixStack(), is, this.getX() + x, this.getY() + y);
-
-            GL11.glDisable(GL11.GL_BLEND);
+            MinecraftClient.getInstance().renderInGui(IBridge.newMatrixStack(), is, this.getX() + x, this.getY() + y);
 
             if (endX > width) {
                 width = endX;
@@ -217,18 +208,16 @@ public class Renderable {
             int endX = x + 16;
             int endY = y + 16;
 
-            if (is.isStackable()) { //Render Amount
+            if (is.stackable) { //Render Amount
                 String text = count + "";
-                this.textRenderer.draw(new MatrixStack(), text, this.getX() + endX - 3, this.getY() + endY - 3, color.getRGB());
-                float[] width = new float[] {this.textRenderer.getWidth(text), this.textRenderer.fontHeight};
+                this.textRenderer.draw(IBridge.newMatrixStack(), text, this.getX() + endX - 3, this.getY() + endY - 3, color.getRGB());
+                float[] width = new float[] {this.textRenderer.getWidth(text), this.textRenderer.fontHeight()};
 
                 endX = (int) ((endX - 3) + width[0]);
                 endY = (int) ((endY - 3) + width[1]);
             }
 
-            RenderSystem.enableBlend();
-            MinecraftClient.getInstance().getItemRenderer().renderInGui(new MatrixStack(), is, this.getX() + x, this.getY() + y);
-            RenderSystem.disableBlend();
+            MinecraftClient.getInstance().renderInGui(IBridge.newMatrixStack(), is, this.getX() + x, this.getY() + y);
 
             if (endX > width) {
                 width = endX;
@@ -242,6 +231,6 @@ public class Renderable {
     }
 
     private void preRender() {
-        this.textRenderer = MinecraftClient.getInstance().textRenderer;
+        this.textRenderer = MinecraftClient.getInstance().getTextRenderer();
     }
 }

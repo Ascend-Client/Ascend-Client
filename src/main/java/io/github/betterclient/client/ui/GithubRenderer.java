@@ -1,18 +1,18 @@
 package io.github.betterclient.client.ui;
 
+import io.github.betterclient.client.bridge.IBridge;
 import io.github.betterclient.client.util.GithubMan;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.util.math.MatrixStack;
 
 import java.awt.*;
 
 public class GithubRenderer {
-    public static void render(Screen screen, GithubMan man, TextRenderer renderer, int height) {
+    public static void render(Object screen, GithubMan man, IBridge.TextRenderer renderer, int height) {
+        if(IBridge.MinecraftClient.getInstance().isCustomScreen(screen)) return;
+
         int x = 2;
         int y = height - 10;
 
-        MatrixStack matrices = new MatrixStack();
+        IBridge.MatrixStack matrices = IBridge.newMatrixStack();
 
         matrices.push();
         matrices.translate(x, y, 1);

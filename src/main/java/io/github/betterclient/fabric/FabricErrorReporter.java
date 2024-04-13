@@ -62,6 +62,12 @@ public class FabricErrorReporter {
             error.append("      ").append(stackTraceElement.toString()).append("\n");
         }
 
+        if(exception.getCause() != null) {
+            error.append("Cause: \n");
+
+            error.append(exception.toString() + "\n\n");
+        }
+
         File savedError = new File(Application.errorsFolder, "fabric-error-" + System.currentTimeMillis() + ".txt");
         if(!saveToFile(error, savedError)) {
             error.append("Failed to save error to file.");

@@ -1,14 +1,11 @@
 package io.github.betterclient.client.ui.clickgui;
 
 import io.github.betterclient.client.BallSack;
+import io.github.betterclient.client.bridge.IBridge;
+import io.github.betterclient.client.bridge.IBridge.*;
 import io.github.betterclient.client.event.impl.RenderEvent;
 import io.github.betterclient.client.mod.*;
 import io.github.betterclient.client.util.UIUtil;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
 
 import java.awt.*;
 import java.util.List;
@@ -28,7 +25,7 @@ public class HUDMoveUI extends Screen {
     public int dropdownx, dropdowny;
 
     public HUDMoveUI() {
-        super(Text.of(""));
+        super();
         instance = this;
         hudMods.addAll(modMan.getByCategory(Category.HUD).stream().map(HUDModule::cast).toList());
     }
@@ -84,10 +81,10 @@ public class HUDMoveUI extends Screen {
                 }
             }
 
-            textRenderer.draw(new MatrixStack(), dropDownMod.name, dropdownx + 4, dropdowny + 10, -1);
+            textRenderer.draw(IBridge.newMatrixStack(), dropDownMod.name, dropdownx + 4, dropdowny + 10, -1);
 
-            textRenderer.draw(new MatrixStack(), Text.literal("Settings").setStyle(Style.EMPTY.withUnderline(UIUtil.basicCollisionCheck(mouseX, mouseY, dropdownx, dropdowny + 20, dropdownx + 100, dropdowny + 40))), dropdownx + 4, dropdowny + 30, -1);
-            textRenderer.draw(new MatrixStack(), Text.literal("Disable").setStyle(Style.EMPTY.withUnderline(UIUtil.basicCollisionCheck(mouseX, mouseY, dropdownx, dropdowny + 40, dropdownx + 100, dropdowny + 60))), dropdownx + 4, dropdowny + 50, -1);
+            textRenderer.draw(IBridge.newMatrixStack(), Text.literal("Settings").withStyle(Style.withUnderline(UIUtil.basicCollisionCheck(mouseX, mouseY, dropdownx, dropdowny + 20, dropdownx + 100, dropdowny + 40))), dropdownx + 4, dropdowny + 30, -1);
+            textRenderer.draw(IBridge.newMatrixStack(), Text.literal("Disable").withStyle(Style.withUnderline(UIUtil.basicCollisionCheck(mouseX, mouseY, dropdownx, dropdowny + 40, dropdownx + 100, dropdowny + 60))), dropdownx + 4, dropdowny + 50, -1);
         }
 
         if(isEnabling) {
@@ -110,8 +107,8 @@ public class HUDMoveUI extends Screen {
                     withStyle = true;
                 }
 
-                textRenderer.draw(new MatrixStack(),
-                        Text.literal(m.name).setStyle(Style.EMPTY.withUnderline(withStyle)),
+                textRenderer.draw(IBridge.newMatrixStack(),
+                        Text.literal(m.name).withStyle(Style.withUnderline(withStyle)),
                          x, y, -1
                 );
 
@@ -126,7 +123,7 @@ public class HUDMoveUI extends Screen {
 
         int[] renderPos = UIUtil.getIdealRenderingPosForText(text, width / 2 - 40, height / 2 - 55, width / 2 + 40, height / 2 - 30);
 
-        textRenderer.draw(new MatrixStack(), Text.of(text), renderPos[0], renderPos[1], -1);
+        textRenderer.draw(IBridge.newMatrixStack(), text, renderPos[0], renderPos[1], -1);
 
         if(moving != null) {
             int finalX = mouseX - moveX;
@@ -141,7 +138,7 @@ public class HUDMoveUI extends Screen {
                 if(mouseX >= rend.x - 5 && mouseX <= (rend.x + rend.width + 5) && Math.abs(mouseY - rend.y) < 150) {
                     boolean renderPlusHeight = rend.y < moving.y;
 
-                    fill(new MatrixStack(), rend.x - 1, rend.y + 2 + (renderPlusHeight ? rend.height : 0), rend.x + 1, moving.y - 2 + (renderPlusHeight ? 0 : rend.height), -1);
+                    fill(IBridge.newMatrixStack(), rend.x - 1, rend.y + 2 + (renderPlusHeight ? rend.height : 0), rend.x + 1, moving.y - 2 + (renderPlusHeight ? 0 : rend.height), -1);
 
                     finalX = rend.x;
                     break;
@@ -150,7 +147,7 @@ public class HUDMoveUI extends Screen {
                 if(mouseY >= rend.y - 5 && mouseY <= (rend.y + rend.height + 5) && Math.abs(mouseX - rend.x) < 150) {
                     boolean renderPlusWidth = rend.x < moving.x;
 
-                    fill(new MatrixStack(), rend.x + (renderPlusWidth ? rend.width : 0), rend.y + rend.height - (rend.height / 2) - 1, moving.x + (renderPlusWidth ? 0 : moving.width), rend.y + rend.height - (rend.height / 2) + 1, -1);
+                    fill(IBridge.newMatrixStack(), rend.x + (renderPlusWidth ? rend.width : 0), rend.y + rend.height - (rend.height / 2) - 1, moving.x + (renderPlusWidth ? 0 : moving.width), rend.y + rend.height - (rend.height / 2) + 1, -1);
 
                     finalY = rend.y;
                     break;
@@ -160,8 +157,6 @@ public class HUDMoveUI extends Screen {
             moving.x = finalX;
             moving.y = finalY;
         }
-
-        super.render(new MatrixStack(), mouseX, mouseY, delta);
     }
 
     @Override
@@ -206,7 +201,7 @@ public class HUDMoveUI extends Screen {
             }
 
             if(UIUtil.basicCollisionCheck(mouseX, mouseY, dropdownx, dropdowny + 20, dropdownx + 100, dropdowny + 40)) {
-                MinecraftClient.getInstance().setScreen(new SettingsUI(dropDownMod));
+                MinecraftClient.getInstance().setGuiScreen(new SettingsUI(dropDownMod));
                 isDropDown = false;
             }
 
@@ -217,7 +212,7 @@ public class HUDMoveUI extends Screen {
         }
 
         if(button == 0 && UIUtil.basicCollisionCheck(mouseX, mouseY, width / 2 - 40, height / 2 - 55, width / 2 + 40, height / 2 - 30) && !isDropDown) {
-            MinecraftClient.getInstance().setScreen(new OtherModsUI());
+            MinecraftClient.getInstance().setGuiScreen(new OtherModsUI());
         }
 
         for(HUDModule mod : hudMods) {
@@ -262,10 +257,5 @@ public class HUDMoveUI extends Screen {
         }
 
         return super.mouseReleased(mouseX, mouseY, button);
-    }
-
-    @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        return super.keyPressed(keyCode, scanCode, modifiers);
     }
 }

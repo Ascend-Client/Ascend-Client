@@ -1,0 +1,33 @@
+plugins {
+    id "java"
+    id "fabric-loom" version "1.1-SNAPSHOT"
+}
+
+group 'io.github.betterclient'
+version '1.0'
+
+repositories {
+    mavenCentral()
+
+    maven {
+        name "CombatReforged"
+        url "https://maven.rizecookey.net"
+    }
+}
+
+loom {
+    customMinecraftManifest = "https://gist.githubusercontent.com/rizecookey/4c6142baaccc3875f9b227fe22f2ace5/raw/c8ed74b19f7a5315813c9d4b199798b692a8f359/1.16_combat-6.json"
+    intermediaryUrl = "https://maven.rizecookey.net/net/fabricmc/intermediary/1.16_combat-6/intermediary-1.16_combat-6-v2.jar"
+
+    runConfigs.configureEach {
+        client()
+        setDefaultMainClass("io.github.betterclient.client.launch.IDEMain")
+    }
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:1.16_combat-6"
+    mappings "net.fabricmc:yarn:1.16_combat-6+build.2:v2"
+
+    shade "org.slf4j:slf4j-api:2.0.2"
+}

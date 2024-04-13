@@ -1,17 +1,10 @@
 package io.github.betterclient.client.ui.minecraft;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.betterclient.client.Application;
 import io.github.betterclient.client.BallSack;
+import io.github.betterclient.client.bridge.IBridge.*;
 import io.github.betterclient.client.ui.clickgui.HUDMoveUI;
 import io.github.betterclient.client.util.UIUtil;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.multiplayer.MultiplayerScreen;
-import net.minecraft.client.gui.screen.option.OptionsScreen;
-import net.minecraft.client.gui.screen.world.SelectWorldScreen;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
 
 import javax.sound.sampled.*;
 import java.awt.*;
@@ -37,10 +30,10 @@ public class CustomTitleMenu extends Screen {
     private final int bgcolor = new Color(0, 0, 0, 120).getRGB();
 
     public CustomTitleMenu(boolean firstLaunch) {
-        super(Text.of(""));
+        super();
         this.isFirstLaunch = firstLaunch;
 
-        int backgroundNumber = new Random().nextInt(4);
+        int backgroundNumber = new Random().nextInt(2);
         this.chosenBackground = new Identifier("textures/ballsack/backgrounds/background" + backgroundNumber + ".png");
     }
 
@@ -98,23 +91,23 @@ public class CustomTitleMenu extends Screen {
         lastMouseY = mouseY;
         fill(matrices, 0, 0, width, height, Color.black.getRGB());
 
-        int alpha = (int) map(System.currentTimeMillis() - startAnim, 0, 2000, 0, 150);
-        fill(matrices, 0, 0, width, height, new Color(255, 255, 255, Math.max(120 - alpha, 0)).getRGB());
-
         int prepanY = (int) map(animatedMouseY, 0, height, -100, 0);
 
         //CustomLoadingOverlay.isFirst = false;
-        int panoramaY = 0;
-        if(CustomLoadingOverlay.isDoingAnimation && this.isFirstLaunch && System.currentTimeMillis() <= (endAnim + 250)) { //continue the animation for extra time so its smoother
+        int panoramaY;
+        if(CustomLoadingOverlay.isDoingAnimation && this.isFirstLaunch && System.currentTimeMillis() < (endAnim + 250)) { //continue the animation for extra time so its smoother
             CustomLoadingOverlay.doRender = false;
 
-            panoramaY = (int) map(System.currentTimeMillis() - startAnim, 0, 2000, width, prepanY);
+            int alpha = (int) map(System.currentTimeMillis() - startAnim, 0, 2000, 0, 120);
+            fill(matrices, 0, 0, width, height, new Color(255, 255, 255, Math.max(120 - alpha, 0)).getRGB());
+
+            panoramaY = (int) map(System.currentTimeMillis() - startAnim, 0, 2000, width, prepanY + 15);
             buttonWallY = (int) map(System.currentTimeMillis() - startAnim, 0, 2000, width, 0);
             if(System.currentTimeMillis() >= endAnim) {
                 panoramaY = prepanY;
                 buttonWallY = 0;
 
-                //run in seperate thread to not stop app
+                //run in separate thread to not stop app
                 new Thread(this::playStartupSound).start();
             }
         } else {
@@ -129,11 +122,9 @@ public class CustomTitleMenu extends Screen {
             panY = (int) map(animatedMouseY, 0, height, -100, 0);
         }
 
-        RenderSystem.setShaderTexture(0, chosenBackground);
-        RenderSystem.enableBlend();
-        RenderSystem.setShaderColor(1, 1, 1, 0.7f);
+        MinecraftClient.getInstance().setShaderTexture(0, chosenBackground);
+        MinecraftClient.getInstance().setShaderColor(1, 1, 1, 0.7f);
         drawTexture(matrices, panX, panY, 0, 0, width + 100, height + 100, width + 100, height + 100);
-        RenderSystem.disableBlend();
 
         animatedMouseX += ((mouseX-animatedMouseX) / 1.8) + 0.1;
         animatedMouseY += ((mouseY-animatedMouseY) / 1.8) + 0.1;
@@ -162,6 +153,8 @@ public class CustomTitleMenu extends Screen {
         iPos = getIdealRenderingPosForText("Quit", width / 2 + 5, height / 2 + 35, width / 2 + 100, height / 2 + 55);
         textRenderer.draw(matrices, "Quit", iPos[0], buttonWallY + iPos[1], -1);
 
+        CustomModButtons.render(matrices);
+
         setStart(0, 0);
 
         textRenderer.draw(matrices, "Ballsack Client (" + BallSack.getInstance().man.commitId + "/" + BallSack.getInstance().man.branch + ")", 5, height - 10, -1);
@@ -171,25 +164,27 @@ public class CustomTitleMenu extends Screen {
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         lastMouseX = (int) mouseX;
         lastMouseY = (int) mouseY;
+        MinecraftClient client = MinecraftClient.getInstance();
         if(button == 0 && (System.currentTimeMillis() > endAnim || !CustomLoadingOverlay.isDoingAnimation)) {
+            CustomModButtons.mouseClicked(mouseX, mouseY);
             if(isMouseOn(width / 2 - 100, height / 2 - 55, width / 2 + 100, height / 2 - 35)) {
-                this.client.setScreen(new SelectWorldScreen(this));
+                client.openNonCustomScreen(NonCustomScreen.SINGLEPLAYER);
             }
 
             if(isMouseOn(width / 2 - 100, height / 2 - 25, width / 2 + 100, height / 2 - 5)) {
-                this.client.setScreen(new MultiplayerScreen(this));
+                client.openNonCustomScreen(NonCustomScreen.MULTIPLAYER);
             }
 
             if(isMouseOn(width / 2 - 100, height / 2 + 5, width / 2 + 100, height / 2 + 25)) {
-                this.client.setScreen(new HUDMoveUI());
+                client.setGuiScreen(new HUDMoveUI());
             }
 
             if(isMouseOn(width / 2 - 100, height / 2 + 35, width / 2 - 5, height / 2 + 55)) {
-                this.client.setScreen(new OptionsScreen(this, this.client.options));
+                client.openNonCustomScreen(NonCustomScreen.OPTIONS);
             }
 
             if(isMouseOn(width / 2 + 5, height / 2 + 35, width / 2 + 100, height / 2 + 55)) {
-                this.client.scheduleStop();
+                client.scheduleStop();
             }
         }
 

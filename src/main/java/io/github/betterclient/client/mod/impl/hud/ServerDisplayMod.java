@@ -1,8 +1,8 @@
 package io.github.betterclient.client.mod.impl.hud;
 
+import io.github.betterclient.client.bridge.IBridge;
 import io.github.betterclient.client.mod.HUDModule;
 import io.github.betterclient.client.mod.Renderable;
-import net.minecraft.client.MinecraftClient;
 
 public class ServerDisplayMod extends HUDModule {
     public ServerDisplayMod() {
@@ -11,8 +11,8 @@ public class ServerDisplayMod extends HUDModule {
 
     @Override
     public void render(Renderable renderable) {
-        boolean singlePlayer = MinecraftClient.getInstance().getCurrentServerEntry() == null;
+        boolean singlePlayer = IBridge.MinecraftClient.getInstance().getCurrentServerEntry() == null;
 
-        renderable.renderText(singlePlayer ? "Singleplayer" : MinecraftClient.getInstance().getCurrentServerEntry().address, 0, 0, textColor.getColor());
+        renderable.renderText(singlePlayer ? "Singleplayer" : IBridge.MinecraftClient.getInstance().getAddress(), 0, 0, textColor.getColor());
     }
 }

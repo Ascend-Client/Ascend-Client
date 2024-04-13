@@ -1,5 +1,10 @@
 package io.github.betterclient.fabric;
 
+import io.github.betterclient.client.Application;
+import io.github.betterclient.client.bridge.IBridge;
+import io.github.betterclient.client.util.modremapper.ModLoadingInformation;
+import io.github.betterclient.client.util.modremapper.ModRemapper;
+import io.github.betterclient.fabric.accesswidener.AccessWidenerApplier;
 import io.github.betterclient.fabric.transformer.PrivateAccessTransformer;
 import io.github.betterclient.fabric.transformer.RemoveEntryPointImplements;
 import io.github.betterclient.quixotic.Quixotic;
@@ -9,39 +14,110 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
+import java.nio.file.Files;
+import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-public class FabricLoader implements QuixoticApplication {
+public class FabricLoader {
     private static final FabricLoader instance = new FabricLoader();
     public List<FabricMod> loadedMods = new ArrayList<>();
 
-    public void loadMod(File f) {
+    public boolean isMod(JarFile f) {
+        return f.getEntry("fabric.mod.json") != null;
+    }
+
+    public FabricMod loadMod(File f) {
         if(f == null) {
             FabricErrorReporter.exception("", new RuntimeException("f == null")).print();
-            return;
+            return null;
+        }
+
+        if(f.getName().contains("fabric-crash-report-info")) {
+            IBridge.getPreLaunch().info("Skipping mod \"Fabric Crash Report Info\"");
+            return null;
+        }
+
+        if(f.getName().contains("fabric-biome-api")) {
+            IBridge.getPreLaunch().info("Skipping mod \"Fabric Biome Api\"");
+            return null;
         }
 
         try {
             JarFile mod = new JarFile(f);
-            List<JarEntry> entries = Util.getEntries(mod);
+            if(!isMod(mod)) {
+                IBridge.getPreLaunch().info("Mod file: " + f.getName() + " isn't a mod.");
+                return null;
+            }
+
             FabricMod loaded = null;
 
-            for (JarEntry entry : entries) {
+            for (JarEntry entry : Util.getEntries(mod)) {
                 if(entry.getName().equals("fabric.mod.json")) {
                     String src = new String(Util.readAndClose(mod.getInputStream(entry)));
                     JSONObject obj = new JSONObject(src);
-                    JSONArray mixes = obj.getJSONArray("mixins");
+                    String name;
+                    String id = obj.getString("id");
+                    if(obj.has("name"))
+                        name = obj.getString("name");
+                    else
+                        name = id;
 
-                    String name = obj.getString("name");
+
+                    for (FabricMod loadedMod : this.loadedMods) {
+                        if(loadedMod.name().equals(name)) {
+                            IBridge.getPreLaunch().info("Mod " + loadedMod.name() + " already loaded!");
+                            return loadedMod;
+                        }
+                    }
+
+                    if(obj.has("jars")) {
+                        for (Object jars : obj.getJSONArray("jars")) {
+                            JSONObject objj = (JSONObject) jars;
+                            String path = objj.getString("file");
+
+                            InputStream is = mod.getInputStream(mod.getEntry(path));
+                            File dir = new File(Application.modLoadingInformation.state().equals(ModLoadingInformation.State.LOADING_BUILTIN) ? Application.modJarsFolder : Application.customJarsFolder, "builtin");
+                            File ff = new File(dir, path.substring(path.lastIndexOf('/') + 1));
+                            Files.createDirectories(dir.toPath());
+                            ff.delete();
+                            ff.createNewFile();
+                            Files.write(ff.toPath(), is.readAllBytes());
+                            is.close();
+
+                            if(isMod(new JarFile(ff))) {
+                                try {
+                                    this.loadMod(name, Application.modLoadingInformation.state().equals(ModLoadingInformation.State.LOADING_BUILTIN) ? ModRemapper.remapInternalMod(ff) : ModRemapper.remapMod(ff, true));
+                                } catch (Exception e) {
+                                    FabricErrorReporter.exception("Nested Mod in: " + name, e).print();
+                                    //Peacefully continue with other mods
+                                }
+                            } else {
+                                Quixotic.classLoader.addURL(ff.toURI().toURL());
+                            }
+                        }
+                    }
+
+                    JSONArray mixes = obj.has("mixins") ? obj.getJSONArray("mixins") : new JSONArray();
+                    String accessWidener = obj.has("accessWidener") ? obj.getString("accessWidener") : "";
+                    String version = obj.getString("version");
+
                     List<String> mainPoints = new ArrayList<>();
                     List<String> preMainPoints = new ArrayList<>();
-                    List<String> mixins = new ArrayList<>(mixes.toList().stream().map(String.class::cast).toList());
+                    Map<String, String> allEntries = new HashMap<>();
+                    List<String> mixins = new ArrayList<>();
+                    for (int i = 0; i < mixes.length(); i++) {
+                        if(mixes.get(i) instanceof String) {
+                            mixins.add(mixes.getString(i));
+                        } else {
+                            if(mixes.getJSONObject(i).getString("environment").equals("client"))
+                                mixins.add(mixes.getJSONObject(i).getString("config"));
+                        }
+                    }
 
                     if(obj.has("entrypoints")) {
                         JSONObject entrypoints = obj.getJSONObject("entrypoints");
@@ -53,6 +129,10 @@ public class FabricLoader implements QuixoticApplication {
 
                             if(key.equals("preLaunch")) {
                                 preMainPoints.addAll(entrypoints.getJSONArray(key).toList().stream().map(String.class::cast).toList());
+                            }
+
+                            for (Object o : entrypoints.getJSONArray(key).toList()) {
+                                allEntries.put(key, (String) o);
                             }
                         }
                     }
@@ -74,13 +154,43 @@ public class FabricLoader implements QuixoticApplication {
                         }
 
                         @Override
+                        public Map<String, String> allEntries() {
+                            return allEntries;
+                        }
+
+                        @Override
                         public List<String> mixinConfigs() {
                             return mixins;
                         }
 
                         @Override
+                        public String accessWidener() {
+                            return accessWidener;
+                        }
+
+                        @Override
                         public File from() {
                             return f;
+                        }
+                        String a = null;
+                        @Override
+                        public String getContainer() {
+                            return a;
+                        }
+
+                        @Override
+                        public void setContainer(String s) {
+                            a = s;
+                        }
+
+                        @Override
+                        public String version() {
+                            return version;
+                        }
+
+                        @Override
+                        public String id() {
+                            return id;
                         }
                     };
                 }
@@ -89,62 +199,54 @@ public class FabricLoader implements QuixoticApplication {
             if(loaded != null) {
                 loadedMods.add(loaded);
 
-                Method m = QuixoticClassLoader.class.getDeclaredMethod("addURL", URL.class);
-                m.setAccessible(true);
-                m.invoke(Quixotic.classLoader, f.toURI().toURL());
-                System.out.println("Successfully loaded mod: " + loaded.name());
+                Quixotic.classLoader.addURL(f.toURI().toURL());
+
+                if(!loaded.accessWidener().equals(""))
+                    Quixotic.classLoader.addPlainTransformer(new AccessWidenerApplier(loaded.accessWidener()));
+
+                IBridge.getPreLaunch().info("Successfully loaded mod: " + loaded.name() + " (" + loaded.from().getAbsolutePath() + ")");
+                return loaded;
             }
         } catch (Exception e) {
             FabricErrorReporter.exception(f.getAbsolutePath(), e).print();
         }
+        return null;
+    }
+
+    private void loadMod(String containerMod, File mod) {
+        if(this.loadMod(mod) != null)
+            loadedMods.get(loadedMods.size() - 1).setContainer(containerMod);
     }
 
     public static FabricLoader getInstance() {
         return instance;
     }
 
-    @Override
-    public String getApplicationName() {
-        return null;
-    }
-
-    @Override
-    public String getApplicationVersion() {
-        return null;
-    }
-
-    @Override
-    public String getMainClass() {
-        return null;
-    }
-
-    @Override
     public void loadApplicationManager(QuixoticClassLoader quixoticClassLoader) {
         quixoticClassLoader.addPlainTransformer(new RemoveEntryPointImplements());
         quixoticClassLoader.addPlainTransformer(new PrivateAccessTransformer());
+    }
 
+    public List<String> getMixinConfigurations() {
         try {
             for (FabricMod mod : loadedMods) {
                 for (String preLaunch : mod.preMainEntries()) {
-                    Class<?> loadedMod = Class.forName(preLaunch, false, quixoticClassLoader);
+                    if(preLaunch.equals("com.replaymod.core.MixinExtrasInit"))
+                        continue;
 
+                    Class<?> loadedMod = Class.forName(preLaunch, false, Quixotic.classLoader);
                     loadedMod.getDeclaredMethod("onPreLaunch").invoke(loadedMod.getConstructor().newInstance());
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
 
-    @Override
-    public List<String> getMixinConfigurations() {
         ArrayList<String> total = new ArrayList<>();
 
         for (FabricMod mod : loadedMods) {
             total.addAll(mod.mixinConfigs());
         }
-
-        total.add("fabric.mixins.json");
 
         return total;
     }
@@ -152,6 +254,18 @@ public class FabricLoader implements QuixoticApplication {
     public void callClientMain() throws Exception {
         for (FabricMod mod : loadedMods) {
             for (String entry : mod.clientEntries()) {
+                if(entry.contains("::")) {
+                    Class<?> loadedMod = Class.forName(entry.substring(0, entry.indexOf(":")), false, Quixotic.classLoader);
+                    String methodName = entry.substring(entry.lastIndexOf(":") + 1);
+                    Method mde = loadedMod.getDeclaredMethod(methodName);
+                    if(Modifier.isStatic(mde.getModifiers())) {
+                        mde.invoke(null);
+                    } else {
+                        mde.invoke(loadedMod.getConstructor().newInstance());
+                    }
+                    continue;
+                }
+
                 Class<?> loadedMod = Class.forName(entry, false, Quixotic.classLoader);
 
                 Method foundInit = null;

@@ -2,9 +2,9 @@ package io.github.betterclient.client.asm;
 
 import io.github.betterclient.quixotic.ClassTransformer;
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.tree.AnnotationNode;
 import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.InnerClassNode;
+
+import static io.github.betterclient.client.asm.ASMHelper.*;
 
 public class YarnFix implements ClassTransformer {
     @Override
@@ -25,17 +25,32 @@ public class YarnFix implements ClassTransformer {
         return bnode.output();
     }
 
-    private int fixAccess(int access) {
-        if((access & 7) != Opcodes.ACC_PRIVATE) { //private
-            return (access & ~7) | Opcodes.ACC_PUBLIC; //public
+    private static int fixAccess(int access) {
+        if ((access & 0x7) != Opcodes.ACC_PRIVATE) {
+            return (access & (~0x7)) | Opcodes.ACC_PUBLIC;
+        } else if ((access & 0x7) != Opcodes.ACC_PROTECTED) {
+            return (access & (~0x7)) | Opcodes.ACC_PUBLIC;
+        } else {
+            return access;
         }
-
-        return access;
     }
 
+    private static int fixFieldAccess(ClassNode node, int access) {
+        if (isFinal(access) && !isInterface(node.access)) {
+            access &= ~Opcodes.ACC_FINAL;
+        }
+
+        return fixAccess(access);
+    }
+
+
     public void fixAccess(ClassNode node) {
+        if(isPublic(node.access) && isFinal(node.access) && !isInterface(node.access) && (node.name.startsWith("net/minecraft/")) && !isEnum(node.access)) {
+            node.access = Opcodes.ACC_PUBLIC;
+        }
+
         node.access = fixAccess(node.access);
-        node.fields.forEach((field) -> field.access = fixAccess(field.access));
+        node.fields.forEach((field) -> field.access = fixFieldAccess(node, field.access));
         node.methods.forEach((method) -> method.access = fixAccess(method.access));
         node.innerClasses.forEach(clazz -> clazz.access = fixAccess(clazz.access));
     }

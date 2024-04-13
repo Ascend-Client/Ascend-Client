@@ -6,6 +6,7 @@ import io.github.betterclient.client.mod.HUDModule;
 import io.github.betterclient.client.mod.Renderable;
 
 import java.awt.*;
+import java.text.DecimalFormat;
 
 public class ReachDisplayMod extends HUDModule {
     public long lastTick = 0;
@@ -19,7 +20,7 @@ public class ReachDisplayMod extends HUDModule {
     public void render(Renderable renderable) {
         String text;
 
-        if(lastTick + 1000 > System.currentTimeMillis()) {
+        if(lastTick + 2000 > System.currentTimeMillis()) {
             text = lastTickReach + " blocks";
         } else {
             text = "No hits";
@@ -31,10 +32,6 @@ public class ReachDisplayMod extends HUDModule {
     @EventTarget
     public void onHit(HitEntityEvent ev) {
         lastTick = System.currentTimeMillis();
-        String reach = (ev.distance + "");
-
-        reach = reach.substring(0, reach.indexOf(".") + 2);
-
-        lastTickReach = Double.parseDouble(reach);
+        lastTickReach = Double.parseDouble(new DecimalFormat("0.00").format(ev.distance));
     }
 }

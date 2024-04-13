@@ -1,11 +1,10 @@
 package io.github.betterclient.client.mod.impl.hud;
 
+import io.github.betterclient.client.bridge.IBridge;
+import io.github.betterclient.client.bridge.IBridge.*;
 import io.github.betterclient.client.mod.HUDModule;
 import io.github.betterclient.client.mod.Renderable;
 import io.github.betterclient.client.mod.setting.BooleanSetting;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 
 public class ArmorStatusMod extends HUDModule {
     public BooleanSetting leftToRight = new BooleanSetting("Left To Right", false);
@@ -23,16 +22,16 @@ public class ArmorStatusMod extends HUDModule {
     public void render(Renderable r) {
         ItemStack helm, chest, legging, boots;
 
-        if(MinecraftClient.getInstance().player == null) {
-            helm = new ItemStack(Items.DIAMOND_HELMET);
-            chest = new ItemStack(Items.DIAMOND_CHESTPLATE);
-            legging = new ItemStack(Items.DIAMOND_LEGGINGS);
-            boots = new ItemStack(Items.DIAMOND_BOOTS);
+        if(MinecraftClient.getInstance().getPlayer() == null) {
+            helm = IBridge.getInstance().getClient().getItems().DIAMOND_HELMET;
+            chest = IBridge.getInstance().getClient().getItems().DIAMOND_CHESTPLATE;
+            legging = IBridge.getInstance().getClient().getItems().DIAMOND_LEGGINGS;
+            boots = IBridge.getInstance().getClient().getItems().DIAMOND_BOOTS;
         } else {
-            helm = MinecraftClient.getInstance().player.getInventory().getArmorStack(3);
-            chest = MinecraftClient.getInstance().player.getInventory().getArmorStack(2);
-            legging = MinecraftClient.getInstance().player.getInventory().getArmorStack(1);
-            boots = MinecraftClient.getInstance().player.getInventory().getArmorStack(0);
+            helm = MinecraftClient.getInstance().getPlayer().getArmorStack(3);
+            chest = MinecraftClient.getInstance().getPlayer().getArmorStack(2);
+            legging = MinecraftClient.getInstance().getPlayer().getArmorStack(1);
+            boots = MinecraftClient.getInstance().getPlayer().getArmorStack(0);
         }
 
         if(leftToRight.isValue()){

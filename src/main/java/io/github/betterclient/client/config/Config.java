@@ -6,7 +6,6 @@ import io.github.betterclient.client.config.impl.ClientImplementation;
 import io.github.betterclient.client.mod.HUDModule;
 import io.github.betterclient.client.mod.Module;
 import io.github.betterclient.client.mod.setting.*;
-import net.minecraft.client.util.InputUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -74,7 +73,7 @@ public class Config {
                     }
 
                     if(s instanceof KeyBindSetting set) {
-                        set.bind.setBoundKey(InputUtil.fromKeyCode(setting.keyBindVal(), 0));
+                        set.bind.setKey(setting.keyBindVal());
                     }
 
                     if(s instanceof ModeSetting set) {
