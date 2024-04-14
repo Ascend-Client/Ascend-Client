@@ -15,7 +15,7 @@ public class BridgeImpl implements IBridge {
 
     @Override
     public String getVersion() {
-        return "1.19.4";
+        return "1.16-combat-6";
     }
 
     @Override

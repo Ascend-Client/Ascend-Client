@@ -16,10 +16,7 @@ import org.objectweb.asm.Handle;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.*;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
@@ -34,6 +31,9 @@ public class ModRemapper {
         IBridge.PreLaunchBridge bridge = IBridge.getPreLaunch();
         DownloadedMinecraft version = Application.minecraft;
 
+        ModLoadingInformation old = Application.modLoadingInformation;
+        Application.modLoadingInformation = new ModLoadingInformation(old.minecraftClasses(), old.nonCustomMods(), old.state(), modToRemap);
+
         File remappedMod = new File(Application.remappedModsFolder, modToRemap.getName().substring(0, modToRemap.getName().lastIndexOf('.')) + "-remapped.jar");
         if(isBuiltin) {
             remappedMod = new File(Application.remappedModsFolder, "builtin");
@@ -41,13 +41,15 @@ public class ModRemapper {
             remappedMod = new File(remappedMod, modToRemap.getName().substring(0, modToRemap.getName().lastIndexOf('.')) + "-remapped.jar");
         }
         if(remappedMod.exists() && !Application.doRemappingOfAlreadyRemappedMods) {
-            return remappedMod;
+            if(Util.readAndClose(new FileInputStream(remappedMod)).length != 0)
+                return remappedMod;
+            else
+                bridge.info("Found corrupted mod file, deleting and remapping");
         }
+
         bridge.info("Remapping mod " + modToRemap.getName());
 
-        if(!remappedMod.delete()) {
-            bridge.error("Failed to delete file (?)");
-        }
+        if(!remappedMod.delete()) {}
         if(!remappedMod.createNewFile()) {
             bridge.error("Failed to create file (?)");
         }
@@ -998,15 +1000,20 @@ public class ModRemapper {
         IBridge.PreLaunchBridge bridge = IBridge.getPreLaunch();
         DownloadedMinecraft version = Application.minecraft;
 
+        ModLoadingInformation old = Application.modLoadingInformation;
+        Application.modLoadingInformation = new ModLoadingInformation(old.minecraftClasses(), old.nonCustomMods(), old.state(), modToRemap);
+
         File remappedMod = new File(Application.remappedModJarsFolder, modToRemap.getName().substring(0, modToRemap.getName().lastIndexOf('.')) + "-remapped.jar");
         if(remappedMod.exists() && !Application.doRemappingOfAlreadyRemappedMods) {
-            return remappedMod;
+            if(Util.readAndClose(new FileInputStream(remappedMod)).length != 0)
+                return remappedMod;
+            else
+                bridge.info("Found corrupted mod file, deleting and remapping");
         }
+
         bridge.info("Remapping mod internal " + modToRemap.getName());
 
-        if(!remappedMod.delete()) {
-            bridge.error("Failed to delete file (?)");
-        }
+        if(!remappedMod.delete()) {}
         if(!remappedMod.createNewFile()) {
             bridge.error("Failed to create file (?)");
         }

@@ -7,17 +7,18 @@ import io.github.betterclient.client.util.modremapper.ModRemapper;
 import io.github.betterclient.fabric.accesswidener.AccessWidenerApplier;
 import io.github.betterclient.fabric.transformer.PrivateAccessTransformer;
 import io.github.betterclient.fabric.transformer.RemoveEntryPointImplements;
+import io.github.betterclient.fabric.transformer.RemoveInitializer;
 import io.github.betterclient.quixotic.Quixotic;
-import io.github.betterclient.quixotic.QuixoticApplication;
 import io.github.betterclient.quixotic.QuixoticClassLoader;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.net.URL;
 import java.nio.file.Files;
 import java.util.*;
 import java.util.jar.JarEntry;
@@ -225,6 +226,7 @@ public class FabricLoader {
     public void loadApplicationManager(QuixoticClassLoader quixoticClassLoader) {
         quixoticClassLoader.addPlainTransformer(new RemoveEntryPointImplements());
         quixoticClassLoader.addPlainTransformer(new PrivateAccessTransformer());
+        quixoticClassLoader.addPlainTransformer(new RemoveInitializer());
     }
 
     public List<String> getMixinConfigurations() {
@@ -257,12 +259,24 @@ public class FabricLoader {
                 if(entry.contains("::")) {
                     Class<?> loadedMod = Class.forName(entry.substring(0, entry.indexOf(":")), false, Quixotic.classLoader);
                     String methodName = entry.substring(entry.lastIndexOf(":") + 1);
-                    Method mde = loadedMod.getDeclaredMethod(methodName);
-                    if(Modifier.isStatic(mde.getModifiers())) {
-                        mde.invoke(null);
-                    } else {
-                        mde.invoke(loadedMod.getConstructor().newInstance());
+                    try {
+                        Field f = loadedMod.getField(methodName);
+                        Runnable theRunnable;
+                        if(Modifier.isStatic(f.getModifiers())) {
+                            theRunnable = (Runnable) f.get(null);
+                        } else {
+                            theRunnable = (Runnable) f.get(loadedMod.getConstructor().newInstance());
+                        }
+                        theRunnable.run();
+                    } catch (NoSuchFieldException exception) {
+                        Method mde = loadedMod.getDeclaredMethod(methodName);
+                        if(Modifier.isStatic(mde.getModifiers())) {
+                            mde.invoke(null);
+                        } else {
+                            mde.invoke(loadedMod.getConstructor().newInstance());
+                        }
                     }
+
                     continue;
                 }
 
@@ -280,5 +294,24 @@ public class FabricLoader {
                 foundInit.invoke(loadedMod.getConstructor().newInstance());
             }
         }
+    }
+
+    public String getModName(File f) throws IOException {
+        JarFile mod = new JarFile(f);
+        if(!isMod(mod)) {
+            IBridge.getPreLaunch().info("Mod file: " + f.getName() + " isn't a mod.");
+            return null;
+        }
+        JarEntry modJson = mod.getJarEntry("fabric.mod.json");
+        String src = new String(Util.readAndClose(mod.getInputStream(modJson)));
+        JSONObject obj = new JSONObject(src);
+
+        String name;
+        String id = obj.getString("id");
+        if(obj.has("name"))
+            name = obj.getString("name");
+        else
+            name = id;
+        return name;
     }
 }

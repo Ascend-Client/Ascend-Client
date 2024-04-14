@@ -48,7 +48,7 @@ public class MinecraftDownloader {
         JarFile clientJarFile = new JarFile(clientJar);
         for (JarEntry entry : Util.getEntries(clientJarFile)) {
             byte[] bites = Util.readAndClose(clientJarFile.getInputStream(entry));
-            if(!entry.getName().endsWith(".class") && !entry.getName().equals("META-INF/MANIFEST.MF") && !entry.isDirectory()) {
+            if(!entry.getName().endsWith(".class") && !entry.getName().equals("META-INF/MANIFEST.MF") && !entry.isDirectory() && !entry.getName().equals("log4j.xml")) {
                 if(bites != null)
                     toAdd.put(entry.getName(), bites);
             }

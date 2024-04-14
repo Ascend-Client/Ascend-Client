@@ -4,6 +4,7 @@ import io.github.betterclient.client.asm.YarnFix;
 import io.github.betterclient.client.bridge.IBridge;
 import io.github.betterclient.client.util.downloader.DownloadedMinecraft;
 import io.github.betterclient.client.util.downloader.MinecraftDownloader;
+import io.github.betterclient.client.util.mclaunch.StatusFrame;
 import io.github.betterclient.client.util.modremapper.ModLoadingInformation;
 import io.github.betterclient.client.util.modremapper.ModRemapper;
 import io.github.betterclient.fabric.FabricLoader;
@@ -22,6 +23,7 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -41,7 +43,8 @@ public class Application {
                           ignoreDownloadedMinecraft = false;
     public static DownloadedMinecraft minecraft;
 
-    public static ModLoadingInformation modLoadingInformation = new ModLoadingInformation(new ArrayList<>(), new ArrayList<>(), ModLoadingInformation.State.LOADING_BUILTIN);
+    public static AtomicReference<StatusFrame> statusFrame = new AtomicReference<>(null);
+    public static ModLoadingInformation modLoadingInformation = new ModLoadingInformation(new ArrayList<>(), new ArrayList<>(), ModLoadingInformation.State.LOADING_BUILTIN, null);
 
     public static void load(QuixoticClassLoader quixoticClassLoader) {
         quixoticClassLoader.addExclusion("io.github.betterclient.client.asm.Better");
@@ -104,7 +107,9 @@ public class Application {
         }
 
         try {
-            modLoadingInformation = new ModLoadingInformation(new ArrayList<>(), new ArrayList<>(), ModLoadingInformation.State.LOADING_BUILTIN);
+            new Thread(StatusFrame::new).start();
+            while (statusFrame.get() == null) {}
+            modLoadingInformation = new ModLoadingInformation(new ArrayList<>(), new ArrayList<>(), ModLoadingInformation.State.LOADING_BUILTIN, null);
 
             JarFile f = new JarFile(minecraft.yarnJar());
 
@@ -123,7 +128,7 @@ public class Application {
                 );
             }
 
-            modLoadingInformation = new ModLoadingInformation(modLoadingInformation.minecraftClasses(), modLoadingInformation.nonCustomMods(), ModLoadingInformation.State.LOADING_CUSTOM);
+            modLoadingInformation = new ModLoadingInformation(modLoadingInformation.minecraftClasses(), modLoadingInformation.nonCustomMods(), ModLoadingInformation.State.LOADING_CUSTOM, null);
 
             for (File customMod : Objects.requireNonNull(customJarsFolder.listFiles())) {
                 if(customMod.getName().endsWith(".jar")) {
@@ -135,9 +140,11 @@ public class Application {
                 }
             }
 
-            modLoadingInformation = new ModLoadingInformation(modLoadingInformation.minecraftClasses(), modLoadingInformation.nonCustomMods(), ModLoadingInformation.State.LOADED_ALL);
+            modLoadingInformation = new ModLoadingInformation(modLoadingInformation.minecraftClasses(), modLoadingInformation.nonCustomMods(), ModLoadingInformation.State.LOADED_ALL, null);
+            statusFrame.get().setVisible(false);
+            statusFrame.get().dispose();
         } catch (Exception e) {
-            throw new RuntimeException("Mod loading failed at: " + modLoadingInformation.state(), e);
+            throw new RuntimeException("Mod loading failed while " + modLoadingInformation.state().getName(), e);
         }
 
         quixoticClassLoader.addPlainTransformer(new YarnFix());
