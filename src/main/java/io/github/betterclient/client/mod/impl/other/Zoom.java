@@ -3,8 +3,11 @@ package io.github.betterclient.client.mod.impl.other;
 import io.github.betterclient.client.BallSack;
 import io.github.betterclient.client.bridge.IBridge;
 import io.github.betterclient.client.bridge.IBridge.*;
+import io.github.betterclient.client.event.EventTarget;
+import io.github.betterclient.client.event.impl.MouseScrollEvent;
 import io.github.betterclient.client.mod.Category;
 import io.github.betterclient.client.mod.Module;
+import io.github.betterclient.client.mod.setting.BooleanSetting;
 import io.github.betterclient.client.mod.setting.KeyBindSetting;
 
 public class Zoom extends Module {
@@ -15,10 +18,12 @@ public class Zoom extends Module {
     private static boolean cachedSmoothCamera;
 
     public KeyBindSetting bind = new KeyBindSetting("Zoom Key", IBridge.getKeys().KEY_C, () -> isZooming = true, () -> isZooming = false);
+    public BooleanSetting flip = new BooleanSetting("Flip Scroll", false);
 
     public Zoom() {
         super("Zoom", Category.OTHER);
         this.addSetting(this.bind);
+        this.addSetting(flip);
     }
 
     public static Zoom get() {
@@ -27,11 +32,10 @@ public class Zoom extends Module {
 
     public double handleZoom(double fov) {
         MinecraftClient mc = MinecraftClient.getInstance();
-        if(mc.getCurrentScreenPointer() != null)
+        if (mc.getCurrentScreenPointer() != null)
             return fov;
 
         if (mc.isKeyPressed(bind.key)) {
-
             if (!isZoomed) {
                 cachedSmoothCamera = mc.getOptions().isSmoothCamera();
             }
@@ -48,7 +52,6 @@ public class Zoom extends Module {
             return (modifiedZoom);
 
         } else {
-
             if (isZoomed) {
                 mc.getOptions().setSmoothCameraEnabled(cachedSmoothCamera);
                 isZoomed = false;
@@ -59,5 +62,18 @@ public class Zoom extends Module {
 
         return fov;
 
+    }
+
+    @EventTarget
+    public void handleScrollWheel(MouseScrollEvent event) {
+        if(!isZooming) return;
+
+        if (event.amount == (this.flip.value ? -1 : 1)) {
+            zoomFactor *= 0.9;
+        } else if (event.amount == (this.flip.value ? 1 : -1)) {
+            zoomFactor *= 1.1;
+        }
+
+        event.cancel();
     }
 }
