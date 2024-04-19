@@ -68,9 +68,9 @@ public class Zoom extends Module {
     public void handleScrollWheel(MouseScrollEvent event) {
         if(!isZooming) return;
 
-        if (event.amount == (this.flip.value ? -1 : 1)) {
+        if (event.amount == (this.flip.value ? -1 : 1) && zoomFactor > 0.1) {
             zoomFactor *= 0.9;
-        } else if (event.amount == (this.flip.value ? 1 : -1)) {
+        } else if (event.amount == (this.flip.value ? 1 : -1) && zoomFactor < 0.7) {
             zoomFactor *= 1.1;
         }
 
