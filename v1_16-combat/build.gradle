@@ -28,6 +28,4 @@ loom {
 dependencies {
     minecraft "com.mojang:minecraft:1.16_combat-6"
     mappings "net.fabricmc:yarn:1.16_combat-6+build.2:v2"
-
-    shade "org.slf4j:slf4j-api:2.0.2"
 }

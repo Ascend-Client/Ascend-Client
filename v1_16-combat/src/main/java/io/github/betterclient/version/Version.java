@@ -6,8 +6,6 @@ import io.github.betterclient.client.util.downloader.MinecraftVersion;
 import io.github.betterclient.fabric.Util;
 import io.github.betterclient.version.mods.CookeyMod;
 import io.github.betterclient.version.util.InternalBridgeImplementation;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFW;
 
 import java.io.File;
@@ -15,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Version {
-    private static final Logger LOGGER = LogManager.getLogger("Ballsack Client");
 
     public static IBridge bridge;
     public static IBridge.KeyStorage keys = new IBridge.KeyStorage(GLFW.GLFW_KEY_LEFT_SHIFT, GLFW.GLFW_KEY_C, GLFW.GLFW_KEY_RIGHT_SHIFT, GLFW.GLFW_KEY_BACKSPACE, GLFW.GLFW_KEY_ESCAPE, GLFW.GLFW_KEY_ENTER, GLFW.GLFW_KEY_LEFT_ALT);
@@ -34,12 +31,12 @@ public class Version {
 
         @Override
         public void info(String s) {
-            LOGGER.info(s);
+            System.out.println(s);
         }
 
         @Override
         public void error(String s) {
-            LOGGER.error(s);
+            System.err.println(s);
         }
 
         @Override
