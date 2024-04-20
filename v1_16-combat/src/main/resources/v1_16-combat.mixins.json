@@ -20,6 +20,7 @@
     "client.entity.MixinEndCrystal",
     "client.entity.MixinEntity",
     "client.entity.MixinItemEntity",
+    "client.fixes.MixinGlStateManager",
     "client.fixes.MixinLifecycledResourceManagerImpl",
     "client.fixes.MixinNamespaceResourceManager",
     "client.fixes.MixinSoundManager",

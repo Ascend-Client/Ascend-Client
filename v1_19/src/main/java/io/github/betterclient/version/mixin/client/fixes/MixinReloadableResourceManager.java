@@ -1,5 +1,7 @@
 package io.github.betterclient.version.mixin.client.fixes;
 
+import io.github.betterclient.client.BallSack;
+import io.github.betterclient.client.bridge.IBridge;
 import io.github.betterclient.fabric.FabricLoader;
 import io.github.betterclient.fabric.FabricMod;
 import net.minecraft.client.MinecraftClient;
@@ -29,30 +31,16 @@ public interface MixinReloadableResourceManager {
     @Overwrite
     default Resource getResourceOrThrow(Identifier id) throws FileNotFoundException {
         Optional<Resource> of = this.getResource(id);
+
         if(of.isEmpty()) {
-            return findLoadedResource(id);
-        } else {
-            return of.orElseThrow(FileNotFoundException::new);
-        }
-    }
+            IBridge.Identifier identifier = new IBridge.Identifier(id);
+            IBridge.Resource resource = BallSack.getInstance().findLoadedResource(identifier);
 
-    default Resource findLoadedResource(Identifier id) {
-        String addr = "assets/" + id.getNamespace() + "/" + id.getPath();
-
-        for (FabricMod mod : FabricLoader.getInstance().loadedMods) {
-            try {
-                JarFile f = new JarFile(mod.from());
-                ZipEntry entry = f.getEntry(addr);
-                if(entry != null) {
-                    InputStream is = f.getInputStream(entry);
-                    return new Resource(MinecraftClient.getInstance().getDefaultResourcePack(), () -> new ByteArrayInputStream(readAndClose(is)));
-                }
-                f.close();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            if(resource != null) {
+                return new Resource(MinecraftClient.getInstance().getDefaultResourcePack(), resource.resourceSupplier::getInputStream);
             }
         }
 
-        return null;
+        throw new FileNotFoundException();
     }
 }

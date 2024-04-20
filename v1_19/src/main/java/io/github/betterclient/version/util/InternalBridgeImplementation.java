@@ -105,4 +105,14 @@ public class InternalBridgeImplementation implements IBridge.InternalBridge {
     public boolean isKeyPressed(int key) {
         return InputUtil.isKeyPressed(MinecraftClient.getInstance().getWindow().getHandle(), key);
     }
+
+    @Override
+    public String Identifier_namespace(Object pointer) {
+        return ((Identifier) pointer).getNamespace();
+    }
+
+    @Override
+    public String Identifier_path(Object pointer) {
+        return ((Identifier) pointer).getPath();
+    }
 }

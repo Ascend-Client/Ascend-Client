@@ -72,6 +72,10 @@ public interface IBridge {
         void GL11_enableScissor(int x, int y, int width, int height);
 
         boolean isKeyPressed(int key);
+
+        String Identifier_namespace(Object pointer);
+
+        String Identifier_path(Object pointer);
     }
 
     String getVersion();
@@ -491,9 +495,22 @@ public interface IBridge {
         public final String path;
         public final Object pointer;
 
+        public Identifier(Object pointer) {
+            this.path = "";
+            this.pointer = pointer;
+        }
+
         public Identifier(String path) {
             this.path = path;
             this.pointer = getInstance().getInternal().Identifier_new(path);
+        }
+
+        public String path() {
+            return getInstance().getInternal().Identifier_path(pointer);
+        }
+
+        public String namespace() {
+            return getInstance().getInternal().Identifier_namespace(pointer);
         }
     }
 
