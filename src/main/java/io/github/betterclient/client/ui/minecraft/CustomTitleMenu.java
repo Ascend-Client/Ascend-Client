@@ -5,6 +5,7 @@ import io.github.betterclient.client.BallSack;
 import io.github.betterclient.client.bridge.IBridge.*;
 import io.github.betterclient.client.ui.clickgui.HUDMoveUI;
 import io.github.betterclient.client.util.UIUtil;
+import io.github.betterclient.client.util.autoupdater.AutoUpdaterScreen;
 
 import javax.sound.sampled.*;
 import java.awt.*;
@@ -87,13 +88,17 @@ public class CustomTitleMenu extends Screen {
             endAnim = System.currentTimeMillis() + 2000; //2 second animation
         }
 
+        if(BallSack.getInstance().doUpdate && BallSack.getInstance().man.checkUpdate())
+            MinecraftClient.getInstance().setGuiScreen(new AutoUpdaterScreen(chosenBackground, this));
+        else
+            BallSack.getInstance().doUpdate = false;
+
         lastMouseX = mouseX;
         lastMouseY = mouseY;
         fill(matrices, 0, 0, width, height, Color.black.getRGB());
 
         int prepanY = (int) map(animatedMouseY, 0, height, -100, 0);
 
-        //CustomLoadingOverlay.isFirst = false;
         int panoramaY;
         if(CustomLoadingOverlay.isDoingAnimation && this.isFirstLaunch && System.currentTimeMillis() < (endAnim + 250)) { //continue the animation for extra time so its smoother
             CustomLoadingOverlay.doRender = false;
@@ -112,6 +117,7 @@ public class CustomTitleMenu extends Screen {
             }
         } else {
             panoramaY = 0;
+            buttonWallY = 0;
             CustomLoadingOverlay.isDoingAnimation = false;
         }
 

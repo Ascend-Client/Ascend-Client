@@ -92,6 +92,8 @@ subprojects {
     }
 
     dependencies {
+        if(project.name == "Version-Auto-Updater") return
+
         shade parent
         shade files(downloadQuixotic())
 

@@ -1,9 +1,14 @@
 package io.github.betterclient.client.util;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonParser;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -47,5 +52,20 @@ public class GithubMan {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public boolean checkUpdate() {
+        try {
+            URL url = new URL("https://api.github.com/repos/betterclient/Minecraft-Client/commits");
+            InputStream is = url.openStream();
+            byte[] bites = is.readAllBytes();
+            is.close();
+
+            JsonArray array = new JsonParser().parse(new String(bites)).getAsJsonArray();
+            String version = array.get(0).getAsJsonObject().get("sha").getAsString();
+            return !version.startsWith(this.commitId);
+        } catch (IOException ignored) {ignored.printStackTrace();}
+
+        return false;
     }
 }
