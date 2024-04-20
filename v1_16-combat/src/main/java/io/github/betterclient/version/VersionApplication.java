@@ -6,6 +6,7 @@ import io.github.betterclient.quixotic.QuixoticApplication;
 import io.github.betterclient.quixotic.QuixoticClassLoader;
 import io.github.betterclient.quixotic.Side;
 import io.github.betterclient.version.transformers.RenderSystemTransformer;
+import io.github.betterclient.version.transformers.TexturedButtonWidgetTransformer;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -34,6 +35,7 @@ public class VersionApplication implements QuixoticApplication {
         Application.remappedModsFolder = new File(Application.remappedModsFolder, "1.16-combat-6");
         Application.load(quixoticClassLoader);
         quixoticClassLoader.addPlainTransformer(new RenderSystemTransformer());
+        quixoticClassLoader.addPlainTransformer(new TexturedButtonWidgetTransformer());
     }
 
     @Override

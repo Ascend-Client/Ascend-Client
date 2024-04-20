@@ -124,6 +124,12 @@ public class ModRemapper {
 
                 finallyModifyNode(node, tinyMappings);
 
+                try {
+                    ModIssueFixer.edit(node, modToRemap);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+
                 ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);
                 node.accept(writer);
                 bytes = writer.toByteArray();
@@ -1087,6 +1093,12 @@ public class ModRemapper {
                 }
 
                 finallyModifyNode(node, tinyMappings);
+
+                try {
+                    ModIssueFixer.edit(node, modToRemap);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
 
                 ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);
                 node.accept(writer);
