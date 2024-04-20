@@ -9,6 +9,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.Mouse;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.hud.InGameHud;
+import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.multiplayer.MultiplayerScreen;
 import net.minecraft.client.gui.screen.options.OptionsScreen;
@@ -196,5 +197,10 @@ public abstract class MixinMinecraftClient implements IBridge.MinecraftClient {
     @Override
     public void openNonCustomScreen(Object screen) {
         this.openScreen((Screen) screen);
+    }
+
+    @Override
+    public boolean isChat(Object screen) {
+        return screen instanceof ChatScreen;
     }
 }

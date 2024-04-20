@@ -6,6 +6,7 @@ import io.github.betterclient.client.util.downloader.MinecraftVersion;
 import io.github.betterclient.fabric.Util;
 import io.github.betterclient.version.mods.CookeyMod;
 import io.github.betterclient.version.util.InternalBridgeImplementation;
+import io.netty.util.internal.logging.Slf4JLoggerFactory;
 import org.lwjgl.glfw.GLFW;
 
 import java.io.File;

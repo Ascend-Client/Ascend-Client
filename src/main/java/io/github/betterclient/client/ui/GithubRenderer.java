@@ -8,6 +8,7 @@ import java.awt.*;
 public class GithubRenderer {
     public static void render(Object screen, GithubMan man, IBridge.TextRenderer renderer, int height) {
         if(IBridge.MinecraftClient.getInstance().isCustomScreen(screen)) return;
+        if(IBridge.MinecraftClient.getInstance().isChat(screen)) return;
 
         int x = 2;
         int y = height - 10;

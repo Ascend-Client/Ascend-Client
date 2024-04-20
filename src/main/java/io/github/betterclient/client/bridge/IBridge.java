@@ -141,6 +141,8 @@ public interface IBridge {
         boolean isCustomScreen(Object screen);
 
         void openNonCustomScreen(Object screen);
+
+        boolean isChat(Object screen);
     }
 
     enum NonCustomScreen {
