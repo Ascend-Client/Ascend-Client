@@ -4,6 +4,7 @@ import io.github.betterclient.client.bridge.IBridge;
 import io.github.betterclient.client.mod.ModuleManager;
 import io.github.betterclient.client.util.downloader.MinecraftVersion;
 import io.github.betterclient.fabric.Util;
+import io.github.betterclient.version.mods.BedrockBridge;
 import io.github.betterclient.version.mods.CookeyMod;
 import io.github.betterclient.version.util.InternalBridgeImplementation;
 import io.netty.util.internal.logging.Slf4JLoggerFactory;
@@ -59,6 +60,7 @@ public class Version {
         @Override
         public void registerVersionBallsackMods(ModuleManager manager) {
             manager.moduleList.add(new CookeyMod());
+            manager.moduleList.add(new BedrockBridge());
         }
     };
 
