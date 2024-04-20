@@ -189,6 +189,8 @@ public interface IBridge {
         int scaledWidth();
 
         int scaledHeight();
+
+        boolean isFocused();
     }
 
     interface Mouse {

@@ -1,6 +1,7 @@
 package io.github.betterclient.version.mixin.bridge;
 
 import io.github.betterclient.client.bridge.IBridge;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.Window;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -33,5 +34,10 @@ public class MixinWindow implements IBridge.Window {
     @Override
     public int scaledHeight() {
         return this.scaledHeight;
+    }
+
+    @Override
+    public boolean isFocused() {
+        return MinecraftClient.getInstance().isWindowFocused();
     }
 }

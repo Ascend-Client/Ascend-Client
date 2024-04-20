@@ -44,6 +44,7 @@ public class SuperSecretSettings extends Module {
         MinecraftClient client = MinecraftClient.getInstance();
 
         if (((client.getWindow().width() != lastWidth || client.getWindow().height() != lastHeight) && client.getWindow().width() > 0 && client.getWindow().height() > 0) || !this.oldMode.equals(this.mode.value)) {
+            if(!client.getWindow().isFocused() || client.getWindow().width() <= 0 || client.getWindow().height() <= 0) return;
             if(shader != null)
                 shader.close();
 
