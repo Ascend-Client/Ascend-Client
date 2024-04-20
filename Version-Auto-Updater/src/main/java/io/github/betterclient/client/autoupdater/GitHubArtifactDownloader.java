@@ -76,7 +76,7 @@ public class GitHubArtifactDownloader {
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
         //use dummy account token
-        connection.setRequestProperty("Authorization", "Bearer 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");
+        connection.setRequestProperty("Authorization", "Bearer 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");
 
         InputStream inputStream = connection.getInputStream();
         FileOutputStream outputStream = new FileOutputStream(to);
