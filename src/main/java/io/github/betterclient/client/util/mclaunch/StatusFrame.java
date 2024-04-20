@@ -57,6 +57,7 @@ public class StatusFrame extends JFrame {
 
         pack();
         setVisible(true);
+        setAlwaysOnTop(true);
         instance = this;
         Application.statusFrame.set(this);
     }
