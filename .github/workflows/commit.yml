@@ -19,10 +19,15 @@ jobs:
       - name: Build
         run: ./gradlew shadowJar --no-daemon
 
+      - name: Copy artifacts
+        run: |
+          cp v1_16-combat/build/libs/v1_16-combat-1.0.jar 1.16-combat-6.jar
+          cp v1_19/build/libs/v1_19-1.0.jar 1.19.4.jar
+
       - name: Upload archive
         uses: actions/upload-artifact@v4
         with:
           name: Upload versions
           path: |
-            v1_16-combat/build/libs/*.jar
-            v1_19/build/libs/*.jar
+            1.16-combat-6.jar
+            1.19.4.jar
