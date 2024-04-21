@@ -40,6 +40,7 @@ public class Application {
             customJarsFolder = new File(clientFolder, "custom-mods"),
             remappedModsFolder = new File(clientFolder, "remapped-mods"),
             remappedModJarsFolder = new File(modJarsFolder, "remapped"),
+            remappedBuiltinModJarsFolder = new File(remappedModJarsFolder, "builtin"),
             mcVersionFolder;
 
     public static boolean doRemappingOfAlreadyRemappedMods = false,
@@ -63,6 +64,7 @@ public class Application {
             Files.createDirectories(customJarsFolder.toPath());
             Files.createDirectories(remappedModsFolder.toPath());
             Files.createDirectories(remappedModJarsFolder.toPath());
+            Files.createDirectories(remappedBuiltinModJarsFolder.toPath());
             Files.createDirectories(mcVersionFolder.toPath());
         } catch (Exception e) { e.printStackTrace(); }
 
@@ -126,7 +128,7 @@ public class Application {
             for (File file : modLoadingInformation.nonCustomMods()) {
                 FabricLoader.getInstance().loadMod(
                         ModRemapper.remapInternalMod(
-                                file
+                                file, false
                         )
                 );
             }

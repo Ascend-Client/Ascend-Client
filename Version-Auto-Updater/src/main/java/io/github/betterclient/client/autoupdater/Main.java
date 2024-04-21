@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.zip.ZipFile;
 
@@ -23,6 +24,17 @@ public class Main {
         byte[] versionJar = is.readAllBytes();
         is.close();
         file.close();
+
+        File file1 = new File(".\\.ballsack\\remapped-mods\\" + version + "\\");
+        for (File listFile : Objects.requireNonNullElse(file1.listFiles(), new File[0])) {
+            if(listFile.getName().endsWith(".jar"))
+                file1.delete();
+        }
+        file1 = new File(".\\.ballsack\\modjars\\remapped\\");
+        for (File listFile : Objects.requireNonNullElse(file1.listFiles(), new File[0])) {
+            if(listFile.getName().endsWith(".jar"))
+                file1.delete();
+        }
 
         Files.write(toInstall.toPath(), versionJar);
 

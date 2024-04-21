@@ -1002,7 +1002,7 @@ public class ModRemapper {
         return map;
     }
 
-    public static File remapInternalMod(File modToRemap) throws IOException {
+    public static File remapInternalMod(File modToRemap, boolean builtin) throws IOException {
         IBridge.PreLaunchBridge bridge = IBridge.getPreLaunch();
         DownloadedMinecraft version = Application.minecraft;
 
@@ -1010,6 +1010,9 @@ public class ModRemapper {
         Application.modLoadingInformation = new ModLoadingInformation(old.minecraftClasses(), old.nonCustomMods(), old.state(), modToRemap);
 
         File remappedMod = new File(Application.remappedModJarsFolder, modToRemap.getName().substring(0, modToRemap.getName().lastIndexOf('.')) + "-remapped.jar");
+        if(builtin)
+            remappedMod = new File(Application.remappedBuiltinModJarsFolder, modToRemap.getName().substring(0, modToRemap.getName().lastIndexOf('.')) + "-remapped.jar");
+
         if(remappedMod.exists() && !Application.doRemappingOfAlreadyRemappedMods) {
             if(Util.readAndClose(new FileInputStream(remappedMod)).length != 0)
                 return remappedMod;

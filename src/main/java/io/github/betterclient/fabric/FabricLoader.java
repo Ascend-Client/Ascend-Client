@@ -92,7 +92,7 @@ public class FabricLoader {
 
                             if(isMod(new JarFile(ff))) {
                                 try {
-                                    this.loadMod(name, Application.modLoadingInformation.state().equals(ModLoadingInformation.State.LOADING_BUILTIN) ? ModRemapper.remapInternalMod(ff) : ModRemapper.remapMod(ff, true));
+                                    this.loadMod(name, Application.modLoadingInformation.state().equals(ModLoadingInformation.State.LOADING_BUILTIN) ? ModRemapper.remapInternalMod(ff, true) : ModRemapper.remapMod(ff, true));
                                 } catch (Exception e) {
                                     FabricErrorReporter.exception("Nested Mod in: " + name, e).print();
                                     //Peacefully continue with other mods
