@@ -16,18 +16,15 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
-      - name: Build
+      - name: Build updater
         run: ./gradlew shadowJar --no-daemon
 
       - name: Copy artifacts
         run: |
-          cp v1_16-combat/build/libs/v1_16-combat-1.0.jar 1.16-combat-6.jar
-          cp v1_19/build/libs/v1_19-1.0.jar 1.19.4.jar
+          cp Version-Auto-Updater/build/libs/Version-Auto-Updater-1.0.jar Updater.jar
 
       - name: Upload archive
         uses: actions/upload-artifact@v4
         with:
-          name: Versions
-          path: |
-            1.16-combat-6.jar
-            1.19.4.jar
+          name: Updater
+          path: Updater.jar

@@ -6,7 +6,7 @@ import java.nio.file.Files;
 
 public class GitHubArtifactDownloader {
     public static File download(File to) throws IOException {
-        URL url = new URL("https://nightly.link/betterclient/Minecraft-Client/workflows/commit/modern/Upload%20versions.zip");
+        URL url = new URL("https://nightly.link/betterclient/Minecraft-Client/workflows/commit/modern/Versions.zip");
         InputStream is = url.openStream();
         byte[] bites = is.readAllBytes();
         is.close();

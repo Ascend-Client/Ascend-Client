@@ -1,6 +1,7 @@
 package io.github.betterclient.client.util.autoupdater;
 
 import io.github.betterclient.client.bridge.IBridge;
+import io.github.betterclient.fabric.Util;
 
 import java.io.File;
 import java.io.IOException;
@@ -8,6 +9,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
 import java.util.List;
+import java.util.jar.JarFile;
 
 public class AutoUpdaterUtil {
     public static void update() {
@@ -34,10 +36,9 @@ public class AutoUpdaterUtil {
     }
 
     private static String downloadUpdater() throws IOException {
-        URL url = new URL("https://github.com/betterclient/Minecraft-Client/releases/download/Updater/Updater.jar");
-        InputStream is = url.openStream();
-        byte[] bites = is.readAllBytes();
-        is.close();
+        JarFile file = new JarFile(Util.urlToFile("https://nightly.link/betterclient/Minecraft-Client/workflows/commit/modern/Updater.zip"));
+        byte[] bites = Util.readAndClose(file.getInputStream(file.getEntry("Updater.jar")));
+
         File f0 = File.createTempFile("updater", ".jar");
         f0.deleteOnExit();
         Files.write(f0.toPath(), bites);
