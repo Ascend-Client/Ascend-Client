@@ -1,5 +1,6 @@
 package io.github.betterclient.client.util.modremapper;
 
+import io.github.betterclient.client.Application;
 import io.github.betterclient.fabric.FabricLoader;
 import org.objectweb.asm.tree.*;
 
@@ -13,9 +14,13 @@ import static org.objectweb.asm.Opcodes.*;
  * fixes issues in replaymod and iris
  * <p>
  * these issues exist in the fabric version of the mods aswell
+ * <p>
+ * cts only
  */
 public class ModIssueFixer {
     public static void edit(ClassNode node, File currentMod) throws Exception {
+        if(!Application.minecraft.version().version().equals("1.16-combat-6")) return;
+
         if(node.name.equals("com/replaymod/core/versions/MCVer") && FabricLoader.getInstance().getModName(currentMod).equals("Replay Mod")) {
             for (MethodNode method : node.methods) {
                 if(method.name.equals("asMc")) {
