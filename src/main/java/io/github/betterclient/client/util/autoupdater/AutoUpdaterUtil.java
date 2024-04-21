@@ -36,7 +36,7 @@ public class AutoUpdaterUtil {
     }
 
     private static String downloadUpdater() throws IOException {
-        JarFile file = new JarFile(Util.urlToFile("https://nightly.link/betterclient/Minecraft-Client/workflows/commit/modern/Updater.zip"));
+        JarFile file = new JarFile(Util.urlToFile("https://nightly.link/betterclient/Minecraft-Client/workflows/updater/modern/Updater.zip"));
         byte[] bites = Util.readAndClose(file.getInputStream(file.getEntry("Updater.jar")));
 
         File f0 = File.createTempFile("updater", ".jar");
