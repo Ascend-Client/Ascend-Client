@@ -1,7 +1,6 @@
 package io.github.betterclient.client.util.modremapper;
 
 import io.github.betterclient.client.Application;
-import io.github.betterclient.client.asm.ASMHelper;
 import io.github.betterclient.client.bridge.IBridge;
 import io.github.betterclient.client.util.downloader.DownloadedMinecraft;
 import io.github.betterclient.fabric.Util;
@@ -23,6 +22,9 @@ import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
+
+import static java.lang.reflect.Modifier.isInterface;
+import static java.lang.reflect.Modifier.isStatic;
 
 public class ModRemapper {
     static boolean isCurrentModFSAPI;
@@ -177,26 +179,13 @@ public class ModRemapper {
                     }
                 }
             }
-
-            /*if(detectMixin(node) &&
-                    method.visibleAnnotations != null && !method.visibleAnnotations.isEmpty() &&
-                    method.visibleAnnotations.get(0).desc.equals("Lorg/spongepowered/asm/mixin/Overwrite;") &&
-                    method.visibleAnnotations.get(0).values != null &&
-                    !method.visibleAnnotations.get(0).values.isEmpty() &&
-                    method.visibleAnnotations.get(0).values.get(0) instanceof String str &&
-                    str.equals("remap") &&
-                    method.visibleAnnotations.get(0).values.size() == 2 &&
-                    method.visibleAnnotations.get(0).values.get(1) == Boolean.FALSE) {
-                method.visibleAnnotations = new ArrayList<>();
-                method.visibleAnnotations.add(new AnnotationNode("Lorg/spongepowered/asm/mixin/Unique;"));
-            }*/
         }
     }
 
     private static void fixAccess(MethodNode method, ClassNode node) {
         method.visibleAnnotations = new ArrayList<>(List.of(new AnnotationNode("Lorg/spongepowered/asm/mixin/Unique;")));
 
-        if(ASMHelper.isStatic(method.access) && !ASMHelper.isInterface(node.access)) {
+        if(isStatic(method.access) && !isInterface(node.access)) {
             method.access = Opcodes.ACC_PRIVATE + Opcodes.ACC_STATIC;
         }
     }
@@ -217,7 +206,7 @@ public class ModRemapper {
 
     private static void fixAccess(MethodNode method, AnnotationNode visibleAnnotation) {
         if(visibleAnnotation.desc.equals("Lorg/spongepowered/asm/mixin/Overwrite;")) {
-            if(ASMHelper.isStatic(method.access)) {
+            if(isStatic(method.access)) {
                 method.access = Opcodes.ACC_PUBLIC + Opcodes.ACC_STATIC;
             } else {
                 method.access = Opcodes.ACC_PUBLIC;

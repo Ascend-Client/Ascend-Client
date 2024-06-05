@@ -4,7 +4,7 @@ import io.github.betterclient.quixotic.ClassTransformer;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.ClassNode;
 
-import static io.github.betterclient.client.asm.ASMHelper.*;
+import static java.lang.reflect.Modifier.*;
 
 public class YarnFix implements ClassTransformer {
     @Override
@@ -45,7 +45,7 @@ public class YarnFix implements ClassTransformer {
 
 
     public void fixAccess(ClassNode node) {
-        if(isPublic(node.access) && isFinal(node.access) && !isInterface(node.access) && (node.name.startsWith("net/minecraft/")) && !isEnum(node.access)) {
+        if(isPublic(node.access) && isFinal(node.access) && !isInterface(node.access) && (node.name.startsWith("net/minecraft/")) && !node.superName.equals("java/lang/Enum")) {
             node.access = Opcodes.ACC_PUBLIC;
         }
 
