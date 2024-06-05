@@ -22,15 +22,14 @@ loom {
     runConfigs.configureEach {
         if(it.name == "server") {
             ideConfigGenerated = false
-            return
+        } else {
+            it.vmArg("--add-opens=java.base/java.net=ALL-UNNAMED")
+            it.vmArg("--add-opens=java.base/jdk.internal.loader=ALL-UNNAMED")
+
+            ideConfigGenerated = true
+            client()
+            setDefaultMainClass("io.github.betterclient.client.launch.IDEMain")
         }
-
-        it.vmArg("--add-opens=java.base/java.net=ALL-UNNAMED")
-        it.vmArg("--add-opens=java.base/jdk.internal.loader=ALL-UNNAMED")
-
-        ideConfigGenerated = true
-        client()
-        setDefaultMainClass("io.github.betterclient.client.launch.IDEMain")
     }
 }
 
