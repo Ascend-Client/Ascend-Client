@@ -55,7 +55,7 @@ public abstract class MixinItemEntityRenderer extends EntityRenderer<ItemEntity>
 
     @Inject(at = @At("HEAD"), method = "render*", cancellable = true)
     private void render(ItemEntity dropped, float f, float partialTicks, MatrixStack matrix, VertexConsumerProvider vertexConsumerProvider, int i, CallbackInfo callback) {
-        if(!ItemPhysics.isEnabled())
+        if(ItemPhysics.isDisabled())
             return;
 
         ItemStack itemStack = dropped.getStack();
