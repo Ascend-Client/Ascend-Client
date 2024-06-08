@@ -14,10 +14,12 @@ public class Renderable {
     public Runnable render = () -> {};
     public Color backgroundColor;
     public TextRenderer textRenderer;
+    public final HUDModule owner;
 
-    public Renderable(int x, int y) {
+    public Renderable(int x, int y, HUDModule owner) {
         this.x = x;
         this.y = y;
+        this.owner = owner;
         this.textRenderer = MinecraftClient.getInstance().getTextRenderer();
     }
 
@@ -56,9 +58,11 @@ public class Renderable {
         this.y = y;
 
         if(this.renderBackground) {
-            UIUtil.drawRoundedRect(this.x, this.y, this.x + oldWidth, this.y + oldHeight, 5f, this.backgroundColor.getRGB());
+            UIUtil.drawRoundedRect(this.x - 4, this.y - 4, this.x + oldWidth + 4, this.y + oldHeight + 4, 10f, this.backgroundColor.getRGB());
         }
 
+        this.reset();
+        this.owner.render(this);
         this.render.run();
 
         this.x = xx;

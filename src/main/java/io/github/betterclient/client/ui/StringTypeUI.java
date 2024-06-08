@@ -1,16 +1,16 @@
 package io.github.betterclient.client.ui;
 
 import io.github.betterclient.client.bridge.IBridge;
-import io.github.betterclient.client.ui.clickgui.OtherModsUI;
+import io.github.betterclient.client.util.StringTypeHandler;
 import io.github.betterclient.client.util.UIUtil;
 
 import java.awt.*;
 
 public class StringTypeUI extends IBridge.Screen {
     public String text = "";
-    public OtherModsUI ui;
+    public StringTypeHandler ui;
 
-    public StringTypeUI(OtherModsUI ui) {
+    public StringTypeUI(StringTypeHandler ui) {
         super();
         this.ui = ui;
     }
@@ -18,8 +18,8 @@ public class StringTypeUI extends IBridge.Screen {
     @Override
     protected void init() {
         IBridge.ButtonWidget widget = new IBridge.ButtonWidget(IBridge.Text.literal("Accept"), () -> {
-            ui.currentConfig = text;
-            IBridge.getInstance().getClient().setGuiScreen(ui);
+            ui.setCurrentConfig(text);
+            IBridge.getInstance().getClient().setGuiScreen((IBridge.Screen) ui);
         }).dimensions(width / 2 - 50, height / 2 + 30, 98, 20);
         this.addButton(widget);
     }
@@ -29,7 +29,7 @@ public class StringTypeUI extends IBridge.Screen {
         super.renderBackground(matrices);
 
         UIUtil.drawRoundedRect(width / 2 - 50, height / 2 - 25, width / 2 + 50, height / 2 + 25, 5f, new Color(0, 0, 0, 81).getRGB());
-        int[] pos = UIUtil.getIdealRenderingPosForText(text, width / 2 - 50, height / 2 - 25, width / 2 + 50, height / 2 + 25);
+        float[] pos = UIUtil.getIdealRenderingPosForText(text, width / 2 - 50, height / 2 - 25, width / 2 + 50, height / 2 + 25);
         textRenderer.draw(IBridge.newMatrixStack(), text, pos[0], pos[1] + 10, -1);
     }
 
@@ -37,8 +37,8 @@ public class StringTypeUI extends IBridge.Screen {
     public boolean charTyped(char chr, int keyCode) {
         if(keyCode != IBridge.getKeys().KEY_ESCAPE) {
             if(keyCode == IBridge.getKeys().KEY_ENTER) {
-                ui.currentConfig = text;
-                IBridge.MinecraftClient.getInstance().setGuiScreen(ui);
+                ui.setCurrentConfig(text);
+                IBridge.MinecraftClient.getInstance().setGuiScreen((IBridge.Screen) ui);
             } else if(keyCode == IBridge.getKeys().KEY_BACKSPACE) {
                 if(!text.equals(""))
                     this.text = this.text.substring(0, this.text.length() - 1);
@@ -56,8 +56,8 @@ public class StringTypeUI extends IBridge.Screen {
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if(keyCode != IBridge.getKeys().KEY_ESCAPE) {
             if(keyCode == IBridge.getKeys().KEY_ENTER) {
-                ui.currentConfig = text;
-                IBridge.MinecraftClient.getInstance().setGuiScreen(ui);
+                ui.setCurrentConfig(text);
+                IBridge.MinecraftClient.getInstance().setGuiScreen((IBridge.Screen) ui);
             } else if(keyCode == IBridge.getKeys().KEY_BACKSPACE) {
                 if(!text.equals(""))
                     this.text = this.text.substring(0, this.text.length() - 1);

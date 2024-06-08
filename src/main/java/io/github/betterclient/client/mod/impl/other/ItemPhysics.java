@@ -6,10 +6,10 @@ import io.github.betterclient.client.mod.Module;
 
 public class ItemPhysics extends Module {
     public ItemPhysics() {
-        super("Item Physics", Category.OTHER);
+        super("Item Physics", Category.OTHER, null);
     }
 
-    public static boolean isEnabled() {
-        return BallSack.getInstance().moduleManager.getModuleByName("Item Physics").toggled;
+    public static boolean isDisabled() {
+        return !BallSack.getInstance().moduleManager.getModuleByName("Item Physics").toggled;
     }
 }

@@ -9,7 +9,7 @@ public class NoHurtCam extends Module {
     public NumberSetting setting = new NumberSetting("Multiplier", 0, 0, 200);
 
     public NoHurtCam() {
-        super("NoHurtCam", Category.OTHER);
+        super("NoHurtCam", Category.OTHER, null);
         this.addSetting(setting);
     }
 

@@ -17,7 +17,7 @@ public class CustomModButtons {
         TextRenderer textRenderer = MinecraftClient.getInstance().getTextRenderer();
 
         int index = 0;
-        int[] iPos;
+        float[] iPos;
 
         if(FabricLoader.getInstance().isModLoaded("replaymod")) {
             drawRoundedRect(25, 25, 125, 45, 2f, bgcolor);

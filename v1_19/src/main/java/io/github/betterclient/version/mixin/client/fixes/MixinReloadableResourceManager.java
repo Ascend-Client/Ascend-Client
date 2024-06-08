@@ -2,8 +2,6 @@ package io.github.betterclient.version.mixin.client.fixes;
 
 import io.github.betterclient.client.BallSack;
 import io.github.betterclient.client.bridge.IBridge;
-import io.github.betterclient.fabric.FabricLoader;
-import io.github.betterclient.fabric.FabricMod;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.resource.Resource;
 import net.minecraft.resource.ResourceFactory;
@@ -12,12 +10,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
-import java.io.*;
+import java.io.FileNotFoundException;
 import java.util.Optional;
-import java.util.jar.JarFile;
-import java.util.zip.ZipEntry;
-
-import static io.github.betterclient.fabric.Util.readAndClose;
 
 @Mixin(ResourceFactory.class)
 public interface MixinReloadableResourceManager {
@@ -33,12 +27,15 @@ public interface MixinReloadableResourceManager {
         Optional<Resource> of = this.getResource(id);
 
         if(of.isEmpty()) {
+            System.out.println("Finding BetterResource");
             IBridge.Identifier identifier = new IBridge.Identifier(id);
             IBridge.Resource resource = BallSack.getInstance().findLoadedResource(identifier);
 
             if(resource != null) {
                 return new Resource(MinecraftClient.getInstance().getDefaultResourcePack(), resource.resourceSupplier::getInputStream);
             }
+        } else {
+            return of.get();
         }
 
         throw new FileNotFoundException();

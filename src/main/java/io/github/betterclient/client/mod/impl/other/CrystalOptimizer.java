@@ -6,7 +6,7 @@ import io.github.betterclient.client.mod.Module;
 
 public class CrystalOptimizer extends Module {
     public CrystalOptimizer() {
-        super("CrystalOptimizer", Category.OTHER);
+        super("CrystalOptimizer", Category.OTHER, null);
     }
 
     public static CrystalOptimizer get() {

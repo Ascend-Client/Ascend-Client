@@ -10,7 +10,7 @@ public class FullBright extends Module {
     public double before;
 
     public FullBright() {
-        super("FullBright", Category.OTHER);
+        super("FullBright", Category.OTHER, null);
     }
 
     @Override

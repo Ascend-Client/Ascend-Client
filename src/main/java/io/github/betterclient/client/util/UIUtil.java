@@ -3,6 +3,9 @@ package io.github.betterclient.client.util;
 import io.github.betterclient.client.bridge.IBridge;
 import io.github.betterclient.client.bridge.IBridge.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class UIUtil {
     private static int stX = 0,stY = 0;
 
@@ -71,10 +74,22 @@ public class UIUtil {
     }
 
     public static boolean basicCollisionCheck(double mouseX, double mouseY, double x, double y, double endX, double endY) {
+        double val = x;
+        if(endX < x) {
+            x = endX;
+            endX = val;
+        }
+
+        val = y;
+        if(endY < y) {
+            y = endY;
+            endY = val;
+        }
+
         return mouseX >= x & mouseX <= endX & mouseY >= y & mouseY <= endY;
     }
 
-    public static int[] getIdealRenderingPosForText(String text, double x, double y, double endX, double endY) {
+    public static float[] getIdealRenderingPosForText(String text, double x, double y, double endX, double endY) {
         return getIdealRenderingPosForText(text, x, y, endX, endY, 1f);
     }
 
@@ -89,8 +104,20 @@ public class UIUtil {
         return (val - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
     }
 
-    public static int[] getIdealRenderingPosForText(String text, double x, double y, double endX, double endY, float scale) {
-        int[] renderingPos = new int[2];
+    public static float[] getIdealRenderingPosForText(String text, double x, double y, double endX, double endY, float scale) {
+        double val = endX;
+        if(x > endX) {
+            endX = x;
+            x = val;
+        }
+
+        val = endY;
+        if(y > endY) {
+            endY = y;
+            y = val;
+        }
+
+        float[] renderingPos = new float[2];
 
         MinecraftClient minecraft = MinecraftClient.getInstance();
         TextRenderer textRenderer = minecraft.getTextRenderer();
@@ -98,8 +125,8 @@ public class UIUtil {
         int textHeight = textRenderer.fontHeight();
 
         // Adjust the rendering position based on the specified parameters and scale
-        renderingPos[0] = (int) ((x + endX) / 2 - textWidth / 2 * scale);
-        renderingPos[1] = (int) ((y + endY) / 2 - textHeight / 2 * scale);
+        renderingPos[0] = (float) ((x + endX) / 2 - textWidth / 2 * scale);
+        renderingPos[1] = (float) ((y + endY) / 2 - textHeight / 2 * scale);
 
         return renderingPos;
     }
@@ -113,5 +140,24 @@ public class UIUtil {
 
     public static void disableScissor() {
         IBridge.internal().GL11_disableScissor();
+    }
+
+    public static String capitalize(String string) {
+        if(string.contains(" ")) {
+            String[] strE = string.split(" ");
+            List<String> strEL = new ArrayList<>();
+            for(String strELR : strE) {
+                if(strELR.length() >= 2) {
+                    strEL.add(strELR.toUpperCase().charAt(0) + strELR.toLowerCase().substring(1));
+                } else {
+                    strEL.add(strELR);
+                }
+            }
+            string = String.join(" ", strEL.toArray(CharSequence[]::new));
+        } else {
+            string = string.toUpperCase().charAt(0) + string.toLowerCase().substring(1);
+        }
+
+        return string;
     }
 }

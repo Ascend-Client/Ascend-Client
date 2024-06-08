@@ -33,7 +33,7 @@ public class FreeLook extends Module {
     });
 
     public FreeLook() {
-        super("FreeLook", Category.OTHER);
+        super("FreeLook", Category.OTHER, null);
         this.addSetting(this.bind);
     }
 

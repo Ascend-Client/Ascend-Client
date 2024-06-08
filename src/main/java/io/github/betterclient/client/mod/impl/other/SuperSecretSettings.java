@@ -24,7 +24,7 @@ public class SuperSecretSettings extends Module {
     public String oldMode = "NOTCH";
 
     public SuperSecretSettings() {
-        super("Super Secret", Category.OTHER);
+        super("Super Secret", Category.OTHER, null);
         this.addSetting(mode);
     }
 

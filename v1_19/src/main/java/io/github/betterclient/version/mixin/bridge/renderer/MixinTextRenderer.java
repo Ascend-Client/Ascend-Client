@@ -24,4 +24,9 @@ public abstract class MixinTextRenderer implements IBridge.TextRenderer {
     public int fontHeight() {
         return textRenderer.fontHeight;
     }
+
+    @Override
+    public void drawWithShadow(IBridge.MatrixStack matrices, String text, float x, float y, int color) {
+        textRenderer.drawWithShadow((MatrixStack) matrices, text, x, y, color);
+    }
 }

@@ -283,13 +283,15 @@ public interface IBridge {
 
         int getWidth(String text);
         int fontHeight();
+
+        void drawWithShadow(MatrixStack matrices, String text, float x, float y, int color);
     }
 
     interface MatrixStack {
         void push();
         void pop();
 
-        void translate(int x, int y, int z);
+        void translate(float x, float y, float z);
 
         void scale(float scaleX, float scaleY, float scaleZ);
     }

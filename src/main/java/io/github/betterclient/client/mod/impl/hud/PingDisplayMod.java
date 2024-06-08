@@ -6,7 +6,7 @@ import io.github.betterclient.client.mod.Renderable;
 
 public class PingDisplayMod extends HUDModule {
     public PingDisplayMod() {
-        super("Ping Display", 10, 10);
+        super("Ping Display", 10, 10, new IBridge.Identifier("minecraft:textures/ballsack/modules/ping.png"));
     }
 
     @Override

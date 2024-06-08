@@ -140,7 +140,7 @@ public class CustomTitleMenu extends Screen {
         setStart(0, buttonWallY);
 
         drawRoundedRect(width / 2 - 100, height / 2 - 55, width / 2 + 100, height / 2 - 35, 2f, bgcolor);
-        int[] iPos = getIdealRenderingPosForText("Singleplayer", width / 2 - 100, height / 2 - 55, width / 2 + 100, height / 2 - 35);
+        float[] iPos = getIdealRenderingPosForText("Singleplayer", width / 2 - 100, height / 2 - 55, width / 2 + 100, height / 2 - 35);
         textRenderer.draw(matrices, "Singleplayer", iPos[0], buttonWallY + iPos[1], -1);
 
         drawRoundedRect(width / 2 - 100, height / 2 - 25, width / 2 + 100, height / 2 - 5, 2f, bgcolor);

@@ -1,5 +1,6 @@
 package io.github.betterclient.client.mod;
 
+import io.github.betterclient.client.bridge.IBridge;
 import io.github.betterclient.client.event.EventTarget;
 import io.github.betterclient.client.event.impl.RenderEvent;
 import io.github.betterclient.client.mod.setting.BooleanSetting;
@@ -14,9 +15,9 @@ public abstract class HUDModule extends Module {
     public BooleanSetting backGround = new BooleanSetting("Render Background", false);
     public ColorSetting textColor = new ColorSetting("Text Color", Color.WHITE);
 
-    public HUDModule(String name, int x, int y) {
-        super(name, Category.HUD);
-        this.renderable = new Renderable(x, y);
+    public HUDModule(String name, int x, int y, IBridge.Identifier icon) {
+        super(name, Category.HUD, icon);
+        this.renderable = new Renderable(x, y, this);
         this.addSetting(backGround);
         this.addSetting(backgroundColor);
         this.addSetting(textColor);

@@ -21,7 +21,7 @@ public class Zoom extends Module {
     public BooleanSetting flip = new BooleanSetting("Flip Scroll", false);
 
     public Zoom() {
-        super("Zoom", Category.OTHER);
+        super("Zoom", Category.OTHER, null);
         this.addSetting(this.bind);
         this.addSetting(flip);
     }

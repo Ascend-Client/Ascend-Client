@@ -20,7 +20,7 @@ public class MotionBlur extends Module {
     public int lastHeight;
 
     public MotionBlur() {
-        super("Motion Blur", Category.OTHER);
+        super("Motion Blur", Category.OTHER, null);
         this.addSetting(blurStrength);
 
         BallSack.getInstance().resources.put(shaderLocation, new MotionBlurShader());

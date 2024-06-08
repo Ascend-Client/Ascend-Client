@@ -1,11 +1,11 @@
 package io.github.betterclient.client.mod.impl.hud;
 
+import io.github.betterclient.client.bridge.IBridge;
 import io.github.betterclient.client.event.EventTarget;
 import io.github.betterclient.client.event.impl.HitEntityEvent;
 import io.github.betterclient.client.mod.HUDModule;
 import io.github.betterclient.client.mod.Renderable;
 
-import java.awt.*;
 import java.text.DecimalFormat;
 
 public class ReachDisplayMod extends HUDModule {
@@ -13,7 +13,7 @@ public class ReachDisplayMod extends HUDModule {
     public double lastTickReach = 0;
 
     public ReachDisplayMod() {
-        super("Reach Display", 10, 10);
+        super("Reach Display", 10, 10, new IBridge.Identifier("minecraft:textures/ballsack/modules/reach.png"));
     }
 
     @Override

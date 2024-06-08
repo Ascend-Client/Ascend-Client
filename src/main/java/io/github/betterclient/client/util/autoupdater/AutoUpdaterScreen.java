@@ -45,7 +45,7 @@ public class AutoUpdaterScreen extends Screen {
         this.textRenderer.draw(matrices, str2, (float) (width / 2 - (this.textRenderer.getWidth(str2) / 2)), (float) (height*0.25) + 20, -1);
 
         drawRoundedRect(width / 2 - 125, height*0.55, width / 2 - 25, height*0.55 + 20, 2f, bgcolor);
-        int[] iPos = getIdealRenderingPosForText("Update", width / 2 - 125, height*0.55, width / 2 - 25, height*0.55 + 20);
+        float[] iPos = getIdealRenderingPosForText("Update", width / 2 - 125, height*0.55, width / 2 - 25, height*0.55 + 20);
         textRenderer.draw(matrices, "Update", iPos[0], iPos[1], -1);
 
         drawRoundedRect(width / 2 + 125, height*0.55, width / 2 + 25, height*0.55 + 20, 2f, bgcolor);

@@ -13,7 +13,6 @@ import java.util.Vector;
 
 public class HUDMoveUI extends Screen {
     public ModuleManager modMan = BallSack.getInstance().moduleManager;
-    private static HUDMoveUI instance;
 
     public Renderable moving = null;
     public int moveX = 0, moveY = 0;
@@ -26,7 +25,6 @@ public class HUDMoveUI extends Screen {
 
     public HUDMoveUI() {
         super();
-        instance = this;
         hudMods.addAll(modMan.getByCategory(Category.HUD).stream().map(HUDModule::cast).toList());
     }
 
@@ -81,7 +79,8 @@ public class HUDMoveUI extends Screen {
                 }
             }
 
-            textRenderer.draw(IBridge.newMatrixStack(), dropDownMod.name, dropdownx + 4, dropdowny + 10, -1);
+            if(dropDownMod != null)
+                textRenderer.draw(IBridge.newMatrixStack(), dropDownMod.name, dropdownx + 4, dropdowny + 10, -1);
 
             textRenderer.draw(IBridge.newMatrixStack(), Text.literal("Settings").withStyle(Style.withUnderline(UIUtil.basicCollisionCheck(mouseX, mouseY, dropdownx, dropdowny + 20, dropdownx + 100, dropdowny + 40))), dropdownx + 4, dropdowny + 30, -1);
             textRenderer.draw(IBridge.newMatrixStack(), Text.literal("Disable").withStyle(Style.withUnderline(UIUtil.basicCollisionCheck(mouseX, mouseY, dropdownx, dropdowny + 40, dropdownx + 100, dropdowny + 60))), dropdownx + 4, dropdowny + 50, -1);
@@ -116,12 +115,12 @@ public class HUDMoveUI extends Screen {
             }
         }
 
-        UIUtil.drawRoundedRect(width / 2 - 40, height / 2 - 55, width / 2 + 40, height / 2 - 30,
+        UIUtil.drawRoundedRect(width / 2f - 40, height / 2f - 55, width / 2f + 40, height / 2f - 30,
                 5F, new Color(0, 0, 0, 120).getRGB());
 
         String text = "Enable Mods";
 
-        int[] renderPos = UIUtil.getIdealRenderingPosForText(text, width / 2 - 40, height / 2 - 55, width / 2 + 40, height / 2 - 30);
+        float[] renderPos = UIUtil.getIdealRenderingPosForText(text, width / 2f - 40, height / 2f - 55, width / 2f + 40, height / 2f - 30);
 
         textRenderer.draw(IBridge.newMatrixStack(), text, renderPos[0], renderPos[1], -1);
 
@@ -201,18 +200,18 @@ public class HUDMoveUI extends Screen {
             }
 
             if(UIUtil.basicCollisionCheck(mouseX, mouseY, dropdownx, dropdowny + 20, dropdownx + 100, dropdowny + 40)) {
-                MinecraftClient.getInstance().setGuiScreen(new SettingsUI(dropDownMod));
+                MinecraftClient.getInstance().setGuiScreen(new SettingsGui(dropDownMod));
                 isDropDown = false;
             }
 
             if(UIUtil.basicCollisionCheck(mouseX, mouseY, dropdownx, dropdowny + 40, dropdownx + 100, dropdowny + 60)) {
-                dropDownMod.toggle();
+                if(dropDownMod != null) dropDownMod.toggle();
                 isDropDown = false;
             }
         }
 
-        if(button == 0 && UIUtil.basicCollisionCheck(mouseX, mouseY, width / 2 - 40, height / 2 - 55, width / 2 + 40, height / 2 - 30) && !isDropDown) {
-            MinecraftClient.getInstance().setGuiScreen(new OtherModsUI());
+        if(button == 0 && UIUtil.basicCollisionCheck(mouseX, mouseY, width / 2f - 40, height / 2f - 55, width / 2f + 40, height / 2f - 30) && !isDropDown) {
+            MinecraftClient.getInstance().setGuiScreen(new ClickGui());
         }
 
         for(HUDModule mod : hudMods) {

@@ -42,7 +42,7 @@ public class CookeyMod extends Module {
     public BooleanSetting force100PercentRecharge = new BooleanSetting("Force 100% Recharge", false);
 
     public CookeyMod() {
-        super("CookeyMod", Category.OTHER);
+        super("CookeyMod", Category.OTHER, null);
         this.addSetting(text1);
         this.addSetting(swingAndUseItem);
         this.addSetting(oldSwing);

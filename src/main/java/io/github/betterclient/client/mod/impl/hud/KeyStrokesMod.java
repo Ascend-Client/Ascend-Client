@@ -1,5 +1,6 @@
 package io.github.betterclient.client.mod.impl.hud;
 
+import io.github.betterclient.client.bridge.IBridge;
 import io.github.betterclient.client.bridge.IBridge.*;
 import io.github.betterclient.client.mod.HUDModule;
 import io.github.betterclient.client.mod.Renderable;
@@ -13,7 +14,7 @@ public class KeyStrokesMod extends HUDModule {
     public ColorSetting backgroundColorPressed = new ColorSetting("Background Color (Pressed)", new Color(150, 140, 140,156)); // This one aswell
 
     public KeyStrokesMod() {
-        super("Keystrokes", 10, 10);
+        super("Keystrokes", 10, 10, new IBridge.Identifier("minecraft:textures/ballsack/modules/keystrokes.png"));
         this.addSetting(mouseKeys);
         this.addSetting(backgroundColorPressed);
 

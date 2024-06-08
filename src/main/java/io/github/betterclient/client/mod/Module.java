@@ -1,7 +1,9 @@
 package io.github.betterclient.client.mod;
 
 import io.github.betterclient.client.BallSack;
+import io.github.betterclient.client.bridge.IBridge;
 import io.github.betterclient.client.mod.setting.Setting;
+import io.github.betterclient.client.util.FileResource;
 
 import java.util.List;
 import java.util.Vector;
@@ -11,12 +13,20 @@ public class Module {
     public boolean toggled;
     public Category cat;
     public BallSack sack = BallSack.getInstance();
+    public final IBridge.Identifier icon;
 
     private final List<Setting> settings = new Vector<>();
 
-    public Module(String name, Category cat) {
+    public Module(String name, Category cat, IBridge.Identifier icon) {
         this.name = name;
         this.cat = cat;
+        this.icon = icon;
+        if(icon != null) {
+            String s = icon.path;
+            s = s.substring(s.indexOf("/") + 1);
+            BallSack.getInstance().resources.put(icon, new FileResource("/assets/" + s));
+        }
+
     }
 
     public boolean isToggled() {

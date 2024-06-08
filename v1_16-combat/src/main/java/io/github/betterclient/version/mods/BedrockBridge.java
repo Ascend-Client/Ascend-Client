@@ -18,7 +18,7 @@ public class BedrockBridge extends Module {
     public MinecraftClient client;
 
     public BedrockBridge() {
-        super("Bedrock Bridging", Category.OTHER);
+        super("Bedrock Bridging", Category.OTHER, null);
         this.client = MinecraftClient.getInstance();
     }
 
