@@ -24,7 +24,7 @@ public class CookeyMod extends Module {
     public BooleanSetting enableDamageCameraTilt = new BooleanSetting("Enable damage camera tilt", false);
 
     public NoneSetting text2 = new NoneSetting("Hud Rendering");
-    public NumberSetting attachCooldownHandOffset = new NumberSetting("Attach cooldown hand offset", 0, -100, 100);
+    public NumberSetting attackCooldownHandOffset = new NumberSetting("Attack cooldown hand offset", 0, -100, 100);
     public ColorSetting damageColor = new ColorSetting("Damage Color", new Color(255, 0, 0, 77)) {
         @Override
         public void setColor(Color color) {
@@ -32,10 +32,10 @@ public class CookeyMod extends Module {
             OverlayReloadListener.callEvent();
         }
     };
-    public BooleanSetting showDamageTintOnArmor = new BooleanSetting("Show damage tilt on armor (broken)", false);
+    public BooleanSetting showDamageTintOnArmor = new BooleanSetting("Show damage tilt on armor", false);
     public BooleanSetting onlyShowShieldWhenBlocking = new BooleanSetting("Only show shield when blocking", false);
     public BooleanSetting disableEffectBasedFovChange = new BooleanSetting("Disable effect based fov change", false);
-    public BooleanSetting alternativeBobbing = new BooleanSetting("Alternative bobbing (weird/broken)", false);
+    public BooleanSetting alternativeBobbing = new BooleanSetting("Alternative bobbing (broken)", false);
 
     public NoneSetting text3 = new NoneSetting("Miscellaneous");
     public BooleanSetting renderOwnName = new BooleanSetting("Render Own Name On 3rd Person", false);
@@ -54,16 +54,16 @@ public class CookeyMod extends Module {
         this.addSetting(enableDamageCameraTilt);
 
         this.addSetting(text2);
-        this.addSetting(attachCooldownHandOffset);
+        this.addSetting(attackCooldownHandOffset);
         this.addSetting(damageColor);
         this.addSetting(showDamageTintOnArmor);
         this.addSetting(onlyShowShieldWhenBlocking);
         this.addSetting(disableEffectBasedFovChange);
-        this.addSetting(alternativeBobbing);
+        //this.addSetting(alternativeBobbing);
 
         this.addSetting(text3);
         this.addSetting(renderOwnName);
-        this.addSetting(force100PercentRecharge);
+        //this.addSetting(force100PercentRecharge);
     }
 
     public static CookeyMod get() {

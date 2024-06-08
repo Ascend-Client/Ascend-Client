@@ -118,7 +118,7 @@ public abstract class MixinHeldItemRenderer {
             from = @At(value = "JUMP", ordinal = 3)
     ), at = @At(value = "FIELD", ordinal = 0))
     public float modifyArmHeight(float f) {
-        double offset = CookeyMod.get().attachCooldownHandOffset.getValue() / 100D;
+        double offset = CookeyMod.get().attackCooldownHandOffset.getValue() / 100D;
         return (float) (f * (1 - offset) + offset);
     }
 
