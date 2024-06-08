@@ -24,7 +24,7 @@ public class AutoUpdaterUtil {
 
     private static String getJava() throws IOException {
         String filePath = new File("").getAbsolutePath();
-        File file = new File(filePath.substring(0, filePath.lastIndexOf('\\')) + "\\instance.cfg");
+        File file = new File(filePath.substring(0, filePath.lastIndexOf(File.separator)) + File.separator + "instance.cfg");
         List<String> lines = Files.readAllLines(file.toPath());
         for (String line : lines) {
             if(line.startsWith("JavaPath=")) {
