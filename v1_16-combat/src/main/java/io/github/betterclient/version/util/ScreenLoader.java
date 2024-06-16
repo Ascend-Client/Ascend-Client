@@ -1,6 +1,8 @@
 package io.github.betterclient.version.util;
 
 import io.github.betterclient.client.bridge.IBridge;
+import io.github.betterclient.client.mod.impl.other.SmoothFont;
+import io.github.betterclient.client.util.smooth.SmoothTextRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
@@ -30,7 +32,7 @@ public class ScreenLoader extends Screen {
 
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        ui.textRenderer = (IBridge.TextRenderer) textRenderer;
+        ui.textRenderer = SmoothFont.instance.toggled ? SmoothTextRenderer.instance : (IBridge.TextRenderer) this.textRenderer;
         ui.render((IBridge.MatrixStack) matrices, mouseX, mouseY, delta);
 
         super.render(matrices, mouseX, mouseY, delta);

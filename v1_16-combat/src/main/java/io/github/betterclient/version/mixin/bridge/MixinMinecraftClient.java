@@ -2,7 +2,9 @@ package io.github.betterclient.version.mixin.bridge;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.betterclient.client.bridge.IBridge;
+import io.github.betterclient.client.mod.impl.other.SmoothFont;
 import io.github.betterclient.client.ui.clickgui.HUDMoveUI;
+import io.github.betterclient.client.util.smooth.SmoothTextRenderer;
 import io.github.betterclient.version.util.ItemsImplementation;
 import io.github.betterclient.version.util.ScreenLoader;
 import net.minecraft.client.MinecraftClient;
@@ -74,7 +76,7 @@ public abstract class MixinMinecraftClient implements IBridge.MinecraftClient {
 
     @Override
     public IBridge.TextRenderer getTextRenderer() {
-        return (IBridge.TextRenderer) this.textRenderer;
+        return SmoothFont.instance.toggled ? SmoothTextRenderer.instance : (IBridge.TextRenderer) this.textRenderer;
     }
 
     @Override

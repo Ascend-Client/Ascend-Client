@@ -26,6 +26,8 @@ public class ModuleManager {
         moduleList.add(new PingDisplayMod());
         moduleList.add(new ServerDisplayMod());
         moduleList.add(new SuperSecretSettings());
+        moduleList.add(new CrosshairMod());
+        moduleList.add(SmoothFont.instance);
 
         IBridge.getPreLaunch().registerVersionBallsackMods(this);
     }

@@ -14,10 +14,10 @@ public class HitEntityEvent extends Event {
     public HitEntityEvent(PlayerEntity damager, Entity damagedEntity) {
         this.damager = damager;
         this.damagedEntity = damagedEntity;
-        this.distance = this.getAttackDistance(damager, damagedEntity);
+        this.distance = getAttackDistance(damager, damagedEntity);
     }
 
-    public double getAttackDistance(Entity attacking, Entity receiving) {
+    public static double getAttackDistance(Entity attacking, Entity receiving) {
         Vec3d camera = attacking.getCameraPosVec(1);
         Vec3d rotation = attacking.getRotationVec(1);
 
@@ -42,7 +42,7 @@ public class HitEntityEvent extends Event {
         return camera.distanceTo(raycast.pos);
     }
 
-    private Vec3d compareTo(Vec3d compare, Vec3d test, AtomicReference<Double> max) {
+    private static Vec3d compareTo(Vec3d compare, Vec3d test, AtomicReference<Double> max) {
         double dist = compare.distanceTo(test);
         if (dist > max.get()) {
             max.set(dist);

@@ -5,6 +5,7 @@ import io.github.betterclient.client.BallSack;
 import io.github.betterclient.client.bridge.IBridge.*;
 import io.github.betterclient.client.mod.Category;
 import io.github.betterclient.client.mod.Module;
+import io.github.betterclient.client.mod.impl.other.SmoothFont;
 import io.github.betterclient.client.ui.StringTypeUI;
 import io.github.betterclient.client.util.StringTypeHandler;
 import io.github.betterclient.client.util.UIUtil;

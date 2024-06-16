@@ -26,15 +26,17 @@ public class InternalBridgeImplementation implements IBridge.InternalBridge {
     public IBridge.Text Text_literalText(String text) {
         IBridge.Text text1 = new IBridge.Text();
         text1.pointer = Text.of(text);
+        text1.str = text;
+        text1.underline = false;
         return text1;
     }
 
     @Override
-    public IBridge.Text Text_addStyle(Object pointer, IBridge.Style s) {
-        IBridge.Text text1 = new IBridge.Text();
-        MutableText t = (MutableText) pointer;
-        text1.pointer = t.setStyle(Style.EMPTY.withUnderline(s.underline()));
-        return text1;
+    public IBridge.Text Text_addStyle(IBridge.Text pointer, IBridge.Style s) {
+        MutableText t = (MutableText) pointer.pointer;
+        pointer.pointer = t.setStyle(Style.EMPTY.withUnderline(s.underline()));
+        pointer.underline = s.underline();
+        return pointer;
     }
 
     @Override

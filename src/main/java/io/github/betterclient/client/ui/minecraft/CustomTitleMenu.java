@@ -21,7 +21,6 @@ public class CustomTitleMenu extends Screen {
 
     private int lastMouseX, lastMouseY;
     private float animatedMouseX, animatedMouseY;
-    private int buttonWallY = 0;
 
     /**
      * choose a background image from the folder
@@ -76,7 +75,7 @@ public class CustomTitleMenu extends Screen {
             line.close();
             ais.close();
         } catch (Exception ex) {
-            ex.printStackTrace();
+            ex.printStackTrace(System.err);
         }
     }
 
@@ -100,6 +99,7 @@ public class CustomTitleMenu extends Screen {
         int prepanY = (int) map(animatedMouseY, 0, height, -100, 0);
 
         int panoramaY;
+        int buttonWallY = 0;
         if(CustomLoadingOverlay.isDoingAnimation && this.isFirstLaunch && System.currentTimeMillis() < (endAnim + 250)) { //continue the animation for extra time so its smoother
             CustomLoadingOverlay.doRender = false;
 
@@ -117,7 +117,6 @@ public class CustomTitleMenu extends Screen {
             }
         } else {
             panoramaY = 0;
-            buttonWallY = 0;
             CustomLoadingOverlay.isDoingAnimation = false;
         }
 
@@ -132,31 +131,31 @@ public class CustomTitleMenu extends Screen {
         MinecraftClient.getInstance().setShaderColor(1, 1, 1, 0.7f);
         drawTexture(matrices, panX, panY, 0, 0, width + 100, height + 100, width + 100, height + 100);
 
-        animatedMouseX += ((mouseX-animatedMouseX) / 1.8) + 0.1;
-        animatedMouseY += ((mouseY-animatedMouseY) / 1.8) + 0.1;
+        animatedMouseX += ((mouseX-animatedMouseX) / 1.8f) + 0.1f;
+        animatedMouseY += ((mouseY-animatedMouseY) / 1.8f) + 0.1f;
 
         //a wall of buttons
 
         setStart(0, buttonWallY);
 
-        drawRoundedRect(width / 2 - 100, height / 2 - 55, width / 2 + 100, height / 2 - 35, 2f, bgcolor);
-        float[] iPos = getIdealRenderingPosForText("Singleplayer", width / 2 - 100, height / 2 - 55, width / 2 + 100, height / 2 - 35);
+        drawRoundedRect(width / 2f - 100, height / 2f - 55, width / 2f + 100, height / 2f - 35, 2f, bgcolor);
+        float[] iPos = getIdealRenderingPosForText("Singleplayer", width / 2f - 100, height / 2f - 55, width / 2f + 100, height / 2f - 35);
         textRenderer.draw(matrices, "Singleplayer", iPos[0], buttonWallY + iPos[1], -1);
 
-        drawRoundedRect(width / 2 - 100, height / 2 - 25, width / 2 + 100, height / 2 - 5, 2f, bgcolor);
-        iPos = getIdealRenderingPosForText("Multiplayer", width / 2 - 100, height / 2 - 25, width / 2 + 100, height / 2 - 5);
+        drawRoundedRect(width / 2f - 100, height / 2f - 25, width / 2f + 100, height / 2f - 5, 2f, bgcolor);
+        iPos = getIdealRenderingPosForText("Multiplayer", width / 2f - 100, height / 2f - 25, width / 2f + 100, height / 2f - 5);
         textRenderer.draw(matrices, "Multiplayer", iPos[0], buttonWallY + iPos[1], -1);
 
-        drawRoundedRect(width / 2 - 100, height / 2 + 5, width / 2 + 100, height / 2 + 25, 2f, bgcolor);
-        iPos = getIdealRenderingPosForText("Ballsack Settings", width / 2 - 100, height / 2 + 5, width / 2 + 100, height / 2 + 25);
+        drawRoundedRect(width / 2f - 100, height / 2f + 5, width / 2f + 100, height / 2f + 25, 2f, bgcolor);
+        iPos = getIdealRenderingPosForText("Ballsack Settings", width / 2f - 100, height / 2f + 5, width / 2f + 100, height / 2f + 25);
         textRenderer.draw(matrices, "Ballsack Settings", iPos[0], buttonWallY + iPos[1], -1);
 
-        drawRoundedRect(width / 2 - 100, height / 2 + 35, width / 2 - 5, height / 2 + 55, 2f, bgcolor);
-        iPos = getIdealRenderingPosForText("Options", width / 2 - 100, height / 2 + 35, width / 2 - 5, height / 2 + 55);
+        drawRoundedRect(width / 2f - 100, height / 2f + 35, width / 2f - 5, height / 2f + 55, 2f, bgcolor);
+        iPos = getIdealRenderingPosForText("Options", width / 2f - 100, height / 2f + 35, width / 2f - 5, height / 2f + 55);
         textRenderer.draw(matrices, "Options", iPos[0], buttonWallY + iPos[1], -1);
 
-        drawRoundedRect(width / 2 + 5, height / 2 + 35, width / 2 + 100, height / 2 + 55, 2f, bgcolor);
-        iPos = getIdealRenderingPosForText("Quit", width / 2 + 5, height / 2 + 35, width / 2 + 100, height / 2 + 55);
+        drawRoundedRect(width / 2f + 5, height / 2f + 35, width / 2f + 100, height / 2f + 55, 2f, bgcolor);
+        iPos = getIdealRenderingPosForText("Quit", width / 2f + 5, height / 2f + 35, width / 2f + 100, height / 2f + 55);
         textRenderer.draw(matrices, "Quit", iPos[0], buttonWallY + iPos[1], -1);
 
         CustomModButtons.render(matrices);
@@ -173,23 +172,23 @@ public class CustomTitleMenu extends Screen {
         MinecraftClient client = MinecraftClient.getInstance();
         if(button == 0 && (System.currentTimeMillis() > endAnim || !CustomLoadingOverlay.isDoingAnimation)) {
             CustomModButtons.mouseClicked(mouseX, mouseY);
-            if(isMouseOn(width / 2 - 100, height / 2 - 55, width / 2 + 100, height / 2 - 35)) {
+            if(isMouseOn(width / 2f - 100, height / 2f - 55, width / 2f + 100, height / 2f - 35)) {
                 client.openNonCustomScreen(NonCustomScreen.SINGLEPLAYER);
             }
 
-            if(isMouseOn(width / 2 - 100, height / 2 - 25, width / 2 + 100, height / 2 - 5)) {
+            if(isMouseOn(width / 2f - 100, height / 2f - 25, width / 2f + 100, height / 2f - 5)) {
                 client.openNonCustomScreen(NonCustomScreen.MULTIPLAYER);
             }
 
-            if(isMouseOn(width / 2 - 100, height / 2 + 5, width / 2 + 100, height / 2 + 25)) {
+            if(isMouseOn(width / 2f - 100, height / 2f + 5, width / 2f + 100, height / 2f + 25)) {
                 client.setGuiScreen(new HUDMoveUI());
             }
 
-            if(isMouseOn(width / 2 - 100, height / 2 + 35, width / 2 - 5, height / 2 + 55)) {
+            if(isMouseOn(width / 2f - 100, height / 2f + 35, width / 2f - 5, height / 2f + 55)) {
                 client.openNonCustomScreen(NonCustomScreen.OPTIONS);
             }
 
-            if(isMouseOn(width / 2 + 5, height / 2 + 35, width / 2 + 100, height / 2 + 55)) {
+            if(isMouseOn(width / 2f + 5, height / 2f + 35, width / 2f + 100, height / 2f + 55)) {
                 client.scheduleStop();
             }
         }

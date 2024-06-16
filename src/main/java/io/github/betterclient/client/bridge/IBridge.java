@@ -54,7 +54,7 @@ public interface IBridge {
 
         Text Text_literalText(String text);
 
-        Text Text_addStyle(Object pointer, Style s);
+        Text Text_addStyle(Text pointer, Style s);
 
         Object Identifier_new(String path);
 
@@ -267,13 +267,15 @@ public interface IBridge {
 
     class Text {
         public Object pointer;
+        public boolean underline;
+        public String str;
 
         public static Text literal(String s) {
             return IBridge.internal().Text_literalText(s);
         }
 
         public Text withStyle(Style s) {
-            return IBridge.internal().Text_addStyle(pointer, s);
+            return IBridge.internal().Text_addStyle(this, s);
         }
     }
 
