@@ -61,8 +61,6 @@ public class FontGlyphInfo {
             if(xadd == 0) xadd++;
             if(height == 0) height++;
 
-            if(id == 32) xadd = 8;
-
             this.chars.add(new FontCharacter(
                     (char) id, x, y, width, height, xoff, yoff, xadd, orW, orH
             ));

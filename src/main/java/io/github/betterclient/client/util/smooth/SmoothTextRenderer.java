@@ -62,7 +62,7 @@ public class SmoothTextRenderer implements IBridge.TextRenderer {
 
     @Override
     public int fontHeight() {
-        return 9;
+        return 10;
     }
 
     @Override
@@ -98,13 +98,8 @@ public class SmoothTextRenderer implements IBridge.TextRenderer {
                 if(orH == 0) orH++;
 
                 int offX = fontCharacter.xoff();
-                if(offX != 0) {
-                    offX = ((fontCharacter.width() / orW) * fontCharacter.xoff());
-                }
                 int offY = fontCharacter.yoff();
-                if(offY != 0) {
-                    offY = ((fontCharacter.height() / orH) * fontCharacter.yoff());
-                }
+                if(i == '-') offY = 0;
 
                 float crx = x + offX;
                 float cry = y + offY;
