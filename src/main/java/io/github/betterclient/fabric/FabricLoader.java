@@ -241,7 +241,7 @@ public class FabricLoader {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            IBridge.getPreLaunch().error(e.toString());
         }
 
         ArrayList<String> total = new ArrayList<>();

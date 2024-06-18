@@ -724,7 +724,7 @@ public class ModRemapper {
             if(methodName.equals("Default")) methodName = toMap.contains(";") ? toMap.substring(toMap.indexOf(";") + 1, toMap.indexOf('(')) : toMap;
         } catch (Exception e) {
             System.out.println(toMap + " (" + (toMap.indexOf(";") + 1) + ", " + toMap.indexOf('(') + ")");
-            e.printStackTrace();
+            IBridge.getPreLaunch().error(e.toString());
         }
 
         StringBuilder methodDesc = new StringBuilder(toMap.substring(toMap.indexOf('(') + 1, toMap.indexOf(')')));

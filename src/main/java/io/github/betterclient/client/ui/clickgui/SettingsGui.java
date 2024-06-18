@@ -527,7 +527,7 @@ public class SettingsGui extends Screen {
                 listeningKeyBind.bind.setKey(keyCode);
                 BallSack.getInstance().config.save();
             } catch (Exception e) {
-                e.printStackTrace();
+                IBridge.getPreLaunch().error(e.toString());
             }
 
             isKeyListening = false;

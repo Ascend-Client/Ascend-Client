@@ -1,5 +1,6 @@
 package io.github.betterclient.version.transformers;
 
+import io.github.betterclient.client.bridge.IBridge;
 import io.github.betterclient.quixotic.ClassTransformer;
 import org.lwjgl.opengl.GL11;
 import org.objectweb.asm.ClassReader;
@@ -36,7 +37,7 @@ public class RenderSystemTransformer implements ClassTransformer {
                     }
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                IBridge.getPreLaunch().error(e.toString());
             }
 
             enableScissor.instructions = instructions;
@@ -60,7 +61,7 @@ public class RenderSystemTransformer implements ClassTransformer {
                     }
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                IBridge.getPreLaunch().error(e.toString());
             }
 
             disableScissor.instructions = instructions;

@@ -2,12 +2,12 @@ package io.github.betterclient.client.util;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
+import io.github.betterclient.client.bridge.IBridge;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -64,7 +64,8 @@ public class GithubMan {
             JsonArray array = new JsonParser().parse(new String(bites)).getAsJsonArray();
             String version = array.get(0).getAsJsonObject().get("sha").getAsString();
             return !version.startsWith(this.commitId);
-        } catch (IOException ignored) {ignored.printStackTrace();}
+        } catch (IOException ex) {
+            IBridge.getPreLaunch().error(ex.toString());}
 
         return false;
     }

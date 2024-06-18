@@ -1,5 +1,6 @@
 package io.github.betterclient.fabric.api;
 
+import io.github.betterclient.client.bridge.IBridge;
 import io.github.betterclient.fabric.FabricMod;
 import io.github.betterclient.fabric.relocate.loader.api.FabricLoader;
 import io.github.betterclient.fabric.relocate.loader.api.MappingResolver;
@@ -96,7 +97,7 @@ public class FabricLoaderImpl implements FabricLoader {
                                     mde.invoke(lmd.getConstructor().newInstance(), o);
                                 }
                             } catch (Exception e) {
-                                e.printStackTrace();
+                                IBridge.getPreLaunch().error(e.toString());
                             }
                         };
 

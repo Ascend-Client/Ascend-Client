@@ -1,5 +1,7 @@
 package io.github.betterclient.client.event;
 
+import io.github.betterclient.client.bridge.IBridge;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -37,7 +39,7 @@ public class EventBus {
                         try {
                             method.invoke(subscriber.instance, e);
                         } catch (IllegalAccessException | InvocationTargetException ex) {
-                            ex.printStackTrace();
+                            IBridge.getPreLaunch().error(ex.toString());
                         }
                     }
                 })

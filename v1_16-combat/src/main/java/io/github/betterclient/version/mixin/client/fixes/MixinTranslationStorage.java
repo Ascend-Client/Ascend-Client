@@ -1,5 +1,6 @@
 package io.github.betterclient.version.mixin.client.fixes;
 
+import io.github.betterclient.client.bridge.IBridge;
 import io.github.betterclient.fabric.FabricLoader;
 import io.github.betterclient.fabric.FabricMod;
 import io.github.betterclient.fabric.Util;
@@ -40,7 +41,7 @@ public abstract class MixinTranslationStorage {
                 f.close();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            IBridge.getPreLaunch().error(e.toString());
         }
 
         translationMap.put("gui.socialInteractions.tab_all", "All");

@@ -1,5 +1,6 @@
 package io.github.betterclient.fabric.accesswidener;
 
+import io.github.betterclient.client.bridge.IBridge;
 import io.github.betterclient.fabric.FabricLoader;
 import io.github.betterclient.fabric.accesswidener.AccessWidener;
 import io.github.betterclient.fabric.accesswidener.AccessWidenerFieldOrMethod;
@@ -32,7 +33,7 @@ public class AccessWidenerApplier implements ClassTransformer {
             this.parsed = new AccessWidener(new String(is.readAllBytes()));
             is.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            IBridge.getPreLaunch().error(e.toString());
         }
 
         allClasses.addAll(this.parsed.classes);

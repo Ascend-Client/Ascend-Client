@@ -52,7 +52,7 @@ public class Version {
 
                 return List.of(fapi, sodium, sodiumExtras, reesesSodiumExtras, iris);
             } catch (Exception e) {
-                e.printStackTrace();
+                IBridge.getPreLaunch().error(e.toString());
             }
             return new ArrayList<>();
         }

@@ -43,7 +43,7 @@ public class Application {
             remappedBuiltinModJarsFolder = new File(remappedModJarsFolder, "builtin"),
             mcVersionFolder;
 
-    public static boolean doRemappingOfAlreadyRemappedMods = false,
+    public static final boolean doRemappingOfAlreadyRemappedMods = false,
                           ignoreDownloadedMinecraft = false;
     public static DownloadedMinecraft minecraft;
 
@@ -66,7 +66,7 @@ public class Application {
             Files.createDirectories(remappedModJarsFolder.toPath());
             Files.createDirectories(remappedBuiltinModJarsFolder.toPath());
             Files.createDirectories(mcVersionFolder.toPath());
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) { IBridge.getPreLaunch().error(e.toString()); }
 
         boolean hasDownloaded = false;
         try {

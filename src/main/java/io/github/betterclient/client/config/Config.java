@@ -2,6 +2,7 @@ package io.github.betterclient.client.config;
 
 import io.github.betterclient.client.Application;
 import io.github.betterclient.client.BallSack;
+import io.github.betterclient.client.bridge.IBridge;
 import io.github.betterclient.client.config.impl.ClientImplementation;
 import io.github.betterclient.client.mod.HUDModule;
 import io.github.betterclient.client.mod.Module;
@@ -88,7 +89,7 @@ public class Config {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            IBridge.getPreLaunch().error(e.toString());
         }
     }
 
@@ -100,7 +101,7 @@ public class Config {
             writer.write(json);
             writer.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            IBridge.getPreLaunch().error(e.toString());
         }
     }
 
@@ -124,7 +125,7 @@ public class Config {
 
             load();
         } catch (Exception e) {
-            e.printStackTrace();
+            IBridge.getPreLaunch().error(e.toString());
         }
     }
 
@@ -137,7 +138,7 @@ public class Config {
             (loadedConfig = new File(Application.configFolder, "main.json")).createNewFile();
             save();
         } catch (IOException e) {
-            e.printStackTrace();
+            IBridge.getPreLaunch().error(e.toString());
         }
     }
 
