@@ -95,6 +95,7 @@ public interface IBridge {
         MatrixStack newMatrixStack();
 
         TextRenderer getTextRenderer();
+        TextRenderer getMCRenderer();
 
         void addMessage(Text literal);
 

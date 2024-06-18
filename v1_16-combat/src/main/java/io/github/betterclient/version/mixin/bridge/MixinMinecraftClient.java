@@ -80,6 +80,11 @@ public abstract class MixinMinecraftClient implements IBridge.MinecraftClient {
     }
 
     @Override
+    public IBridge.TextRenderer getMCRenderer() {
+        return (IBridge.TextRenderer) this.textRenderer;
+    }
+
+    @Override
     public void addMessage(IBridge.Text literal) {
         this.inGameHud.getChatHud().addMessage((Text) literal.pointer);
     }

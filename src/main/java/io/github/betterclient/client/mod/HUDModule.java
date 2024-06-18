@@ -14,6 +14,7 @@ public abstract class HUDModule extends Module {
     public ColorSetting backgroundColor = new ColorSetting("Background Color", new Color(0,0,0,84));
     public BooleanSetting backGround = new BooleanSetting("Render Background", false);
     public ColorSetting textColor = new ColorSetting("Text Color", Color.WHITE);
+    public BooleanSetting forceVanillaFont = new BooleanSetting("Force vanilla font", false);
 
     public HUDModule(String name, int x, int y, IBridge.Identifier icon) {
         super(name, Category.HUD, icon);
@@ -21,6 +22,7 @@ public abstract class HUDModule extends Module {
         this.addSetting(backGround);
         this.addSetting(backgroundColor);
         this.addSetting(textColor);
+        this.addSetting(forceVanillaFont);
     }
 
     public abstract void render(Renderable renderable);
@@ -29,6 +31,12 @@ public abstract class HUDModule extends Module {
     public void render(RenderEvent event) {
         renderable.renderBackground = backGround.isValue();
         renderable.backgroundColor = backgroundColor.getColor();
+
+        if(this.forceVanillaFont.value) {
+            this.renderable.textRenderer = IBridge.MinecraftClient.getInstance().getMCRenderer();
+        } else {
+            this.renderable.textRenderer = IBridge.MinecraftClient.getInstance().getTextRenderer();
+        }
 
         this.renderable.reset();
         this.render(this.renderable);

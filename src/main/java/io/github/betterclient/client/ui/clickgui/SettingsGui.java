@@ -78,6 +78,11 @@ public class SettingsGui extends Screen {
             renderer.draw(matrices, "Preview", w2 + 187 - hudmod.renderable.width, h2 + 175 - hudmod.renderable.height - 10, -1);
             UIUtil.drawRoundedRect(w2 + 185 - hudmod.renderable.width, h2 + 175 - hudmod.renderable.height, w2 + 195, h2 + 185, 2f, c1);
 
+            if(hudmod.forceVanillaFont.value) {
+                hudmod.renderable.textRenderer = IBridge.MinecraftClient.getInstance().getMCRenderer();
+            } else {
+                hudmod.renderable.textRenderer = IBridge.MinecraftClient.getInstance().getTextRenderer();
+            }
             hudmod.renderable.renderWithXY(w2 + 190 - hudmod.renderable.width, h2 + 180 - hudmod.renderable.height);
         }
 
