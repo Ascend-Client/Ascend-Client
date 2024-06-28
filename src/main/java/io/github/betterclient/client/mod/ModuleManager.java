@@ -28,6 +28,7 @@ public class ModuleManager {
         moduleList.add(new SuperSecretSettings());
         moduleList.add(new CrosshairMod());
         moduleList.add(SmoothFont.instance);
+        moduleList.add(new PositionMod());
 
         IBridge.getPreLaunch().registerVersionBallsackMods(this);
     }

@@ -19,7 +19,7 @@ public class SmoothTextRenderer implements IBridge.TextRenderer {
     }
 
     public FontGlyphInfo info;
-    public IBridge.Identifier texture = new IBridge.Identifier("/ballsackfont" + SmoothFont.instance.font.value + ".png");
+    public IBridge.Identifier texture = new IBridge.Identifier("/ballsackfont" + SmoothFont.instance.font.value.toLowerCase() + ".png");
 
     public SmoothTextRenderer(FontGlyphInfo glyph) {
         this.info = glyph;

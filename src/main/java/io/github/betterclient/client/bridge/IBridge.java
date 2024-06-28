@@ -449,6 +449,9 @@ public interface IBridge {
 
     interface PlayerEntity extends Entity {
         ItemStack getArmorStack(int num);
+
+        String getBiome();
+        String getFacing();
     }
 
     class RaycastResult {
