@@ -6,7 +6,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath "com.github.johnrengelman:shadow:8.1.1"
+        classpath("io.github.goooler.shadow:shadow-gradle-plugin:8.1.8")
     }
 }
 
@@ -84,7 +84,7 @@ subprojects {
     }
 
     apply plugin: 'java'
-    apply plugin: "com.github.johnrengelman.shadow"
+    apply plugin: "io.github.goooler.shadow"
 
     configurations {
         shade
