@@ -13,12 +13,7 @@ public class SuperSecretSettings extends Module {
             "BLOBS2", "PENCIL", "COLOR_CONVOLVE", "DECONVERGE", "FLIP",
             "INVERT", "NTSC", "OUTLINE", "PHOSPHOR", "SCAN_PINCUSHION",
             "SOBEL", "BITS", "DESATURATE", "GREEN", "BLUR", "WOBBLE",
-            "BLOBS", "ANTIALIAS", "CREEPER", "SPIDER") {
-        @Override
-        public void toggle() {
-            super.toggle();
-        }
-    };
+            "BLOBS", "ANTIALIAS", "CREEPER", "SPIDER");
     public ShaderEffect shader;
     public int lastWidth, lastHeight;
     public String oldMode = "NOTCH";

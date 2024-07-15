@@ -75,7 +75,7 @@ gitProperties {
 }
 
 allprojects {
-    targetCompatibility = sourceCompatibility = 17
+    targetCompatibility = sourceCompatibility = 21
 }
 
 subprojects {

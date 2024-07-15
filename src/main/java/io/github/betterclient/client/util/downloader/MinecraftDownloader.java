@@ -69,6 +69,7 @@ public class MinecraftDownloader {
         builder.withMappings(TinyUtils.createTinyMappingProvider(tinyMappings.toPath(), from, to));
         builder.fixPackageAccess(true);
         builder.resolveMissing(true);
+        builder.ignoreConflicts(true);
         TinyRemapper mapper = builder.build();
 
         JarOutputStream jos = new JarOutputStream(Files.newOutputStream(destination.toPath()));

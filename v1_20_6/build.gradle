@@ -1,0 +1,36 @@
+plugins {
+    id "java"
+    id "fabric-loom" version "1.6-SNAPSHOT"
+}
+
+group 'io.github.betterclient'
+version '1.0'
+
+repositories {
+    mavenCentral()
+
+    maven {
+        name = 'Fabric'
+        url = 'https://maven.fabricmc.net/'
+    }
+}
+
+loom {
+    runConfigs.configureEach {
+        if(it.name == "server") {
+            ideConfigGenerated = false
+        } else {
+            it.vmArg("--add-opens=java.base/java.net=ALL-UNNAMED")
+            it.vmArg("--add-opens=java.base/jdk.internal.loader=ALL-UNNAMED")
+
+            ideConfigGenerated = true
+            client()
+            setDefaultMainClass("io.github.betterclient.client.launch.IDEMain")
+        }
+    }
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:1.20.6"
+    mappings "net.fabricmc:yarn:1.20.6+build.3:v2"
+}

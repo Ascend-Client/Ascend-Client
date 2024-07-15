@@ -11,6 +11,7 @@ pluginManagement {
 
 rootProject.name = 'MinecraftClient'
 include 'v1_19'
+include 'v1_20_6'
 include 'v1_16-combat'
 include 'Version-Auto-Updater'
 

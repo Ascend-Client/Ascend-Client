@@ -85,7 +85,7 @@ public class SmoothTextRenderer implements IBridge.TextRenderer {
         client.setShaderColor(((color >> 16) & 0xFF) / 255f, ((color >> 8) & 0xFF) / 255f, (color & 0xFF) / 255f, ((color >> 24) & 0xFF) / 255f);
         matrices.push();
         matrices.translate(x,y,1);
-        matrices.scale(scale, scale,1);
+        matrices.scale(scale, scale, scale);
         matrices.translate(-x,-y,1);
         for (int i : str.chars().toArray()) {
             if(this.info.containsChar(i)) {

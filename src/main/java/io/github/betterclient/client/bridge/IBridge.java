@@ -291,6 +291,10 @@ public interface IBridge {
     }
 
     interface MatrixStack {
+        default void setCTX(Object o) {}
+        default Object getCTX() {
+            return null;
+        }
         void push();
         void pop();
 
