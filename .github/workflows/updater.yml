@@ -10,7 +10,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: 21
-          distribution: 'adopt'
+          distribution: 'zulu'
           cache: gradle
 
       - name: Make gradlew executable
