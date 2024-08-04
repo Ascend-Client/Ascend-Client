@@ -8,7 +8,6 @@ import io.github.betterclient.quixotic.QuixoticApplication;
 import io.github.betterclient.quixotic.QuixoticClassLoader;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 public class VersionApplication implements QuixoticApplication {
@@ -39,11 +38,9 @@ public class VersionApplication implements QuixoticApplication {
 
     @Override
     public List<String> getMixinConfigurations() {
-        ArrayList<String> arrayList = new ArrayList<>(FabricLoader.getInstance().getMixinConfigurations());
+        FabricLoader.getInstance().doMixin();
 
-        arrayList.add("v1_20_6.mixins.json");
-
-        return arrayList;
+        return List.of("v1_20_6.mixins.json");
     }
 
     @Override

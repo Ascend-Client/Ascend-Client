@@ -32,7 +32,7 @@ File downloadQuixotic() {
     if(f.exists()) return f
 
     f.createNewFile()
-    def is = new URL("https://github.com/betterclient/Quixotic-Loader/releases/download/hi/Quixotic-1.0.jar").openStream()
+    def is = new URI("https://github.com/betterclient/Quixotic-Loader/releases/download/ithinkiforgoralreadyexists/Quixotic-1.0.jar").toURL().openStream()
     Files.copy(
             is,
             f.toPath(),
@@ -47,6 +47,9 @@ dependencies {
     implementation files(downloadQuixotic())
 
     implementation "org.json:json:20231013"
+    implementation "net.fabricmc:sponge-mixin:0.15.0+mixin.0.8.7"
+    implementation "io.github.llamalad7:mixinextras-fabric:0.4.0"
+    implementation "net.fabricmc:tiny-remapper:0.10.1"
 
     implementation "org.ow2.asm:asm:$asmVersion"
     implementation "org.ow2.asm:asm-analysis:$asmVersion"
@@ -59,9 +62,6 @@ dependencies {
     annotationProcessor "org.ow2.asm:asm-commons:$asmVersion"
     annotationProcessor "org.ow2.asm:asm-tree:$asmVersion"
     annotationProcessor "org.ow2.asm:asm-util:$asmVersion"
-
-    implementation "net.fabricmc:sponge-mixin:0.12.5+mixin.0.8.5"
-    implementation "net.fabricmc:tiny-remapper:0.10.1"
 }
 
 tasks.processResources {
@@ -98,6 +98,9 @@ subprojects {
         shade files(downloadQuixotic())
 
         shade "org.json:json:20231013"
+        shade "net.fabricmc:sponge-mixin:0.15.0+mixin.0.8.7"
+        shade "io.github.llamalad7:mixinextras-fabric:0.4.0"
+        shade "net.fabricmc:tiny-remapper:0.10.1"
 
         shade "org.ow2.asm:asm:$asmVersion"
         shade "org.ow2.asm:asm-analysis:$asmVersion"
@@ -110,10 +113,6 @@ subprojects {
         annotationProcessor "org.ow2.asm:asm-commons:$asmVersion"
         annotationProcessor "org.ow2.asm:asm-tree:$asmVersion"
         annotationProcessor "org.ow2.asm:asm-util:$asmVersion"
-
-        shade "net.fabricmc:sponge-mixin:0.12.5+mixin.0.8.5"
-        shade "io.github.llamalad7:mixinextras-fabric:0.3.5"
-        shade "net.fabricmc:tiny-remapper:0.10.1"
     }
 
     shadowJar {

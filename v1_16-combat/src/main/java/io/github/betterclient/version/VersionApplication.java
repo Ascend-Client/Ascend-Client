@@ -9,7 +9,6 @@ import io.github.betterclient.version.transformers.RenderSystemTransformer;
 import io.github.betterclient.version.transformers.TexturedButtonWidgetTransformer;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 public class VersionApplication implements QuixoticApplication {
@@ -40,11 +39,9 @@ public class VersionApplication implements QuixoticApplication {
 
     @Override
     public List<String> getMixinConfigurations() {
-        ArrayList<String> arrayList = new ArrayList<>(FabricLoader.getInstance().getMixinConfigurations());
+        FabricLoader.getInstance().doMixin();
 
-        arrayList.add("v1_16-combat.mixins.json");
-
-        return arrayList;
+        return List.of("v1_16-combat.mixins.json");
     }
 
     @Override

@@ -1,8 +1,9 @@
 package io.github.betterclient.fabric.api;
 
 import io.github.betterclient.client.Application;
+import io.github.betterclient.client.bridge.IBridge;
 import io.github.betterclient.client.util.downloader.DownloadedMinecraft;
-import io.github.betterclient.client.util.modremapper.ModRemapper;
+import io.github.betterclient.client.util.modremapper.utility.ModRemapperUtility;
 import io.github.betterclient.fabric.Util;
 import io.github.betterclient.fabric.relocate.loader.api.MappingResolver;
 
@@ -20,10 +21,11 @@ public class MappingResolverImpl implements MappingResolver {
 
     public MappingResolverImpl(DownloadedMinecraft minecraft) {
         try {
-            this.intermediaryToYarn.putAll(ModRemapper.generateMappings(minecraft));
+            this.intermediaryToYarn.putAll(ModRemapperUtility.generateMappings(minecraft));
             officialMappings.putAll(populateOfficialMappings(minecraft));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            IBridge.getPreLaunch().error("Failed to load mappings!");
+            IBridge.getPreLaunch().error(e);
         }
     }
 
@@ -69,7 +71,7 @@ public class MappingResolverImpl implements MappingResolver {
                 return officialMappings.getOrDefault(className, null);
             }
             default -> {
-                return ModRemapper.mapClassName(className.replace('.', '/'), this.intermediaryToYarn).replace('/', '.');
+                return ModRemapperUtility.mapClassName(className.replace('.', '/'), this.intermediaryToYarn).replace('/', '.');
             }
         }
     }

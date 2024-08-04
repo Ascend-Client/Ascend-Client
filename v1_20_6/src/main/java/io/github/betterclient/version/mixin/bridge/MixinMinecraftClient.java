@@ -23,7 +23,6 @@ import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.client.util.Window;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.item.ItemStack;
@@ -39,8 +38,6 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
-import java.util.Objects;
-
 @Mixin(MinecraftClient.class)
 public abstract class MixinMinecraftClient implements IBridge.MinecraftClient {
 
@@ -49,8 +46,6 @@ public abstract class MixinMinecraftClient implements IBridge.MinecraftClient {
     @Shadow @Final public TextRenderer textRenderer;
 
     @Shadow @Final public InGameHud inGameHud;
-
-    @Shadow @Final private ItemRenderer itemRenderer;
 
     @Shadow @Nullable public ClientPlayerEntity player;
 

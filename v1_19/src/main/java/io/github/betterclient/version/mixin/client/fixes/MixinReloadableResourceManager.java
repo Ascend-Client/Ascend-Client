@@ -27,7 +27,6 @@ public interface MixinReloadableResourceManager {
         Optional<Resource> of = this.getResource(id);
 
         if(of.isEmpty()) {
-            System.out.println("Finding BetterResource");
             IBridge.Identifier identifier = new IBridge.Identifier(id);
             IBridge.Resource resource = BallSack.getInstance().findLoadedResource(identifier);
 

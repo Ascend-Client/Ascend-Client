@@ -1,4 +1,4 @@
-package io.github.betterclient.client.util.modremapper;
+package io.github.betterclient.client.util.modremapper.utility;
 
 import io.github.betterclient.client.util.mclaunch.StatusFrame;
 

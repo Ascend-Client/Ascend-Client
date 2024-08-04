@@ -5,7 +5,7 @@ import io.github.betterclient.client.bridge.IBridge;
 import io.github.betterclient.client.util.downloader.DownloadedMinecraft;
 import io.github.betterclient.client.util.downloader.MinecraftDownloader;
 import io.github.betterclient.client.util.mclaunch.StatusFrame;
-import io.github.betterclient.client.util.modremapper.ModLoadingInformation;
+import io.github.betterclient.client.util.modremapper.utility.ModLoadingInformation;
 import io.github.betterclient.client.util.modremapper.ModRemapper;
 import io.github.betterclient.fabric.FabricLoader;
 import io.github.betterclient.fabric.FabricMod;
@@ -13,10 +13,7 @@ import io.github.betterclient.fabric.Util;
 import io.github.betterclient.quixotic.Quixotic;
 import io.github.betterclient.quixotic.QuixoticClassLoader;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -28,7 +25,6 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import java.util.zip.ZipEntry;
 
 public class Application {
     public static File
@@ -56,6 +52,13 @@ public class Application {
         quixoticClassLoader.addExclusion("org.slf4j.");
 
         try {
+            /*for (File file : remappedBuiltinModJarsFolder.listFiles()) {
+                file.delete();
+            }
+
+            for (File file : remappedModJarsFolder.listFiles()) {
+                file.delete();
+            }*/
             Files.createDirectories(clientFolder.toPath());
             Files.createDirectories(modJarsFolder.toPath());
             Files.createDirectories(configFolder.toPath());
@@ -66,7 +69,7 @@ public class Application {
             Files.createDirectories(remappedModJarsFolder.toPath());
             Files.createDirectories(remappedBuiltinModJarsFolder.toPath());
             Files.createDirectories(mcVersionFolder.toPath());
-        } catch (Exception e) { IBridge.getPreLaunch().error(e.toString()); }
+        } catch (Exception e) { IBridge.getPreLaunch().error(e); }
 
         boolean hasDownloaded = false;
         try {
@@ -80,7 +83,7 @@ public class Application {
             List<?> listURLs = (List<?>) f.get(quixoticClassLoader);
             URL mcURL = null;
             for (Object url : listURLs) {
-                if(url instanceof URL listURL && listURL.toString().contains("minecraft-merged"))
+                if(url instanceof URL listURL && listURL.toString().contains("minecraft"))
                     mcURL = listURL;
             }
 
@@ -110,6 +113,8 @@ public class Application {
         } catch (Exception e) {
             throw new RuntimeException("Failed to " + (hasDownloaded ? "replace" : "download") +  " minecraft.", e);
         }
+
+        long startt = System.currentTimeMillis();
 
         try {
             new Thread(StatusFrame::new).start();
@@ -151,6 +156,8 @@ public class Application {
         } catch (Exception e) {
             throw new RuntimeException("Mod loading failed while " + modLoadingInformation.state().getName(), e);
         }
+
+        IBridge.getPreLaunch().info("Took " + (System.currentTimeMillis() - startt) / 1000f + " seconds for remapping of all mods!");
 
         quixoticClassLoader.addPlainTransformer(new YarnFix());
 

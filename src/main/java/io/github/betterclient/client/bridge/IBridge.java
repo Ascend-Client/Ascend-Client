@@ -3,10 +3,7 @@ package io.github.betterclient.client.bridge;
 import io.github.betterclient.client.mod.ModuleManager;
 import io.github.betterclient.client.util.downloader.MinecraftVersion;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,6 +42,7 @@ public interface IBridge {
         MinecraftVersion getVersion();
         void info(String s);
         void error(String s);
+        void error(Exception e);
         List<File> getVersionMods();
         void registerVersionBallsackMods(ModuleManager manager);
     }
@@ -164,7 +162,7 @@ public interface IBridge {
         TRIANGLES,
         TRIANGLE_STRIP,
         TRIANGLE_FAN,
-        QUADS;
+        QUADS
     }
 
     interface BufferBuilder {
@@ -195,7 +193,7 @@ public interface IBridge {
 
         int scaledHeight();
 
-        boolean isFocused();
+        boolean isNotFocused();
     }
 
     interface Mouse {
@@ -223,8 +221,6 @@ public interface IBridge {
         public List<ButtonWidget> buttons = new ArrayList<>();
         public int width, height;
         public TextRenderer textRenderer;
-
-        public static boolean hasShiftDown() {return IBridge.internal().isKeyPressed(IBridge.getKeys().KEY_SHIFT);}
 
         protected void init() {}
         public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {}

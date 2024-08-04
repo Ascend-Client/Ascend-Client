@@ -5,8 +5,7 @@ import io.github.betterclient.fabric.Util;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.util.List;
 import java.util.jar.JarFile;
@@ -15,7 +14,10 @@ public class AutoUpdaterUtil {
     public static void update() {
         IBridge.getPreLaunch().info("Updating!");
         try {
-            Runtime.getRuntime().exec("\"" + getJava() + "\" -jar \"" + downloadUpdater() + "\" \"" + IBridge.getInstance().getVersion() + "\"");
+            String command = "\"" + getJava() + "\" -jar \"" + downloadUpdater() + "\" \"" + IBridge.getInstance().getVersion() + "\"";
+            IBridge.getPreLaunch().info("Command: \"" + command + "\"");
+
+            Runtime.getRuntime().exec(command.split(" "));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -35,7 +37,7 @@ public class AutoUpdaterUtil {
         return "java";
     }
 
-    private static String downloadUpdater() throws IOException {
+    private static String downloadUpdater() throws IOException, URISyntaxException {
         JarFile file = new JarFile(Util.urlToFile("https://nightly.link/betterclient/Minecraft-Client/workflows/updater/modern/Updater.zip"));
         byte[] bites = Util.readAndClose(file.getInputStream(file.getEntry("Updater.jar")));
 

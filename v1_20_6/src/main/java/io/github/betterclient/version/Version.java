@@ -19,12 +19,12 @@ public class Version {
 
     public static IBridge bridge;
     public static IBridge.KeyStorage keys = new IBridge.KeyStorage(GLFW.GLFW_KEY_LEFT_SHIFT, GLFW.GLFW_KEY_C, GLFW.GLFW_KEY_RIGHT_SHIFT, GLFW.GLFW_KEY_BACKSPACE, GLFW.GLFW_KEY_ESCAPE, GLFW.GLFW_KEY_ENTER, GLFW.GLFW_KEY_LEFT_ALT);
-    public static IBridge.InternalBridge internal = new InternalBridgeImplementation();
+    public static IBridge.InternalBridge internal;
     public static IBridge.PreLaunchBridge preLaunchBridge = new IBridge.PreLaunchBridge() {
         @Override
         public MinecraftVersion getVersion() {
             return new MinecraftVersion(
-                    "1.20.6",
+                    MinecraftVersion.Version.V1_20_6,
                     "https://piston-data.mojang.com/v1/objects/05b6f1c6b46a29d6ea82b4e0d42190e42402030f/client.jar",
                     "https://raw.githubusercontent.com/FabricMC/intermediary/master/mappings/1.20.6.tiny",
                     "https://github.com/betterclient/Minecraft-Client/releases/download/Mappings/1.20.6.tiny",
@@ -43,18 +43,25 @@ public class Version {
         }
 
         @Override
+        public void error(Exception e) {
+            LOGGER.error(e);
+        }
+
+        @Override
         public List<File> getVersionMods() {
-            /*try {
-                File fapi = Util.downloadIfFirstLaunch("https://cdn.modrinth.com/data/P7dR8mSH/versions/nyAmoHlr/fabric-api-0.87.2%2B1.19.4.jar");
-                File sodium = Util.downloadIfFirstLaunch("https://cdn.modrinth.com/data/AANobbMI/versions/b4hTi3mo/sodium-fabric-mc1.19.4-0.4.10%2Bbuild.24.jar");
-                File sodiumExtra = Util.downloadIfFirstLaunch("https://cdn.modrinth.com/data/PtjYWJkn/versions/YknbqkHe/sodium-extra-0.4.18%2Bmc1.19.4-build.100.jar");
-                File reesesSodiumExtras = Util.downloadIfFirstLaunch("https://cdn.modrinth.com/data/Bh37bMuy/versions/vjKE54Zq/reeses_sodium_options-1.6.3%2Bmc1.19.4-build.90.jar");
-                //File iris = Util.downloadIfFirstLaunch("https://cdn.modrinth.com/data/YL57xq9U/versions/wN6PuLPa/iris-mc1.19.4-1.6.11.jar");
-            h
-                return List.of(fapi, sodium, sodiumExtra, reesesSodiumExtras);
+            new File("D:\\MyStupidClient\\v1_20_6\\run\\.ballsack\\modjars\\remapped\\sodium-fabric-0.5.11%2Bmc1.20.6-remapped.jar").delete();
+
+            try {
+                File fapi = Util.downloadIfFirstLaunch("https://cdn.modrinth.com/data/P7dR8mSH/versions/GT0R5Mz7/fabric-api-0.100.4%2B1.20.6.jar");
+                File sodium = Util.downloadIfFirstLaunch("https://cdn.modrinth.com/data/AANobbMI/versions/OwLQelEI/sodium-fabric-0.5.11%2Bmc1.20.6.jar");
+                File sodiumExtra = Util.downloadIfFirstLaunch("https://cdn.modrinth.com/data/PtjYWJkn/versions/6ethXWmk/sodium-extra-0.5.6%2Bmc1.20.6.jar");
+                File reesesSodiumExtras = Util.downloadIfFirstLaunch("https://cdn.modrinth.com/data/Bh37bMuy/versions/JKZokbpT/reeses_sodium_options-1.7.2%2Bmc1.20.5-build.103.jar");
+                File iris = Util.downloadIfFirstLaunch("https://cdn.modrinth.com/data/YL57xq9U/versions/1bvcmYOc/iris-1.7.2%2Bmc1.20.6.jar");
+
+                return List.of(fapi, sodium, sodiumExtra, reesesSodiumExtras, iris);
             } catch (IOException e) {
                 IBridge.getPreLaunch().error(e.toString());
-            }*/
+            }
             return new ArrayList<>();
         }
 
@@ -65,6 +72,7 @@ public class Version {
     };
 
     public static void setup() {
+        internal = new InternalBridgeImplementation();
         bridge = new BridgeImpl();
     }
 }

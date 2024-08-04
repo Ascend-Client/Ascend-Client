@@ -7,7 +7,6 @@ import io.github.betterclient.fabric.Util;
 import io.github.betterclient.version.mods.BedrockBridge;
 import io.github.betterclient.version.mods.CookeyMod;
 import io.github.betterclient.version.util.InternalBridgeImplementation;
-import io.netty.util.internal.logging.Slf4JLoggerFactory;
 import org.lwjgl.glfw.GLFW;
 
 import java.io.File;
@@ -23,7 +22,7 @@ public class Version {
         @Override
         public MinecraftVersion getVersion() {
             return new MinecraftVersion(
-                    "1.16-combat-6",
+                    MinecraftVersion.Version.COMBAT_TEST_8C,
                     "https://launcher.mojang.com/v1/objects/177472ace3ff5d98fbd63b4bcd5bbef5b035a018/client.jar",
                     "https://raw.githubusercontent.com/rizecookey/intermediary/master/mappings/1.16_combat-6.tiny",
                     "https://github.com/betterclient/Minecraft-Client/releases/download/Mappings/1.16_combat-6.tiny",
@@ -39,6 +38,11 @@ public class Version {
         @Override
         public void error(String s) {
             System.err.println(s);
+        }
+
+        @Override
+        public void error(Exception e) {
+            e.printStackTrace(System.err);
         }
 
         @Override

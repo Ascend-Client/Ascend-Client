@@ -24,7 +24,7 @@ public class Version {
         @Override
         public MinecraftVersion getVersion() {
             return new MinecraftVersion(
-                    "1.19.4",
+                    MinecraftVersion.Version.V1_19_4,
                     "https://piston-data.mojang.com/v1/objects/958928a560c9167687bea0cefeb7375da1e552a8/client.jar",
                     "https://raw.githubusercontent.com/FabricMC/intermediary/master/mappings/1.19.4.tiny",
                     "https://github.com/betterclient/Minecraft-Client/releases/download/Mappings/1.19.4.tiny",
@@ -43,17 +43,22 @@ public class Version {
         }
 
         @Override
+        public void error(Exception e) {
+           LOGGER.error(e);
+        }
+
+        @Override
         public List<File> getVersionMods() {
             try {
                 File fapi = Util.downloadIfFirstLaunch("https://cdn.modrinth.com/data/P7dR8mSH/versions/nyAmoHlr/fabric-api-0.87.2%2B1.19.4.jar");
                 File sodium = Util.downloadIfFirstLaunch("https://cdn.modrinth.com/data/AANobbMI/versions/b4hTi3mo/sodium-fabric-mc1.19.4-0.4.10%2Bbuild.24.jar");
                 File sodiumExtra = Util.downloadIfFirstLaunch("https://cdn.modrinth.com/data/PtjYWJkn/versions/YknbqkHe/sodium-extra-0.4.18%2Bmc1.19.4-build.100.jar");
                 File reesesSodiumExtras = Util.downloadIfFirstLaunch("https://cdn.modrinth.com/data/Bh37bMuy/versions/vjKE54Zq/reeses_sodium_options-1.6.3%2Bmc1.19.4-build.90.jar");
-                //File iris = Util.downloadIfFirstLaunch("https://cdn.modrinth.com/data/YL57xq9U/versions/wN6PuLPa/iris-mc1.19.4-1.6.11.jar");
+                File iris = Util.downloadIfFirstLaunch("https://cdn.modrinth.com/data/YL57xq9U/versions/wN6PuLPa/iris-mc1.19.4-1.6.11.jar");
 
-                return List.of(fapi, sodium, sodiumExtra, reesesSodiumExtras/*, iris*/);
+                return List.of(fapi, iris, sodium, sodiumExtra, reesesSodiumExtras);
             } catch (IOException e) {
-                IBridge.getPreLaunch().error(e.toString());
+                IBridge.getPreLaunch().error(e);
             }
             return new ArrayList<>();
         }

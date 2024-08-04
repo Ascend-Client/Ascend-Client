@@ -15,6 +15,7 @@ import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.AliasedBlockItem;
 import net.minecraft.item.BlockItem;
@@ -37,7 +38,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  * Code "borrowed" from: <a href="https://github.com/Draylar/better-dropped-items/blob/1.16.2/src/main/java/bdi/mixin/ItemEntityRendererMixin.java">...</a>
  */
 @Mixin(ItemEntityRenderer.class)
-public abstract class MixinItemEntityRenderer extends EntityRenderer<ItemEntity> {
+public abstract class MixinItemEntityRenderer extends EntityRenderer<Entity> {
     @Shadow @Final private ItemRenderer itemRenderer;
 
     @Shadow
@@ -55,7 +56,8 @@ public abstract class MixinItemEntityRenderer extends EntityRenderer<ItemEntity>
     }
 
     @Inject(at = @At("HEAD"), method = "render*", cancellable = true)
-    private void render(ItemEntity dropped, float f, float partialTicks, MatrixStack matrix, VertexConsumerProvider vertexConsumerProvider, int i, CallbackInfo callback) {
+    private void render(Entity e, float f, float partialTicks, MatrixStack matrix, VertexConsumerProvider vertexConsumerProvider, int i, CallbackInfo callback) {
+        if(!(e instanceof ItemEntity dropped)) return;
         if(ItemPhysics.isDisabled()) return;
         Random random = Random.create();
 

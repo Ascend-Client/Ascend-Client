@@ -2,7 +2,7 @@ package io.github.betterclient.fabric;
 
 import io.github.betterclient.client.Application;
 import io.github.betterclient.client.bridge.IBridge;
-import io.github.betterclient.client.util.modremapper.ModLoadingInformation;
+import io.github.betterclient.client.util.modremapper.utility.ModLoadingInformation;
 import io.github.betterclient.client.util.modremapper.ModRemapper;
 import io.github.betterclient.fabric.accesswidener.AccessWidenerApplier;
 import io.github.betterclient.fabric.transformer.PrivateAccessTransformer;
@@ -12,6 +12,11 @@ import io.github.betterclient.quixotic.Quixotic;
 import io.github.betterclient.quixotic.QuixoticClassLoader;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.spongepowered.asm.mixin.FabricUtil;
+import org.spongepowered.asm.mixin.Mixins;
+import org.spongepowered.asm.mixin.extensibility.IMixinConfig;
+import org.spongepowered.asm.mixin.transformer.Config;
+import org.spongepowered.asm.util.asm.ASM;
 
 import java.io.File;
 import java.io.IOException;
@@ -108,6 +113,7 @@ public class FabricLoader {
                     String version = obj.getString("version");
 
                     List<String> mainPoints = new ArrayList<>();
+                    List<String> mmainPoints = new ArrayList<>();
                     List<String> preMainPoints = new ArrayList<>();
                     Map<String, String> allEntries = new HashMap<>();
                     List<String> mixins = new ArrayList<>();
@@ -124,8 +130,12 @@ public class FabricLoader {
                         JSONObject entrypoints = obj.getJSONObject("entrypoints");
 
                         for (String key : entrypoints.keySet()) {
-                            if(key.equals("main") || key.equals("client")) {
+                            if(key.equals("client")) {
                                 mainPoints.addAll(entrypoints.getJSONArray(key).toList().stream().map(String.class::cast).toList());
+                            }
+
+                            if(key.equals("main")) {
+                                mmainPoints.addAll(entrypoints.getJSONArray(key).toList().stream().map(String.class::cast).toList());
                             }
 
                             if(key.equals("preLaunch")) {
@@ -152,6 +162,11 @@ public class FabricLoader {
                         @Override
                         public List<String> preMainEntries() {
                             return preMainPoints;
+                        }
+
+                        @Override
+                        public List<String> mainEntries() {
+                            return mmainPoints;
                         }
 
                         @Override
@@ -202,7 +217,7 @@ public class FabricLoader {
 
                 Quixotic.classLoader.addURL(f.toURI().toURL());
 
-                if(!loaded.accessWidener().equals(""))
+                if(!loaded.accessWidener().isEmpty())
                     Quixotic.classLoader.addPlainTransformer(new AccessWidenerApplier(loaded.accessWidener()));
 
                 IBridge.getPreLaunch().info("Successfully loaded mod: " + loaded.name() + " (" + loaded.from().getAbsolutePath() + ")");
@@ -216,7 +231,7 @@ public class FabricLoader {
 
     private void loadMod(String containerMod, File mod) {
         if(this.loadMod(mod) != null)
-            loadedMods.get(loadedMods.size() - 1).setContainer(containerMod);
+            loadedMods.getLast().setContainer(containerMod);
     }
 
     public static FabricLoader getInstance() {
@@ -229,7 +244,21 @@ public class FabricLoader {
         quixoticClassLoader.addPlainTransformer(new RemoveInitializer());
     }
 
-    public List<String> getMixinConfigurations() {
+    public void doMixin() {
+        if(ASM.getApiVersionMinor() < 5) {
+            try {
+                Field f = ASM.class.getDeclaredField("minorVersion");
+                f.setAccessible(true);
+                f.setInt(null, 5);
+
+                f = ASM.class.getDeclaredField("implMinorVersion");
+                f.setAccessible(true);
+                f.setInt(null, 5);
+            } catch (IllegalAccessException | NoSuchFieldException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
         try {
             for (FabricMod mod : loadedMods) {
                 for (String preLaunch : mod.preMainEntries()) {
@@ -244,16 +273,39 @@ public class FabricLoader {
             IBridge.getPreLaunch().error(e.toString());
         }
 
-        ArrayList<String> total = new ArrayList<>();
+        HashMap<String, FabricMod> configToModMap = new HashMap<>();
+        loadedMods.forEach(fabricMod -> fabricMod.mixinConfigs().forEach(string -> {
+            Mixins.addConfiguration(string);
+            configToModMap.put(string, fabricMod);
+        }));
 
-        for (FabricMod mod : loadedMods) {
-            total.addAll(mod.mixinConfigs());
+        try {
+            IMixinConfig.class.getMethod("decorate", String.class, Object.class);
+            apply(configToModMap);
+        } catch (NoSuchMethodException e) {
+            System.err.println("Mixin version doesn't support decoration");
+            e.printStackTrace(System.err);
         }
+    }
 
-        return total;
+    private void apply(HashMap<String, FabricMod> configToModMap) {
+        for (Config rawConfig : Mixins.getConfigs()) {
+            FabricMod mod = configToModMap.get(rawConfig.getName());
+            if (mod == null) {
+                IMixinConfig config = rawConfig.getConfig();
+                config.decorate(FabricUtil.KEY_MOD_ID, "Ballsack_Client");
+
+                continue;
+            }
+
+            IMixinConfig config = rawConfig.getConfig();
+            config.decorate(FabricUtil.KEY_MOD_ID, mod.id());
+        }
     }
 
     public void callClientMain() throws Exception {
+        this.callMain();
+
         for (FabricMod mod : loadedMods) {
             for (String entry : mod.clientEntries()) {
                 if(entry.contains("::")) {
@@ -285,7 +337,50 @@ public class FabricLoader {
                 Method foundInit = null;
 
                 for (Method method : loadedMod.getDeclaredMethods()) {
-                    if(method.getName().equals("onInitializeClient") || method.getName().equals("onInitialize"))
+                    if(method.getName().equals("onInitializeClient"))
+                        foundInit = method;
+                }
+
+                if(foundInit == null)
+                    continue;
+                foundInit.invoke(loadedMod.getConstructor().newInstance());
+            }
+        }
+    }
+
+    public void callMain() throws Exception {
+        for (FabricMod mod : loadedMods) {
+            for (String entry : mod.mainEntries()) {
+                if(entry.contains("::")) {
+                    Class<?> loadedMod = Class.forName(entry.substring(0, entry.indexOf(":")), false, Quixotic.classLoader);
+                    String methodName = entry.substring(entry.lastIndexOf(":") + 1);
+                    try {
+                        Field f = loadedMod.getField(methodName);
+                        Runnable theRunnable;
+                        if(Modifier.isStatic(f.getModifiers())) {
+                            theRunnable = (Runnable) f.get(null);
+                        } else {
+                            theRunnable = (Runnable) f.get(loadedMod.getConstructor().newInstance());
+                        }
+                        theRunnable.run();
+                    } catch (NoSuchFieldException exception) {
+                        Method mde = loadedMod.getDeclaredMethod(methodName);
+                        if(Modifier.isStatic(mde.getModifiers())) {
+                            mde.invoke(null);
+                        } else {
+                            mde.invoke(loadedMod.getConstructor().newInstance());
+                        }
+                    }
+
+                    continue;
+                }
+
+                Class<?> loadedMod = Class.forName(entry, false, Quixotic.classLoader);
+
+                Method foundInit = null;
+
+                for (Method method : loadedMod.getDeclaredMethods()) {
+                    if(method.getName().equals("onInitialize"))
                         foundInit = method;
                 }
 

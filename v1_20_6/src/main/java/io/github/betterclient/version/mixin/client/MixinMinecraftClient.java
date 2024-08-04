@@ -2,14 +2,13 @@ package io.github.betterclient.version.mixin.client;
 
 import io.github.betterclient.client.BallSack;
 import io.github.betterclient.client.bridge.IBridge;
-import io.github.betterclient.client.mod.Module;
 import io.github.betterclient.client.mod.impl.other.SuperSecretSettings;
 import io.github.betterclient.client.util.FileResource;
 import io.github.betterclient.version.Version;
 import io.github.betterclient.client.event.impl.HitEntityEvent;
 import io.github.betterclient.fabric.FabricLoader;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.navigation.GuiNavigationType;
+import net.minecraft.client.RunArgs;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -20,6 +19,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
@@ -66,13 +66,12 @@ public abstract class MixinMinecraftClient {
         return Thread.currentThread();
     }
 
-    @Redirect(method = "<init>", at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/navigation/GuiNavigationType;NONE:Lnet/minecraft/client/gui/navigation/GuiNavigationType;"))
-    public GuiNavigationType initBridge() {
+    @Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/resource/PeriodicNotificationManager;<init>(Lnet/minecraft/util/Identifier;Lit/unimi/dsi/fastutil/objects/Object2BooleanFunction;)V"))
+    public void initBridge(RunArgs args, CallbackInfo ci) {
         try {
             Version.setup();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        return GuiNavigationType.NONE;
     }
 }

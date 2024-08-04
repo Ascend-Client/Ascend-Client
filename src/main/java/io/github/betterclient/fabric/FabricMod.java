@@ -9,6 +9,7 @@ public interface FabricMod {
 
     List<String> clientEntries();
     List<String> preMainEntries();
+    List<String> mainEntries();
     Map<String, String> allEntries();
 
     List<String> mixinConfigs();

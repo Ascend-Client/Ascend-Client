@@ -1,6 +1,7 @@
-package io.github.betterclient.client.util.modremapper;
+package io.github.betterclient.client.util.modremapper.utility;
 
 import io.github.betterclient.client.Application;
+import io.github.betterclient.client.util.downloader.MinecraftVersion;
 import io.github.betterclient.fabric.FabricLoader;
 import org.objectweb.asm.tree.*;
 
@@ -14,12 +15,13 @@ import static org.objectweb.asm.Opcodes.*;
  * fixes issues in replaymod and iris
  * <p>
  * these issues exist in the fabric version of the mods aswell
- * <p>
- * cts only
  */
 public class ModIssueFixer {
     public static void edit(ClassNode node, File currentMod) throws Exception {
-        if(!Application.minecraft.version().version().equals("1.16-combat-6")) return;
+        if(Application.minecraft.version().version() == MinecraftVersion.Version.V1_19_4)
+            edit_1_19_4(node);
+
+        if(Application.minecraft.version().version() != MinecraftVersion.Version.COMBAT_TEST_8C) return;
 
         if(node.name.equals("com/replaymod/core/versions/MCVer") && FabricLoader.getInstance().getModName(currentMod).equals("Replay Mod")) {
             for (MethodNode method : node.methods) {
@@ -49,22 +51,39 @@ public class ModIssueFixer {
         if(node.name.equals("net/coderbot/iris/gui/screen/ShaderPackScreen") && FabricLoader.getInstance().getModName(currentMod).equals("Iris")) {
             for (MethodNode method : node.methods) {
                 if(method.name.equals("init")) {
-                    List<AbstractInsnNode> toRemove = new ArrayList<>();
-
-                    for (AbstractInsnNode instruction : method.instructions) {
-                        if(instruction instanceof MethodInsnNode min && min.getOpcode() == INVOKEVIRTUAL && min.name.equals("changeFocus")) {
-                            AbstractInsnNode current = instruction;
-                            toRemove.add(current);
-                            while((current = current.getPrevious()).getOpcode() != ALOAD) {
-                                toRemove.add(current);
-                            }
-                            toRemove.add(current);
-                        }
-                    }
+                    List<AbstractInsnNode> toRemove = getRemovalNodes(method);
 
                     toRemove.forEach(method.instructions::remove);
                 }
             }
         }
+    }
+
+    private static void edit_1_19_4(ClassNode node) {
+        if(node.name.equals("net/coderbot/iris/compat/sodium/mixin/vertex_format/entity/MixinEntityRenderDispatcher")) {
+            for (MethodNode method : node.methods) {
+                if(method.name.equals("renderShadowPart")) {
+                    method.visibleAnnotations = new ArrayList<>(List.of(new AnnotationNode("Lorg/spongepowered/asm/mixin/Unique;")));
+                }
+            }
+        }
+
+        if(!node.name.equals("net/fabricmc/fabric/mixin/entity/event/LivingEntityMixin")) return;
+        node.methods.removeIf(method -> method.name.equals("onGetSleepingDirection"));
+    }
+
+    private static List<AbstractInsnNode> getRemovalNodes(MethodNode method) {
+        List<AbstractInsnNode> toRemove = new ArrayList<>();
+
+        for (AbstractInsnNode instruction : method.instructions) {
+            if(instruction instanceof MethodInsnNode min && min.getOpcode() == INVOKEVIRTUAL && min.name.equals("method_31322")) {
+                AbstractInsnNode current = instruction;
+                do {
+                    toRemove.add(current);
+                } while ((current = current.getPrevious()).getOpcode() != ALOAD);
+                toRemove.add(current);
+            }
+        }
+        return toRemove;
     }
 }

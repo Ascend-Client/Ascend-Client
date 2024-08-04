@@ -9,6 +9,7 @@ import net.fabricmc.tinyremapper.TinyUtils;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
@@ -27,7 +28,7 @@ public class MinecraftDownloader {
         File intermediaryFile = new File(Application.mcVersionFolder, "intermediary.jar");
         File yarnFile = new File(Application.mcVersionFolder, "yarn.jar");
         File intermediaryToYarn = new File(Application.mcVersionFolder, "mappings.tiny");
-        if(yarnFile.exists() && intermediaryFile.exists() && intermediaryToYarn.exists() && !Application.ignoreDownloadedMinecraft) {
+        if(yarnFile.exists() && intermediaryFile.exists() && intermediaryToYarn.exists() && !Application.ignoreDownloadedMinecraft && intermediaryFile.length() != 0 && yarnFile.length() != 0 && intermediaryToYarn.length() != 0) {
             bridge.info("Found pre-downloaded mc file, using it (delete " + Application.mcVersionFolder.getAbsolutePath() + " if issues occur)");
             return new DownloadedMinecraft(intermediaryFile, yarnFile, intermediaryToYarn, version);
         }
@@ -110,7 +111,7 @@ public class MinecraftDownloader {
         IBridge.PreLaunchBridge bridge = IBridge.getPreLaunch();
         bridge.info("Downloading file: " + url);
 
-        URL url1 = new URL(url);
+        URL url1 = new URI(url).toURL();
         InputStream is = url1.openStream();
         byte[] downloaded = is.readAllBytes();
         is.close();

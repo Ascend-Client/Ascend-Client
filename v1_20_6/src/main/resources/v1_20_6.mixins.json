@@ -25,6 +25,7 @@
     "client.entity.MixinEntity",
     "client.entity.MixinItemEntity",
     "client.fixes.MixinLifecycledResourceManagerImpl",
+    "client.fixes.MixinResourceFactory",
     "client.fixes.MixinSoundManager",
     "client.fixes.MixinTranslationStorage",
     "client.gui.MixinInGameHud",

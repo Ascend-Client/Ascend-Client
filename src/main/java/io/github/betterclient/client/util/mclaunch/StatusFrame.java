@@ -1,7 +1,7 @@
 package io.github.betterclient.client.util.mclaunch;
 
 import io.github.betterclient.client.Application;
-import io.github.betterclient.client.util.modremapper.ModLoadingInformation;
+import io.github.betterclient.client.util.modremapper.utility.ModLoadingInformation;
 import io.github.betterclient.fabric.FabricLoader;
 
 import javax.swing.*;
