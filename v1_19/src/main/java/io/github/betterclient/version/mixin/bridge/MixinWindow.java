@@ -37,7 +37,7 @@ public class MixinWindow implements IBridge.Window {
     }
 
     @Override
-    public boolean isFocused() {
-        return MinecraftClient.getInstance().isWindowFocused();
+    public boolean isNotFocused() {
+        return !MinecraftClient.getInstance().isWindowFocused();
     }
 }
