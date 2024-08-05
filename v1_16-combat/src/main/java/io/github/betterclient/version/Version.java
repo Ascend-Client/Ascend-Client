@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Version {
-
     public static IBridge bridge;
     public static IBridge.KeyStorage keys = new IBridge.KeyStorage(GLFW.GLFW_KEY_LEFT_SHIFT, GLFW.GLFW_KEY_C, GLFW.GLFW_KEY_RIGHT_SHIFT, GLFW.GLFW_KEY_BACKSPACE, GLFW.GLFW_KEY_ESCAPE, GLFW.GLFW_KEY_ENTER, GLFW.GLFW_KEY_LEFT_ALT);
     public static IBridge.InternalBridge internal = new InternalBridgeImplementation();
@@ -47,16 +46,21 @@ public class Version {
 
         @Override
         public List<File> getVersionMods() {
+            //Enforce sha256 hashes on coded's GitHub
+            String fapiHash = "32d1966e96bcc1f20fd875bd6d76b2e3a28461f328303ead7f0cdbb9d1f5106d";
+            String cbbHash = "aa930499a33405461512ec02069b9ced7d0c398c7492ddb86d5a6cb1f4f20cee";
+
             try {
                 File sodium = Util.downloadIfFirstLaunch("https://www.replaymod.com/download/sodium-fabric-mc1.16.5-0.2.0+rev.f42b4ca.jar");
-                File fapi = Util.downloadIfFirstLaunch("https://github.com/rizecookey/fabric/releases/download/0.25.0%2B1.16.combat/fabric-api-0.25.0+1.16.combat.jar");
+                File fapi = Util.downloadIfFirstLaunch("https://github.com/not-coded/fabric/releases/download/0.42.0%2B1.16.combat/fabric-api-0.42.0+1.16.combat.jar", fapiHash);
                 File sodiumExtras = Util.downloadIfFirstLaunch("https://cdn.modrinth.com/data/PtjYWJkn/versions/Et3PybAh/sodium-extra-0.4.18%2Bmc1.16.5-build.96.jar");
                 File reesesSodiumExtras = Util.downloadIfFirstLaunch("https://cdn.modrinth.com/data/Bh37bMuy/versions/Em4mC86n/reeses_sodium_options-1.6.3%2Bmc1.16.5-build.86.jar");
                 File iris = Util.downloadIfFirstLaunch("https://cdn.modrinth.com/data/YL57xq9U/versions/1turazSM/iris-mc1.16.5-1.4.5.jar");
+                File codedsbedrockbridging = Util.downloadIfFirstLaunch("https://github.com/not-coded/cts-8a-parity/releases/download/1.0.2/cts-8a-parity-1.0.2.jar", cbbHash);
 
-                return List.of(fapi, sodium, sodiumExtras, reesesSodiumExtras, iris);
+                return List.of(fapi, sodium, sodiumExtras, reesesSodiumExtras, iris, codedsbedrockbridging);
             } catch (Exception e) {
-                IBridge.getPreLaunch().error(e.toString());
+                IBridge.getPreLaunch().error(e);
             }
             return new ArrayList<>();
         }

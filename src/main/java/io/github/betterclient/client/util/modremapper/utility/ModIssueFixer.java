@@ -3,6 +3,7 @@ package io.github.betterclient.client.util.modremapper.utility;
 import io.github.betterclient.client.Application;
 import io.github.betterclient.client.util.downloader.MinecraftVersion;
 import io.github.betterclient.fabric.FabricLoader;
+import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.*;
 
 import java.io.File;
@@ -18,6 +19,10 @@ import static org.objectweb.asm.Opcodes.*;
  */
 public class ModIssueFixer {
     public static void edit(ClassNode node, File currentMod) throws Exception {
+        if(Application.minecraft.version().version() != MinecraftVersion.Version.V1_20_6)
+            if(!node.name.equals("net/fabricmc/fabric/mixin/entity/event/LivingEntityMixin"))
+                node.methods.removeIf(method -> method.name.equals("onGetSleepingDirection"));
+
         if(Application.minecraft.version().version() == MinecraftVersion.Version.V1_19_4)
             edit_1_19_4(node);
 
@@ -57,6 +62,46 @@ public class ModIssueFixer {
                 }
             }
         }
+
+        //Not an issue
+        if(node.name.equals("net/notcoded/cts8a_parity/CTS8aParity") && FabricLoader.getInstance().getModName(currentMod).equals("CTS 8a Parity")) {
+            for (MethodNode method : node.methods) {
+                if(method.name.equals("onInitializeClient")) {
+                    boolean remove = false;
+                    for (AbstractInsnNode instruction : method.instructions.toArray()) {
+                        if(instruction instanceof InsnNode inode && inode.getOpcode() == POP) {
+                            method.instructions.insert(inode, new InsnNode(RETURN));
+                            remove = true;
+                        }
+                        
+                        if(remove) {
+                            method.instructions.remove(instruction);
+                        }
+                    }
+                } else if(method.name.equals("lambda$onInitializeClient$0")) {
+                    AbstractInsnNode injectAfter = null;
+                    for (AbstractInsnNode instruction : method.instructions.toArray()) {
+                        if(instruction instanceof MethodInsnNode) {
+                            injectAfter = instruction.getPrevious();
+                            method.instructions.remove(instruction);
+                        }
+
+                        if(instruction instanceof FieldInsnNode || instruction.getOpcode() == ALOAD) {
+                            method.instructions.remove(instruction);
+                        }
+                    }
+
+                    InsnList injection = new InsnList();
+
+                    injection.add(new MethodInsnNode(INVOKESTATIC, "io/github/betterclient/version/mods/BedrockBridge", "get", "()Lio/github/betterclient/version/mods/BedrockBridge;", false));
+                    injection.add(new VarInsnNode(ALOAD, 2));
+                    injection.add(new MethodInsnNode(INVOKEVIRTUAL, "net/minecraft/network/PacketByteBuf", "readBoolean", "()Z", false));
+                    injection.add(new MethodInsnNode(INVOKEVIRTUAL, "io/github/betterclient/version/mods/BedrockBridge", "setServerAllowing", "(Z)V", false));
+
+                    method.instructions.insert(injectAfter, injection);
+                }
+            }
+        }
     }
 
     private static void edit_1_19_4(ClassNode node) {
@@ -67,9 +112,6 @@ public class ModIssueFixer {
                 }
             }
         }
-
-        if(!node.name.equals("net/fabricmc/fabric/mixin/entity/event/LivingEntityMixin")) return;
-        node.methods.removeIf(method -> method.name.equals("onGetSleepingDirection"));
     }
 
     private static List<AbstractInsnNode> getRemovalNodes(MethodNode method) {

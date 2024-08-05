@@ -37,7 +37,7 @@ public class MappingResolverImpl implements MappingResolver {
         if(tinyMaps == null) return out;
 
         for (String s : Files.readString(officialMaps.toPath()).split("\n")) {
-            if(s.startsWith(" ") || s.startsWith("#") || s.endsWith(".")) continue;
+            if(s.startsWith(" ") || s.startsWith("#") || s.endsWith(".") || s.isEmpty() || s.isBlank()) continue;
 
             s = s.substring(0, s.length() - 1);
             String[] mapping = s.split(" -> ");

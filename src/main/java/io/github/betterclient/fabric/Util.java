@@ -3,15 +3,17 @@ package io.github.betterclient.fabric;
 import io.github.betterclient.client.Application;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.security.DigestInputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -71,5 +73,33 @@ public class Util {
 
     public static File downloadIfFirstLaunch(String url) throws IOException {
         return downloadIfFirstLaunch(Application.modJarsFolder, url);
+    }
+
+    public static File downloadIfFirstLaunch(String url, String hash) throws IOException, NoSuchAlgorithmException {
+        File f = downloadIfFirstLaunch(Application.modJarsFolder, url);
+        if(Objects.equals(hash, getSHA256Checksum(f)))
+            return f;
+
+        throw new RuntimeException("Hashes do not match! (file " + f.getAbsolutePath() + ")");
+    }
+
+    public static String getSHA256Checksum(File file) throws IOException, NoSuchAlgorithmException {
+        MessageDigest digest = MessageDigest.getInstance("SHA-256");
+        try (FileInputStream fis = new FileInputStream(file);
+             DigestInputStream dis = new DigestInputStream(fis, digest)) {
+            byte[] buffer = new byte[1024];
+            while (dis.read(buffer) != -1) {}
+        }
+        return byteArray2Hex(digest.digest());
+    }
+
+    private static String byteArray2Hex(byte[] bytes) {
+        Formatter formatter = new Formatter();
+        for (byte b : bytes) {
+            formatter.format("%02x", b);
+        }
+        String hash = formatter.toString();
+        formatter.close();
+        return hash;
     }
 }

@@ -128,7 +128,6 @@ public class Application {
             }
 
             f.close();
-
             modLoadingInformation.nonCustomMods().addAll(IBridge.getPreLaunch().getVersionMods());
             for (File file : modLoadingInformation.nonCustomMods()) {
                 FabricLoader.getInstance().loadMod(

@@ -8,6 +8,7 @@ import io.github.betterclient.fabric.FabricLoader;
 import io.github.betterclient.version.mods.BedrockBridge;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.EntityHitResult;
@@ -39,14 +40,9 @@ public abstract class MixinMinecraftClient {
         BallSack.getInstance().bus.call(new HitEntityEvent((IBridge.PlayerEntity) this.player, (IBridge.Entity) ((EntityHitResult) this.crosshairTarget).getEntity()));
     }
 
-    @Redirect(method = "doItemUse", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;getStackInHand(Lnet/minecraft/util/Hand;)Lnet/minecraft/item/ItemStack;"))
-    private ItemStack onItemUse(ClientPlayerEntity player, Hand hand) {
-        ItemStack itemStack = this.player.getStackInHand(hand);
-
-        if (BedrockBridge.isEnabled())
-            BedrockBridge.get().checkReachAroundAndExecute(hand, itemStack);
-
-        return itemStack;
+    @Inject(method = "disconnect()V", at = @At("HEAD"))
+    public void enableServer(CallbackInfo ci) {
+        BedrockBridge.get().setServerAllowing(true);
     }
 
     @ModifyArg(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Mouse;<init>(Lnet/minecraft/client/MinecraftClient;)V"))

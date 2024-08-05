@@ -8,6 +8,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -56,7 +58,7 @@ public class GithubMan {
 
     public boolean checkUpdate() {
         try {
-            URL url = new URL("https://api.github.com/repos/betterclient/Minecraft-Client/commits");
+            URL url = new URI("https://api.github.com/repos/betterclient/Minecraft-Client/commits").toURL();
             InputStream is = url.openStream();
             byte[] bites = is.readAllBytes();
             is.close();
@@ -64,7 +66,7 @@ public class GithubMan {
             JsonArray array = new JsonParser().parse(new String(bites)).getAsJsonArray();
             String version = array.get(0).getAsJsonObject().get("sha").getAsString();
             return !version.startsWith(this.commitId);
-        } catch (IOException ex) {
+        } catch (IOException | URISyntaxException ex) {
             IBridge.getPreLaunch().error(ex.toString());}
 
         return false;
