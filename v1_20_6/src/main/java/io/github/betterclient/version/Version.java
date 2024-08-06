@@ -49,8 +49,6 @@ public class Version {
 
         @Override
         public List<File> getVersionMods() {
-            new File("D:\\MyStupidClient\\v1_20_6\\run\\.ballsack\\modjars\\remapped\\sodium-fabric-0.5.11%2Bmc1.20.6-remapped.jar").delete();
-
             try {
                 File fapi = Util.downloadIfFirstLaunch("https://cdn.modrinth.com/data/P7dR8mSH/versions/GT0R5Mz7/fabric-api-0.100.4%2B1.20.6.jar");
                 File sodium = Util.downloadIfFirstLaunch("https://cdn.modrinth.com/data/AANobbMI/versions/OwLQelEI/sodium-fabric-0.5.11%2Bmc1.20.6.jar");
