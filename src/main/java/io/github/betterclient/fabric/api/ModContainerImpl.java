@@ -144,7 +144,7 @@ public class ModContainerImpl implements ModContainer {
 
     @Override
     public Path getPath(String s) {
-        URI jarUri = URI.create("jar:file:" + this.mod.from().toURI().getPath());
+        URI jarUri = URI.create("jar:file:" + this.mod.from().toURI().getPath().replace(" ", "%20"));
 
         try (FileSystem jarFileSystem = FileSystems.newFileSystem(jarUri, Collections.emptyMap())) {
             Path fileInsideJarPath = jarFileSystem.getPath(s);
