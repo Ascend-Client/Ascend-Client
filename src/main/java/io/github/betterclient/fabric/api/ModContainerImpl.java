@@ -86,7 +86,7 @@ public class ModContainerImpl implements ModContainer {
 
             @Override
             public Optional<String> getIconPath(int size) {
-                return mod.getIconMap().get(size);
+                return mod.getIconMap() == null ? Optional.empty() : mod.getIconMap().get(size);
             }
 
             @Override

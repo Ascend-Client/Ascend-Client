@@ -59,6 +59,7 @@ public class Version {
                 list.add(Util.downloadIfFirstLaunch("https://cdn.modrinth.com/data/Bh37bMuy/versions/Em4mC86n/reeses_sodium_options-1.6.3%2Bmc1.16.5-build.86.jar"));
                 list.add(Util.downloadIfFirstLaunch("https://cdn.modrinth.com/data/YL57xq9U/versions/1turazSM/iris-mc1.16.5-1.4.5.jar"));
                 list.add(Util.downloadIfFirstLaunch("https://github.com/not-coded/cts-8a-parity/releases/download/1.0.2/cts-8a-parity-1.0.2.jar", cbbHash));
+                list.add(Util.downloadIfFirstLaunch("https://cdn.modrinth.com/data/hvFnDODi/versions/0.1.2/lazydfu-0.1.2.jar"));
             } catch (Exception e) {
                 IBridge.getPreLaunch().error(e);
             }
