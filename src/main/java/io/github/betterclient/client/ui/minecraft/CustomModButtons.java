@@ -21,11 +21,20 @@ public class CustomModButtons {
 
         if(FabricLoader.getInstance().isModLoaded("replaymod")) {
             drawRoundedRect(25, 25, 125, 45, 2f, bgcolor);
-            iPos = getIdealRenderingPosForText("Replays", 25, 25, 125, 45 + (index * 30));
+            iPos = getIdealRenderingPosForText("Replays", 25, 25, 125, 45);
             textRenderer.draw(matrices, "Replays", iPos[0], iPos[1], -1);
 
             index++;
         }
+
+
+        if(FabricLoader.getInstance().isModLoaded("mod menu")) {
+            drawRoundedRect(25, 25 + (index * 30), 125, 45 + (index * 30), 2f, bgcolor);
+            iPos = getIdealRenderingPosForText("Mod Menu", 25, 25 + (index * 30), 125, 45 + (index * 30));
+            textRenderer.draw(matrices, "Mod Menu", iPos[0], iPos[1], -1);
+            index++;
+        }
+
 
         /*
         Other mods
@@ -55,10 +64,19 @@ public class CustomModButtons {
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
-
             }
 
             index++;
+        }
+
+        if(isMouseOn(25, 25 + (index * 30), 125, 45 + (index * 30)) && FabricLoader.instance.isModLoaded("Mod Menu")) {
+            try {
+                Class<?> cls = Class.forName("com.terraformersmc.modmenu.gui.ModsScreen");
+                Object obj = cls.getConstructor(Class.forName("net.minecraft.client.gui.screen.Screen")).newInstance(MinecraftClient.getInstance().getCurrentScreenPointer());
+                MinecraftClient.getInstance().openNonCustomScreen(obj);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 

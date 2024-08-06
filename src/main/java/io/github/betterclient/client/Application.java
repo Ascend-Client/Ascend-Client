@@ -15,6 +15,7 @@ import io.github.betterclient.quixotic.QuixoticClassLoader;
 
 import java.io.File;
 import java.lang.reflect.Field;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
@@ -37,6 +38,7 @@ public class Application {
             remappedModsFolder = new File(clientFolder, "remapped-mods"),
             remappedModJarsFolder = new File(modJarsFolder, "remapped"),
             remappedBuiltinModJarsFolder = new File(remappedModJarsFolder, "builtin"),
+            customJarsRequestedFolder = new File(customJarsFolder, "requested"),
             mcVersionFolder;
 
     public static final boolean doRemappingOfAlreadyRemappedMods = false,
@@ -68,6 +70,7 @@ public class Application {
             Files.createDirectories(remappedModsFolder.toPath());
             Files.createDirectories(remappedModJarsFolder.toPath());
             Files.createDirectories(remappedBuiltinModJarsFolder.toPath());
+            Files.createDirectories(customJarsRequestedFolder.toPath());
             Files.createDirectories(mcVersionFolder.toPath());
         } catch (Exception e) { IBridge.getPreLaunch().error(e); }
 

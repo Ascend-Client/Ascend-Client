@@ -2,6 +2,7 @@ package io.github.betterclient.fabric.relocate.loader.api;
 
 import io.github.betterclient.fabric.api.FabricLoaderImpl;
 import io.github.betterclient.fabric.relocate.api.EnvType;
+import io.github.betterclient.fabric.relocate.loader.api.entrypoint.EntrypointContainer;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -40,4 +41,6 @@ public interface FabricLoader {
     }
 
     <T> List<T> getEntrypoints(String key, Class<T> type);
+
+    <T> List<EntrypointContainer<T>> getEntrypointContainers(String key, Class<T> type);
 }

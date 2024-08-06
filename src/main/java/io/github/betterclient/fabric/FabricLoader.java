@@ -1,10 +1,18 @@
 package io.github.betterclient.fabric;
 
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonToken;
 import io.github.betterclient.client.Application;
 import io.github.betterclient.client.bridge.IBridge;
 import io.github.betterclient.client.util.modremapper.utility.ModLoadingInformation;
 import io.github.betterclient.client.util.modremapper.ModRemapper;
 import io.github.betterclient.fabric.accesswidener.AccessWidenerApplier;
+import io.github.betterclient.fabric.api.CustomValueImpl;
+import io.github.betterclient.fabric.api.IconMap;
+import io.github.betterclient.fabric.relocate.loader.api.metadata.ContactInformation;
+import io.github.betterclient.fabric.relocate.loader.api.metadata.CustomValue;
+import io.github.betterclient.fabric.relocate.loader.api.metadata.ModEnvironment;
+import io.github.betterclient.fabric.relocate.loader.api.metadata.Person;
 import io.github.betterclient.fabric.transformer.PrivateAccessTransformer;
 import io.github.betterclient.fabric.transformer.RemoveEntryPointImplements;
 import io.github.betterclient.fabric.transformer.RemoveInitializer;
@@ -18,9 +26,7 @@ import org.spongepowered.asm.mixin.extensibility.IMixinConfig;
 import org.spongepowered.asm.mixin.transformer.Config;
 import org.spongepowered.asm.util.asm.ASM;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -126,28 +132,195 @@ public class FabricLoader {
                         }
                     }
 
+                    ModEnvironment environment = ModEnvironment.UNIVERSAL;
+
+                    if(obj.has("environment")) {
+                        switch (obj.getString("environment")) {
+                            case "client" -> environment = ModEnvironment.CLIENT;
+                            case "server" -> environment = ModEnvironment.SERVER;
+                            case "*" -> {}
+                            default -> throw new RuntimeException(obj.getString("environment"));
+                        }
+                    }
+
+                    IconMap iconMap = null;
+
                     if(obj.has("entrypoints")) {
                         JSONObject entrypoints = obj.getJSONObject("entrypoints");
 
                         for (String key : entrypoints.keySet()) {
                             if(key.equals("client")) {
-                                mainPoints.addAll(entrypoints.getJSONArray(key).toList().stream().map(String.class::cast).toList());
+                                JSONArray arr = entrypoints.getJSONArray(key);
+                                for (Object o : arr) {
+                                    if(o instanceof String aa) {
+                                        mainPoints.add(aa);
+                                    } else if(o instanceof HashMap aa) {
+                                        mainPoints.add((String) aa.get("value"));
+                                    }
+                                }
                             }
 
                             if(key.equals("main")) {
-                                mmainPoints.addAll(entrypoints.getJSONArray(key).toList().stream().map(String.class::cast).toList());
+                                JSONArray arr = entrypoints.getJSONArray(key);
+                                for (Object o : arr) {
+                                    if(o instanceof String aa) {
+                                        mmainPoints.add(aa);
+                                    } else if(o instanceof HashMap aa) {
+                                        mmainPoints.add((String) aa.get("value"));
+                                    }
+                                }
                             }
 
                             if(key.equals("preLaunch")) {
-                                preMainPoints.addAll(entrypoints.getJSONArray(key).toList().stream().map(String.class::cast).toList());
+                                JSONArray arr = entrypoints.getJSONArray(key);
+                                for (Object o : arr) {
+                                    if(o instanceof String aa) {
+                                        preMainPoints.add(aa);
+                                    } else if(o instanceof HashMap aa) {
+                                        preMainPoints.add((String) aa.get("value"));
+                                    }
+                                }
                             }
 
                             for (Object o : entrypoints.getJSONArray(key).toList()) {
-                                allEntries.put(key, (String) o);
+                                if(o instanceof String a) {
+                                    allEntries.put(key, a);
+                                } else if(o instanceof HashMap aa) {
+                                    allEntries.put(key, (String) aa.get("value"));
+                                }
+
                             }
                         }
                     }
 
+                    HashMap<String, CustomValue> values = new HashMap<>();
+                    if(obj.has("custom") || obj.has("icon")) {
+                        JsonReader reader = new JsonReader(new StringReader(src));
+
+                        reader.beginObject();
+
+                        while (reader.hasNext()) {
+                            String key = reader.nextName();
+
+                            if(key.equals("custom")) {
+                                if (reader.peek() != JsonToken.BEGIN_OBJECT) {
+                                    throw new RuntimeException("Custom values must be in an object!");
+                                }
+
+                                reader.beginObject();
+
+                                while (reader.hasNext()) {
+                                    values.put(reader.nextName(), CustomValueImpl.readCustomValue(reader));
+                                }
+
+                                reader.endObject();
+                            } else if(key.equals("icon")) {
+                                switch (reader.peek()) {
+                                    case STRING:
+                                        iconMap = new IconMap(reader.nextString());
+                                        break;
+                                    case BEGIN_OBJECT:
+                                        reader.beginObject();
+
+                                        final SortedMap<Integer, String> imap = new TreeMap<>(Comparator.naturalOrder());
+
+                                        while (reader.hasNext()) {
+                                            String kr = reader.nextName();
+
+                                            int size = getSize(kr);
+
+                                            if (reader.peek() != JsonToken.STRING) {
+                                                throw new RuntimeException("Icon path must be a string");
+                                            }
+
+                                            imap.put(size, reader.nextString());
+                                        }
+
+                                        reader.endObject();
+
+                                        if (imap.isEmpty()) {
+                                            throw new RuntimeException("Icon object must not be empty!");
+                                        }
+
+                                        iconMap = new IconMap(imap);
+                                        break;
+                                    default:
+                                        throw new RuntimeException("Icon entry must be an object or string!");
+                                }
+                            } else {
+                                reader.skipValue();
+                            }
+                        }
+
+                        reader.endObject();
+
+                        reader.close();
+                    }
+
+                    List<Person> authors = new ArrayList<>();
+                    if(obj.has("authors")) {
+                        JSONArray authorss = obj.getJSONArray("authors");
+
+                        authors.addAll(authorss.toList().stream().map(Object::toString).map(string -> new Person() {
+                            @Override
+                            public String getName() {
+                                return string;
+                            }
+
+                            @Override
+                            public ContactInformation getContact() {
+                                return ContactInformation.EMPTY;
+                            }
+                        }).toList());
+                    }
+
+                    List<Person> contributors = new ArrayList<>();
+                    if(obj.has("contributors")) {
+                        JSONArray authorss = obj.getJSONArray("contributors");
+
+                        authors.addAll(authorss.toList().stream().map(Object::toString).map(string -> new Person() {
+                            @Override
+                            public String getName() {
+                                return string;
+                            }
+
+                            @Override
+                            public ContactInformation getContact() {
+                                return ContactInformation.EMPTY;
+                            }
+                        }).toList());
+                    }
+
+                    ContactInformation information;
+                    if(obj.has("contact")) {
+                        JSONObject co = obj.getJSONObject("contact");
+                        Map<String, String> yes = new HashMap<>();
+
+                        for (String s : co.keySet()) {
+                            yes.put(s, co.getString(s));
+                        }
+
+                        information = new ContactInformation() {
+                            @Override
+                            public Optional<String> get(String key) {
+                                return Optional.ofNullable(yes.get(key));
+                            }
+
+                            @Override
+                            public Map<String, String> asMap() {
+                                return yes;
+                            }
+                        };
+                    } else
+                        information = ContactInformation.EMPTY;
+
+                    String description = "";
+                    if(obj.has("description"))
+                        description = obj.getString("description");
+
+                    ModEnvironment finalEnvironment = environment;
+                    String finalDescription = description;
+                    IconMap finalIconMap = iconMap;
                     loaded = new FabricMod() {
                         @Override
                         public String name() {
@@ -172,6 +345,11 @@ public class FabricLoader {
                         @Override
                         public Map<String, String> allEntries() {
                             return allEntries;
+                        }
+
+                        @Override
+                        public Map<String, CustomValue> customValues() {
+                            return values;
                         }
 
                         @Override
@@ -208,6 +386,36 @@ public class FabricLoader {
                         public String id() {
                             return id;
                         }
+
+                        @Override
+                        public ModEnvironment environment() {
+                            return finalEnvironment;
+                        }
+
+                        @Override
+                        public String description() {
+                            return finalDescription;
+                        }
+
+                        @Override
+                        public ContactInformation getContact() {
+                            return information;
+                        }
+
+                        @Override
+                        public Collection<Person> contributors() {
+                            return contributors;
+                        }
+
+                        @Override
+                        public Collection<Person> authors() {
+                            return authors;
+                        }
+
+                        @Override
+                        public IconMap getIconMap() {
+                            return finalIconMap;
+                        }
                     };
                 }
             }
@@ -227,6 +435,21 @@ public class FabricLoader {
             FabricErrorReporter.exception(f.getAbsolutePath(), e).print();
         }
         return null;
+    }
+
+    private static int getSize(String kr) {
+        int size;
+
+        try {
+            size = Integer.parseInt(kr);
+        } catch (NumberFormatException e) {
+            throw new RuntimeException("Could not parse icon size '" + kr + "'!", e);
+        }
+
+        if (size < 1) {
+            throw new RuntimeException("Size must be positive!");
+        }
+        return size;
     }
 
     private void loadMod(String containerMod, File mod) {

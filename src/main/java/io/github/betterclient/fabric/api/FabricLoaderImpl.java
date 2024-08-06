@@ -5,10 +5,12 @@ import io.github.betterclient.fabric.FabricMod;
 import io.github.betterclient.fabric.relocate.loader.api.FabricLoader;
 import io.github.betterclient.fabric.relocate.loader.api.MappingResolver;
 import io.github.betterclient.fabric.relocate.loader.api.ModContainer;
+import io.github.betterclient.fabric.relocate.loader.api.entrypoint.EntrypointContainer;
 import io.github.betterclient.quixotic.Quixotic;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.nio.file.Files;
@@ -33,6 +35,29 @@ public class FabricLoaderImpl implements FabricLoader {
         }
 
         return configDir;
+    }
+
+    @Override
+    public <T> List<EntrypointContainer<T>> getEntrypointContainers(String key, Class<T> type) {
+        ArrayList<EntrypointContainer<T>> ts = new ArrayList<>();
+        for (FabricMod loadedMod : io.github.betterclient.fabric.FabricLoader.getInstance().loadedMods) {
+            for (String keya : loadedMod.allEntries().keySet()) {
+                String val = loadedMod.allEntries().get(keya);
+                if(keya.equals(key)) {
+                    try {
+                        Class<?> outClass = Class.forName(val);
+                        Object instance = outClass.getConstructor().newInstance();
+
+                        ts.add(new EntrypointContainerImpl<>(type.cast(instance), this.getModContainer(loadedMod.name())));
+                    } catch (Exception e) {
+                        System.out.println(loadedMod.name());
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+        }
+
+        return ts;
     }
 
     @Override

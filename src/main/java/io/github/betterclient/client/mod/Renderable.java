@@ -23,6 +23,23 @@ public class Renderable {
         this.textRenderer = MinecraftClient.getInstance().getTextRenderer();
     }
 
+    public Renderable drawCircle(float x, float y, float halfRadius, Color color) {
+        Runnable rrrr = render;
+        render = () -> {
+            rrrr.run();
+            UIUtil.renderCircle(this.getX() + x, this.getY() + y, halfRadius, color.getRGB());
+        };
+
+        if((x + halfRadius) > width) {
+            width = (int) (x + halfRadius);
+        }
+        if((y + halfRadius) > height) {
+            height = (int) (y + halfRadius);
+        }
+
+        return this;
+    }
+
     public Renderable fillArea(int startX, int startY, int endX, int endY, Color color) {
         Runnable rrrr = render;
         render = () -> {

@@ -15,4 +15,5 @@ public interface ModContainer {
     Collection<ModContainer> getContainedMods();
     List<Path> getRootPaths();
     Path getRootPath();
+    Path getPath(String s);
 }

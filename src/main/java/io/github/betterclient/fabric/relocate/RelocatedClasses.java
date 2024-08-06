@@ -14,7 +14,15 @@ public class RelocatedClasses {
                 "net/fabricmc/loader/api/VersionParsingException",
                 "net/fabricmc/loader/api/metadata/ModMetadata",
                 "net/fabricmc/loader/api/metadata/ModOrigin",
-                "net/fabricmc/loader/api/metadata/ModOrigin$Kind"
+                "net/fabricmc/loader/api/metadata/ModOrigin$Kind",
+                "net/fabricmc/loader/api/metadata/CustomValue",
+                "net/fabricmc/loader/api/metadata/ContactInformation",
+                "net/fabricmc/loader/api/metadata/Person",
+                "net/fabricmc/loader/api/metadata/CustomValue$CvObject",
+                "net/fabricmc/loader/api/metadata/CustomValue$CvArray",
+                "net/fabricmc/loader/api/metadata/CustomValue$CvType",
+                "net/fabricmc/loader/api/metadata/ModEnvironment",
+                "net/fabricmc/loader/api/entrypoint/EntrypointContainer"
         );
     }
 }

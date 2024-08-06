@@ -56,6 +56,7 @@ public class FabricErrorReporter {
         StringBuilder error = new StringBuilder("Ballsack client error report\n");
         error.append("Mod \"").append(this.modName).append("\" failed loading with error: \n");
         error.append(this.errorName).append("\n");
+        error.append(this.exception.getLocalizedMessage()).append("\n");
         error.append("\nStacktrace: \n");
 
         for (StackTraceElement stackTraceElement : this.exception.getStackTrace()) {

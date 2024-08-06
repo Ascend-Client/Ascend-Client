@@ -77,6 +77,9 @@ public class ModRemapper {
 
         bridge.info("Remapping mod " + modName);
 
+        if(modName.startsWith("kotlin-") || modName.startsWith("kotlinx-"))
+            return modToRemap;
+
         remappedMod.delete();
         if(!remappedMod.createNewFile()) {
             bridge.error("Failed to create file (?)");
