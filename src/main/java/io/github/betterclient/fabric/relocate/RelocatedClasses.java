@@ -7,6 +7,7 @@ public class RelocatedClasses {
         return List.of(
                 "net/fabricmc/api/EnvType",
                 "net/fabricmc/loader/api/FabricLoader",
+                "net/fabricmc/loader/api/ObjectShare",
                 "net/fabricmc/loader/api/MappingResolver",
                 "net/fabricmc/loader/api/ModContainer",
                 "net/fabricmc/loader/api/SemanticVersion",

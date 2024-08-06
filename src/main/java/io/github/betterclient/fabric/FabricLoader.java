@@ -135,7 +135,7 @@ public class FabricLoader {
                     ModEnvironment environment = ModEnvironment.UNIVERSAL;
 
                     if(obj.has("environment")) {
-                        switch (obj.getString("environment")) {
+                        switch (obj.getString("environment").toLowerCase()) {
                             case "client" -> environment = ModEnvironment.CLIENT;
                             case "server" -> environment = ModEnvironment.SERVER;
                             case "*" -> {}

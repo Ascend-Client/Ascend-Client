@@ -8,9 +8,6 @@ import io.github.betterclient.fabric.FabricLoader;
 import io.github.betterclient.version.mods.BedrockBridge;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Hand;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.profiler.DummyProfiler;
@@ -22,8 +19,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import java.io.File;
 
 @Mixin(MinecraftClient.class)
 public abstract class MixinMinecraftClient {
@@ -52,15 +47,15 @@ public abstract class MixinMinecraftClient {
         return client;
     }
 
-    @ModifyArg(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/options/HotbarStorage;<init>(Ljava/io/File;Lcom/mojang/datafixers/DataFixer;)V"))
-    public File hi(File file) {
+    @ModifyArg(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/options/GameOptions;<init>(Lnet/minecraft/client/MinecraftClient;Ljava/io/File;)V"))
+    public MinecraftClient hi(MinecraftClient client) {
         try {
             FabricLoader.getInstance().callClientMain();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
-        return file;
+        return client;
     }
 
     @Redirect(method = "<init>", at = @At(value = "FIELD", target = "Lnet/minecraft/util/profiler/DummyProfiler;INSTANCE:Lnet/minecraft/util/profiler/DummyProfiler;"))

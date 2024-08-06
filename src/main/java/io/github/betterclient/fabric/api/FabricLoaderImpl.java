@@ -5,6 +5,7 @@ import io.github.betterclient.fabric.FabricMod;
 import io.github.betterclient.fabric.relocate.loader.api.FabricLoader;
 import io.github.betterclient.fabric.relocate.loader.api.MappingResolver;
 import io.github.betterclient.fabric.relocate.loader.api.ModContainer;
+import io.github.betterclient.fabric.relocate.loader.api.ObjectShare;
 import io.github.betterclient.fabric.relocate.loader.api.entrypoint.EntrypointContainer;
 import io.github.betterclient.quixotic.Quixotic;
 
@@ -133,5 +134,12 @@ public class FabricLoaderImpl implements FabricLoader {
         }
 
         return ts;
+    }
+
+    ObjectShareImpl impl = new ObjectShareImpl();
+
+    @Override
+    public ObjectShare getObjectShare() {
+        return impl;
     }
 }
