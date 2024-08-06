@@ -9,13 +9,13 @@ import io.github.betterclient.client.util.modremapper.ModRemapper;
 import io.github.betterclient.fabric.accesswidener.AccessWidenerApplier;
 import io.github.betterclient.fabric.api.CustomValueImpl;
 import io.github.betterclient.fabric.api.IconMap;
+import io.github.betterclient.fabric.relocate.api.ClientModInitializer;
 import io.github.betterclient.fabric.relocate.loader.api.metadata.ContactInformation;
 import io.github.betterclient.fabric.relocate.loader.api.metadata.CustomValue;
 import io.github.betterclient.fabric.relocate.loader.api.metadata.ModEnvironment;
 import io.github.betterclient.fabric.relocate.loader.api.metadata.Person;
 import io.github.betterclient.fabric.transformer.PrivateAccessTransformer;
 import io.github.betterclient.fabric.transformer.RemoveEntryPointImplements;
-import io.github.betterclient.fabric.transformer.RemoveInitializer;
 import io.github.betterclient.quixotic.Quixotic;
 import io.github.betterclient.quixotic.QuixoticClassLoader;
 import org.json.JSONArray;
@@ -464,7 +464,6 @@ public class FabricLoader {
     public void loadApplicationManager(QuixoticClassLoader quixoticClassLoader) {
         quixoticClassLoader.addPlainTransformer(new RemoveEntryPointImplements());
         quixoticClassLoader.addPlainTransformer(new PrivateAccessTransformer());
-        quixoticClassLoader.addPlainTransformer(new RemoveInitializer());
     }
 
     public void doMixin() {
@@ -536,13 +535,13 @@ public class FabricLoader {
                     String methodName = entry.substring(entry.lastIndexOf(":") + 1);
                     try {
                         Field f = loadedMod.getField(methodName);
-                        Runnable theRunnable;
+                        ClientModInitializer theRunnable;
                         if(Modifier.isStatic(f.getModifiers())) {
-                            theRunnable = (Runnable) f.get(null);
+                            theRunnable = (ClientModInitializer) f.get(null);
                         } else {
-                            theRunnable = (Runnable) f.get(loadedMod.getConstructor().newInstance());
+                            theRunnable = (ClientModInitializer) f.get(loadedMod.getConstructor().newInstance());
                         }
-                        theRunnable.run();
+                        theRunnable.onInitializeClient();
                     } catch (NoSuchFieldException exception) {
                         Method mde = loadedMod.getDeclaredMethod(methodName);
                         if(Modifier.isStatic(mde.getModifiers())) {

@@ -6,6 +6,8 @@ public class RelocatedClasses {
     public static List<String> getFabricClasses() {
         return List.of(
                 "net/fabricmc/api/EnvType",
+                "net/fabricmc/api/ClientModInitializer",
+                "net/fabricmc/api/DedicatedServerModInitializer",
                 "net/fabricmc/loader/api/FabricLoader",
                 "net/fabricmc/loader/api/ObjectShare",
                 "net/fabricmc/loader/api/MappingResolver",

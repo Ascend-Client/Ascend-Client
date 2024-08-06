@@ -161,6 +161,22 @@ public class ModRemapper {
                                 }
                             }
                         }
+
+                        for (AnnotationNode visibleAnnotation : method.visibleAnnotations) {
+                            if(visibleAnnotation.values == null) continue;
+
+                            for (Object value : visibleAnnotation.values) {
+                                if(value instanceof String[] strarr) {
+                                    int index = 0;
+                                    for (String string : strarr) {
+                                        if (string.equals("CAPTURE_FAILHARD")) {
+                                            strarr[index] = "CAPTURE_FAILSOFT";
+                                        }
+                                        index++;
+                                    }
+                                }
+                            }
+                        }
                     }
                     for (FieldNode field : node.fields) {
                         if(field.visibleAnnotations == null) continue;
