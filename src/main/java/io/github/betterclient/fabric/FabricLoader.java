@@ -530,7 +530,6 @@ public class FabricLoader {
 
         for (FabricMod mod : loadedMods) {
             for (String entry : mod.clientEntries()) {
-                System.out.println(entry + " call");
                 if(entry.contains("::")) {
                     Class<?> loadedMod = Class.forName(entry.substring(0, entry.indexOf(":")), false, Quixotic.classLoader);
                     String methodName = entry.substring(entry.lastIndexOf(":") + 1);

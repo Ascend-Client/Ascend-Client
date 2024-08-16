@@ -32,11 +32,7 @@ public class ModIssueFixer {
                 } else {
                     for (AnnotationNode visibleAnnotation : method.visibleAnnotations) {
                         if(MixinMethodMapper.OVERWRITE_MAPPER.detect(visibleAnnotation)) {
-                            if(Modifier.isStatic(method.access) && !Modifier.isAbstract(node.access)) {
-                                method.access = ACC_STATIC + ACC_PRIVATE;
-                            } else if(!Modifier.isStatic(method.access) && !Modifier.isAbstract(node.access)) {
-                                method.access = ACC_PUBLIC;
-                            }
+                            method.access = (Modifier.isStatic(method.access) ?  ACC_STATIC : 0) + ACC_PUBLIC;
                         }
                     }
                 }
