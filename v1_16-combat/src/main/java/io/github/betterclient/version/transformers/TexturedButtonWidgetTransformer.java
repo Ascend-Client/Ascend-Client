@@ -1,5 +1,6 @@
 package io.github.betterclient.version.transformers;
 
+import io.github.betterclient.client.Application;
 import io.github.betterclient.quixotic.ClassTransformer;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
@@ -10,8 +11,14 @@ import static org.objectweb.asm.Opcodes.*;
 public class TexturedButtonWidgetTransformer implements ClassTransformer {
     @Override
     public byte[] transform(String s, byte[] bytes) {
-        if(!s.equals("net.minecraft.client.gui.widget.TexturedButtonWidget"))
+        if(!s.equals("net.minecraft.client.gui.widget.TexturedButtonWidget") && !s.equals("net.minecraft.class_344"))
             return bytes;
+
+        String identifier = Application.isDev ? "net/minecraft/util/Identifier" : "net/minecraft/class_2960";
+        String pressAction = Application.isDev ? "net/minecraft/client/gui/widget/ButtonWidget$PressAction" : "net/minecraft/class_4185$class_4241";
+        String toolTipSupplier = Application.isDev ? "net/minecraft/client/gui/widget/ButtonWidget$TooltipSupplier" : "net/minecraft/class_4185$class_5316";
+        String text = Application.isDev ? "net/minecraft/text/Text" : "net/minecraft/class_2561";
+        String texturedButton = Application.isDev ? "net/minecraft/client/gui/widget/TexturedButtonWidget" : "net/minecraft/class_344";
 
         ClassReader reader = new ClassReader(bytes);
         ClassNode node = new ClassNode();
@@ -19,7 +26,7 @@ public class TexturedButtonWidgetTransformer implements ClassTransformer {
 
         MethodNode method = new MethodNode();
         method.name = "<init>";
-        method.desc = "(IIIIIIILnet/minecraft/util/Identifier;IILnet/minecraft/client/gui/widget/ButtonWidget$PressAction;Lnet/minecraft/client/gui/widget/ButtonWidget$TooltipSupplier;Lnet/minecraft/text/Text;)V";
+        method.desc = "(IIIIIIIL" + identifier + ";IIL" + pressAction + ";L" + toolTipSupplier + ";L" + text + ";)V";
         method.access = ACC_PUBLIC;
         InsnList insn = new InsnList();
 
@@ -40,7 +47,7 @@ public class TexturedButtonWidgetTransformer implements ClassTransformer {
         insn.add(new VarInsnNode(ALOAD, 13));
 
         //call function
-        insn.add(new MethodInsnNode(INVOKESPECIAL, "net/minecraft/client/gui/widget/TexturedButtonWidget", "<init>", "(IIIIIIILnet/minecraft/util/Identifier;IILnet/minecraft/client/gui/widget/ButtonWidget$PressAction;Lnet/minecraft/text/Text;)V", false));
+        insn.add(new MethodInsnNode(INVOKESPECIAL, texturedButton, "<init>", "(IIIIIIIL" + identifier + ";IIL" + pressAction + ";L" + text + ";)V", false));
         insn.add(new InsnNode(RETURN));
 
         method.instructions = insn;

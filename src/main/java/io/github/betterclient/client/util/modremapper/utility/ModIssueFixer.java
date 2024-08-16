@@ -2,16 +2,17 @@ package io.github.betterclient.client.util.modremapper.utility;
 
 import io.github.betterclient.client.Application;
 import io.github.betterclient.client.util.downloader.MinecraftVersion;
+import io.github.betterclient.client.util.modremapper.mixin.MixinMethodMapper;
 import io.github.betterclient.fabric.FabricLoader;
-import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.*;
 
 import java.io.File;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
+import static io.github.betterclient.client.util.modremapper.utility.ModRemapperUtility.detectMixin;
 import static org.objectweb.asm.Opcodes.*;
 
 /**
@@ -21,6 +22,27 @@ import static org.objectweb.asm.Opcodes.*;
  */
 public class ModIssueFixer {
     public static void edit(ClassNode node, File currentMod) throws Exception {
+        if(detectMixin(node)) {
+            for (MethodNode method : node.methods) {
+                if(method.visibleAnnotations == null) {
+                    if(Modifier.isStatic(method.access) && !Modifier.isAbstract(node.access)) {
+                        method.visibleAnnotations = new ArrayList<>(List.of(new AnnotationNode("Lorg/spongepowered/asm/mixin/Unique;")));
+                        method.access = ACC_STATIC + ACC_PRIVATE;
+                    }
+                } else {
+                    for (AnnotationNode visibleAnnotation : method.visibleAnnotations) {
+                        if(MixinMethodMapper.OVERWRITE_MAPPER.detect(visibleAnnotation)) {
+                            if(Modifier.isStatic(method.access) && !Modifier.isAbstract(node.access)) {
+                                method.access = ACC_STATIC + ACC_PRIVATE;
+                            } else if(!Modifier.isStatic(method.access) && !Modifier.isAbstract(node.access)) {
+                                method.access = ACC_PUBLIC;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         if(Application.minecraft.version().version() != MinecraftVersion.Version.V1_20_6)
             if(!node.name.equals("net/fabricmc/fabric/mixin/entity/event/LivingEntityMixin"))
                 node.methods.removeIf(method -> method.name.equals("onGetSleepingDirection"));
@@ -97,7 +119,7 @@ public class ModIssueFixer {
 
                     injection.add(new MethodInsnNode(INVOKESTATIC, "io/github/betterclient/version/mods/BedrockBridge", "get", "()Lio/github/betterclient/version/mods/BedrockBridge;", false));
                     injection.add(new VarInsnNode(ALOAD, 2));
-                    injection.add(new MethodInsnNode(INVOKEVIRTUAL, "net/minecraft/class_2540", "readBoolean", "()Z", false));
+                    injection.add(new MethodInsnNode(INVOKEVIRTUAL, Application.isDev ? "net/minecraft/network/PacketByteBuf" : "net/minecraft/class_2540", "readBoolean", "()Z", false));
                     injection.add(new MethodInsnNode(INVOKEVIRTUAL, "io/github/betterclient/version/mods/BedrockBridge", "setServerAllowing", "(Z)V", false));
 
                     method.instructions.insert(injectAfter, injection);

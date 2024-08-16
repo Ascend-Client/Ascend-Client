@@ -1,5 +1,6 @@
 package io.github.betterclient.version.transformers;
 
+import io.github.betterclient.client.Application;
 import io.github.betterclient.quixotic.ClassTransformer;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
@@ -9,9 +10,11 @@ import org.objectweb.asm.tree.*;
 import static org.objectweb.asm.Opcodes.*;
 
 public class PlayerInteractEntityC2SPacketEditor implements ClassTransformer {
+    private static final String interactPack = Application.isDev ? "net.minecraft.network.packet.c2s.play.PlayerInteractEntityC2SPacket" : "net.minecraft.class_2824";
+
     @Override
     public byte[] transform(String name, byte[] untransformedBytes) {
-        if(!name.equals("net.minecraft.network.packet.c2s.play.PlayerInteractEntityC2SPacket")) return untransformedBytes;
+        if(!name.equals(interactPack)) return untransformedBytes;
 
         ClassReader reader = new ClassReader(untransformedBytes);
         ClassNode node = new ClassNode();
@@ -23,9 +26,11 @@ public class PlayerInteractEntityC2SPacketEditor implements ClassTransformer {
         impl.access = ACC_PUBLIC;
         InsnList list = new InsnList();
 
-        list.add(new FieldInsnNode(GETSTATIC, "net/minecraft/network/packet/c2s/play/PlayerInteractEntityC2SPacket", "ATTACK", "Lnet/minecraft/network/packet/c2s/play/PlayerInteractEntityC2SPacket$InteractTypeHandler;"));
+        String ith = Application.isDev ? "net/minecraft/network/packet/c2s/play/PlayerInteractEntityC2SPacket$InteractTypeHandler" : "net/minecraft/class_2824$class_5906";
+
+        list.add(new FieldInsnNode(GETSTATIC, interactPack.replace(".", "/"), Application.isDev ? "ATTACK" : "field_29170", "L" + ith + ";"));
         list.add(new VarInsnNode(ALOAD, 0));
-        list.add(new FieldInsnNode(GETFIELD, "net/minecraft/network/packet/c2s/play/PlayerInteractEntityC2SPacket", "type", "Lnet/minecraft/network/packet/c2s/play/PlayerInteractEntityC2SPacket$InteractTypeHandler;"));
+        list.add(new FieldInsnNode(GETFIELD, interactPack.replace(".", "/"), Application.isDev ? "type" : "field_12871", "L" + ith + ";"));
         LabelNode l0 = new LabelNode();
         list.add(new JumpInsnNode(IF_ACMPNE, l0));
         list.add(new InsnNode(ICONST_1));
