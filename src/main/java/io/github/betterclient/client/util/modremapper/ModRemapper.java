@@ -36,14 +36,14 @@ public class ModRemapper {
     private static boolean mappingMethod = false;
 
     public static File remapMod(File toRemap, boolean isBuiltin) throws IOException {
-        if(!Application.isDev) return toRemap;
+        if(!Application.isDev) return ProdFabricRemapper.remap(toRemap, isBuiltin, false);
 
         DownloadedMinecraft version = Application.minecraft;
         return remapMod(toRemap, isBuiltin, false, version.intermediaryToYarn(), version.intermediaryJar());
     }
 
     public static File remapInternalMod(File toRemap, boolean isBuiltin) throws IOException {
-        if(!Application.isDev) return toRemap;
+        if(!Application.isDev) return ProdFabricRemapper.remap(toRemap, isBuiltin, true);
 
         DownloadedMinecraft version = Application.minecraft;
         return remapMod(toRemap, isBuiltin, true, version.intermediaryToYarn(), version.intermediaryJar());
@@ -113,6 +113,7 @@ public class ModRemapper {
                 finalFile.put(entry.getName(), bites);
             }
         }
+        file.close();
 
         Map<String, String> tinyMappings = new HashMap<>();
         populateMappings(tinyMappings, mappingsFile);
