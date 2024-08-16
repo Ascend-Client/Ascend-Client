@@ -4,7 +4,6 @@ import io.github.betterclient.client.Application;
 import io.github.betterclient.client.util.downloader.MinecraftVersion;
 import io.github.betterclient.client.util.modremapper.mixin.MixinMethodMapper;
 import io.github.betterclient.fabric.FabricLoader;
-import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.*;
 
 import java.io.File;
@@ -25,8 +24,8 @@ public class ModIssueFixer {
         if(detectMixin(node)) {
             for (MethodNode method : node.methods) {
                 if(method.visibleAnnotations == null) {
+                    method.visibleAnnotations = new ArrayList<>(List.of(new AnnotationNode("Lorg/spongepowered/asm/mixin/Unique;")));
                     if(Modifier.isStatic(method.access) && !Modifier.isAbstract(node.access)) {
-                        method.visibleAnnotations = new ArrayList<>(List.of(new AnnotationNode("Lorg/spongepowered/asm/mixin/Unique;")));
                         method.access = ACC_STATIC + ACC_PRIVATE;
                     }
                 } else {

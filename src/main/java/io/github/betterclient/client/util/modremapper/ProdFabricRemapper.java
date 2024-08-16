@@ -100,9 +100,10 @@ public class ProdFabricRemapper {
                 node.accept(writer);
                 finalFile.put(s, writer.toByteArray());
             } else if(s.endsWith(".lang")) {
+                String oldS = s;
                 s = s.substring(0, s.lastIndexOf('.')) + ".json";
 
-                finalFile.put(s, convertLangToJSON(finalFile.get(s)));
+                finalFile.put(s, convertLangToJSON(finalFile.get(oldS)));
             }
         }
 
