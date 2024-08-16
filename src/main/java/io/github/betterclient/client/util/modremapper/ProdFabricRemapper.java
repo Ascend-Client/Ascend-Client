@@ -84,7 +84,7 @@ public class ProdFabricRemapper {
         }
         file.close();
 
-        for (String s : finalFile.keySet()) {
+        for (String s : new ArrayList<>(finalFile.keySet())) {
             if(s.endsWith(".class")) {
                 ClassReader reader = new ClassReader(finalFile.get(s));
                 ClassNode node = new ClassNode();
