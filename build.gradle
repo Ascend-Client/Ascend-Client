@@ -134,9 +134,19 @@ abstract class MergeJarsTask extends DefaultTask {
     @TaskAction
     //@NotStatic
     void taskAction() {
-        println("Merging jars!")
         var versions = new String[] {"1.16-combat-6", "1.19.4", "1.20.6"}
+        println("Copy jars")
 
+        Files.copy((project.file("v1_16-combat\\build\\libs\\v1_16-combat-1.0.jar") as File).toPath(), (project.file("1.16-combat-6.jar") as File).toPath(), StandardCopyOption.REPLACE_EXISTING)
+        Files.copy((project.file("v1_16-combat\\build\\libs\\v1_16-combat-1.0-all.jar") as File).toPath(), (project.file("1.16-combat-6-deps.jar") as File).toPath(), StandardCopyOption.REPLACE_EXISTING)
+
+        Files.copy((project.file("v1_19\\build\\libs\\v1_19-1.0.jar") as File).toPath(), (project.file("1.19.4.jar") as File).toPath(), StandardCopyOption.REPLACE_EXISTING)
+        Files.copy((project.file("v1_19\\build\\libs\\v1_19-1.0-all.jar") as File).toPath(), (project.file("1.19.4-deps.jar") as File).toPath(), StandardCopyOption.REPLACE_EXISTING)
+
+        Files.copy((project.file("v1_20_6\\build\\libs\\v1_20_6-1.0.jar") as File).toPath(), (project.file("1.20.6.jar") as File).toPath(), StandardCopyOption.REPLACE_EXISTING)
+        Files.copy((project.file("v1_20_6\\build\\libs\\v1_20_6-1.0-all.jar") as File).toPath(), (project.file("1.20.6-deps.jar") as File).toPath(), StandardCopyOption.REPLACE_EXISTING)
+
+        println("Merge jars")
         for (final def ver in versions) {
             println("Merge: ${ver}.jar with ${ver}-deps.jar")
             var mapFiles = new HashMap<String, byte[]>()

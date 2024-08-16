@@ -22,16 +22,6 @@ jobs:
       - name: Build
         run: ./gradlew build --no-daemon
 
-      - name: Copy artifacts
-        run: |
-          cp v1_16-combat/build/libs/v1_16-combat-1.0.jar 1.16-combat-6.jar
-          cp v1_19/build/libs/v1_19-1.0.jar 1.19.4.jar
-          cp v1_20_6/build/libs/v1_20_6-1.0.jar 1.20.6.jar
-          
-          cp v1_16-combat/build/libs/v1_16-combat-1.0-all.jar 1.16-combat-6-deps.jar
-          cp v1_19/build/libs/v1_19-1.0-all.jar 1.19.4-deps.jar
-          cp v1_20_6/build/libs/v1_20_6-1.0-all.jar 1.20.6-deps.jar
-
       - name: Merge artifacts
         run: ./gradlew mergeJars --no-daemon
 

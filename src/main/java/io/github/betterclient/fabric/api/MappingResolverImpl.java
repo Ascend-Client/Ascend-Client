@@ -54,9 +54,12 @@ public class MappingResolverImpl implements MappingResolver {
             }
         }
 
-        for (String s : new ArrayList<>(out.keySet())) {
-            out.put(s, this.intermediaryToYarn.getOrDefault(out.get(s), out.get(s)));
+        if(Application.isDev) {
+            for (String s : new ArrayList<>(out.keySet())) {
+                out.put(s, this.intermediaryToYarn.getOrDefault(out.get(s), out.get(s)));
+            }
         }
+
 
         return out;
     }
@@ -65,13 +68,13 @@ public class MappingResolverImpl implements MappingResolver {
     public String mapClassName(String namespace, String className) {
         switch (namespace) {
             case "named" -> {
-                return className;
+                return Application.isDev ? className : intermediaryToYarn.keySet().stream().toList().get(new ArrayList<>(intermediaryToYarn.values()).indexOf(className));
             }
             case "official" -> {
-                return officialMappings.getOrDefault(className, null);
+                return officialMappings.getOrDefault(className, className);
             }
             default -> {
-                return ModRemapperUtility.mapClassName(className.replace('.', '/'), this.intermediaryToYarn).replace('/', '.');
+                return Application.isDev ? ModRemapperUtility.mapClassName(className.replace('.', '/'), this.intermediaryToYarn).replace('/', '.') : className;
             }
         }
     }

@@ -97,7 +97,7 @@ public class ModIssueFixer {
 
                     injection.add(new MethodInsnNode(INVOKESTATIC, "io/github/betterclient/version/mods/BedrockBridge", "get", "()Lio/github/betterclient/version/mods/BedrockBridge;", false));
                     injection.add(new VarInsnNode(ALOAD, 2));
-                    injection.add(new MethodInsnNode(INVOKEVIRTUAL, "net/minecraft/network/PacketByteBuf", "readBoolean", "()Z", false));
+                    injection.add(new MethodInsnNode(INVOKEVIRTUAL, "net/minecraft/class_2540", "readBoolean", "()Z", false));
                     injection.add(new MethodInsnNode(INVOKEVIRTUAL, "io/github/betterclient/version/mods/BedrockBridge", "setServerAllowing", "(Z)V", false));
 
                     method.instructions.insert(injectAfter, injection);
