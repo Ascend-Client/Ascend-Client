@@ -14,7 +14,7 @@ public class AutoUpdaterUtil {
     public static void update() {
         IBridge.getPreLaunch().info("Updating!");
         try {
-            String command = "\"" + getJava() + "\" -jar \"" + downloadUpdater() + "\" \"" + IBridge.getInstance().getVersion() + "\"";
+            String command = getJava() + " -jar \"" + downloadUpdater() + "\" \"" + IBridge.getInstance().getVersion() + "\"";
             IBridge.getPreLaunch().info("Command: \"" + command + "\"");
 
             Runtime.getRuntime().exec(command.split(" "));
