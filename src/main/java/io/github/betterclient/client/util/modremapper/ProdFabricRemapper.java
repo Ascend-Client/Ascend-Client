@@ -22,6 +22,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
 
+import static io.github.betterclient.client.util.modremapper.utility.ModRemapperUtility.convertLangToJSON;
 import static io.github.betterclient.client.util.modremapper.utility.ModRemapperUtility.generateFabricLoaderMappings;
 
 public class ProdFabricRemapper {
@@ -98,6 +99,10 @@ public class ProdFabricRemapper {
                 ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);
                 node.accept(writer);
                 finalFile.put(s, writer.toByteArray());
+            } else if(s.endsWith(".lang")) {
+                s = s.substring(0, s.lastIndexOf('.')) + ".json";
+
+                finalFile.put(s, convertLangToJSON(finalFile.get(s)));
             }
         }
 
