@@ -133,7 +133,7 @@ public interface IBridge {
 
         void openNonCustomScreen(NonCustomScreen screen);
 
-        void scheduleStop();
+        void bs$scheduleStop();
 
         void setShaderTexture(int texNum, Identifier identifier);
 

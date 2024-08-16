@@ -41,7 +41,6 @@ import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(MinecraftClient.class)
 public abstract class MixinMinecraftClient implements IBridge.MinecraftClient {
-
     @Shadow public abstract void openScreen(@Nullable Screen screen);
 
     @Shadow @Final public TextRenderer textRenderer;
@@ -63,6 +62,13 @@ public abstract class MixinMinecraftClient implements IBridge.MinecraftClient {
     @Shadow @Nullable public Screen currentScreen;
 
     @Shadow public abstract TextureManager getTextureManager();
+
+    @Shadow public abstract void scheduleStop();
+
+    @Override
+    public void bs$scheduleStop() {
+        scheduleStop();
+    }
 
     @Override
     public void setGuiScreen(IBridge.Screen ui) {

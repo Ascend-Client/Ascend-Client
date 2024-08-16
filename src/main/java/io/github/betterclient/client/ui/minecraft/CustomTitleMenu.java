@@ -189,7 +189,7 @@ public class CustomTitleMenu extends Screen {
             }
 
             if(isMouseOn(width / 2f + 5, height / 2f + 35, width / 2f + 100, height / 2f + 55)) {
-                client.scheduleStop();
+                client.bs$scheduleStop();
             }
         }
 
