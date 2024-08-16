@@ -75,7 +75,7 @@ public class ModIssueFixer {
 
         if(node.name.equals("net/coderbot/iris/gui/screen/ShaderPackScreen") && FabricLoader.getInstance().getModName(currentMod).equals("Iris")) {
             for (MethodNode method : node.methods) {
-                if(method.name.equals("init")) {
+                if(method.name.equals(Application.isDev ? "init" : "method_25426")) {
                     List<AbstractInsnNode> toRemove = getRemovalNodes(method);
 
                     toRemove.forEach(method.instructions::remove);
