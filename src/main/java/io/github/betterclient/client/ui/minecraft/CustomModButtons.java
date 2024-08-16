@@ -1,5 +1,6 @@
 package io.github.betterclient.client.ui.minecraft;
 
+import io.github.betterclient.client.Application;
 import io.github.betterclient.client.bridge.IBridge.*;
 import io.github.betterclient.client.util.UIUtil;
 import io.github.betterclient.fabric.relocate.loader.api.FabricLoader;
@@ -72,7 +73,7 @@ public class CustomModButtons {
         if(isMouseOn(25, 25 + (index * 30), 125, 45 + (index * 30)) && FabricLoader.instance.isModLoaded("Mod Menu")) {
             try {
                 Class<?> cls = Class.forName("com.terraformersmc.modmenu.gui.ModsScreen");
-                Object obj = cls.getConstructor(Class.forName("net.minecraft.client.gui.screen.Screen")).newInstance(MinecraftClient.getInstance().getCurrentScreenPointer());
+                Object obj = cls.getConstructor(Class.forName(Application.isDev ? "net.minecraft.client.gui.screen.Screen" : "net.minecraft.class_437")).newInstance(MinecraftClient.getInstance().getCurrentScreenPointer());
                 MinecraftClient.getInstance().openNonCustomScreen(obj);
             } catch (Exception e) {
                 throw new RuntimeException(e);
