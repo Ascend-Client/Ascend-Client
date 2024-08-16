@@ -56,7 +56,7 @@ public class MinecraftDownloader {
         }
         clientJarFile.close();
 
-        map(clientJar, intermediaryTiny, intermediaryFile, "official", "intermediary", new HashMap<>());
+        map(clientJar, intermediaryTiny, intermediaryFile, "official", "intermediary", toAdd);
         map(intermediaryFile, intermediaryToYarn, yarnFile, "intermediary", "named", toAdd);
 
         return new DownloadedMinecraft(intermediaryFile, yarnFile, intermediaryToYarn, version);
