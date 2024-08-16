@@ -21,7 +21,7 @@ jobs:
 
       - name: Copy artifacts
         run: |
-          cp Version-Auto-Updater/build/libs/Version-Auto-Updater-1.0.jar Updater.jar
+          cp Version-Auto-Updater/build/libs/Version-Auto-Updater-1.0-all.jar Updater.jar
 
       - name: Upload archive
         uses: actions/upload-artifact@v4
