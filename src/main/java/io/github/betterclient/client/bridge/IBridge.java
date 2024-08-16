@@ -175,11 +175,11 @@ public interface IBridge {
     }
 
     interface ShaderEffect {
-        void setupDimensions(int width, int height);
+        void bs$setupDimensions(int width, int height);
 
         List<ShaderPass> getPasses();
 
-        void close();
+        void bs$close();
     }
 
     interface ShaderPass {
@@ -199,8 +199,8 @@ public interface IBridge {
     interface Mouse {
         int getX();
         int getY();
-        boolean wasRightButtonClicked();
-        boolean wasLeftButtonClicked();
+        boolean bs$wasRightButtonClicked();
+        boolean bs$wasLeftButtonClicked();
     }
 
     class Items {
@@ -280,7 +280,7 @@ public interface IBridge {
         void draw(MatrixStack matrices, String text, float x, float y, int color);
         void draw(MatrixStack matrices, Text text, float x, float y, int color);
 
-        int getWidth(String text);
+        int bs$getWidth(String text);
         int fontHeight();
 
         void drawWithShadow(MatrixStack matrices, String text, float x, float y, int color);
@@ -291,12 +291,12 @@ public interface IBridge {
         default Object getCTX() {
             return null;
         }
-        void push();
-        void pop();
+        void bs$push();
+        void bs$pop();
 
-        void translate(float x, float y, float z);
+        void bs$translate(float x, float y, float z);
 
-        void scale(float scaleX, float scaleY, float scaleZ);
+        void bs$scale(float scaleX, float scaleY, float scaleZ);
     }
 
     class KeyStorage {

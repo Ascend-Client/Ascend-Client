@@ -16,6 +16,9 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
+      - name: Before build
+        run: ./gradlew removeAll --no-daemon
+
       - name: Build dependencies
         run: ./gradlew shadowJar --no-daemon
 

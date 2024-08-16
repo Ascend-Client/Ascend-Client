@@ -186,4 +186,28 @@ abstract class MergeJarsTask extends DefaultTask {
     }
 }
 
+abstract class RemoveAll extends DefaultTask {
+    @TaskAction
+    //@NotStatic
+    void taskAction() {
+        var file = project.file("src/main/java/io/github/betterclient/client/Application.java")
+
+        var f = file.readLines()
+
+        var index = 0
+        for (final def str in new ArrayList(f)) {
+            var aa = (str as String)
+            if(aa.contains("Boolean.getBoolean(\"fabric.development\")")) {
+                f.set(index, aa.replace("Boolean.getBoolean(\"fabric.development\")", "false"))
+            }
+
+            index++
+        }
+
+        (file as File).delete()
+        file.write(String.join("\n", f.toList()))
+    }
+}
+
 tasks.create("mergeJars", MergeJarsTask.class)
+tasks.create("removeAll", RemoveAll.class)

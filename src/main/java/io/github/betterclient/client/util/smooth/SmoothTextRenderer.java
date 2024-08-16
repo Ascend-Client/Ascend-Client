@@ -47,7 +47,7 @@ public class SmoothTextRenderer implements IBridge.TextRenderer {
     }
 
     @Override
-    public int getWidth(String text) {
+    public int bs$getWidth(String text) {
         int cw = 0;
         float scale = 9f / getLineHeight(text);
         scale-=.06f;
@@ -83,10 +83,10 @@ public class SmoothTextRenderer implements IBridge.TextRenderer {
         scale-=.06f;
         client.setShaderTexture(0, this.texture);
         client.setShaderColor(((color >> 16) & 0xFF) / 255f, ((color >> 8) & 0xFF) / 255f, (color & 0xFF) / 255f, ((color >> 24) & 0xFF) / 255f);
-        matrices.push();
-        matrices.translate(x,y,1);
-        matrices.scale(scale, scale, scale);
-        matrices.translate(-x,-y,1);
+        matrices.bs$push();
+        matrices.bs$translate(x,y,1);
+        matrices.bs$scale(scale, scale, scale);
+        matrices.bs$translate(-x,-y,1);
         for (int i : str.chars().toArray()) {
             if(this.info.containsChar(i)) {
                 FontCharacter fontCharacter = this.info.getChar(i);
@@ -122,10 +122,10 @@ public class SmoothTextRenderer implements IBridge.TextRenderer {
             }
         }
 
-        matrices.pop();
+        matrices.bs$pop();
 
         if(underline) {
-            IBridge.internal().screen_fill(matrices, (int) oX, (int) (y + 10), (int) oX + (this.getWidth(str)), (int) (y + 11), -1);
+            IBridge.internal().screen_fill(matrices, (int) oX, (int) (y + 10), (int) oX + (this.bs$getWidth(str)), (int) (y + 11), -1);
         }
     }
 

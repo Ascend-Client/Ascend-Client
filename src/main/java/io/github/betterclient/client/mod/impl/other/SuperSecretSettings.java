@@ -41,11 +41,11 @@ public class SuperSecretSettings extends Module {
         if (((client.getWindow().width() != lastWidth || client.getWindow().height() != lastHeight) && client.getWindow().width() > 0 && client.getWindow().height() > 0) || !this.oldMode.equals(this.mode.value)) {
             if(client.getWindow().isNotFocused() || client.getWindow().width() <= 0 || client.getWindow().height() <= 0) return;
             if(shader != null)
-                shader.close();
+                shader.bs$close();
 
             shader = IBridge.newShaderEffect(new IBridge.Identifier("shaders/post/" + this.mode.value.toLowerCase() + ".json"));
 
-            shader.setupDimensions(client.getWindow().width(), client.getWindow().height());
+            shader.bs$setupDimensions(client.getWindow().width(), client.getWindow().height());
         }
 
         lastWidth = client.getWindow().width();

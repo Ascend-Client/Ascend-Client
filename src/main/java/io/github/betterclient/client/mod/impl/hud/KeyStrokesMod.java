@@ -23,8 +23,8 @@ public class KeyStrokesMod extends HUDModule {
 
     @Override
     public void render(Renderable renderable) {
-        boolean leftClick = MinecraftClient.getInstance().getMouse().wasLeftButtonClicked();
-        boolean rightClick = MinecraftClient.getInstance().getMouse().wasRightButtonClicked();
+        boolean leftClick = MinecraftClient.getInstance().getMouse().bs$wasLeftButtonClicked();
+        boolean rightClick = MinecraftClient.getInstance().getMouse().bs$wasRightButtonClicked();
         GameOptions op = MinecraftClient.getInstance().getOptions();
 
         boolean w = op.forwardPressed();

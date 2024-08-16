@@ -10,13 +10,16 @@ import org.spongepowered.asm.mixin.Shadow;
 import java.util.List;
 
 @Mixin(ShaderEffect.class)
-public class MixinPostEffectProcessor implements IBridge.ShaderEffect {
+public abstract class MixinPostEffectProcessor implements IBridge.ShaderEffect {
+    @Shadow public abstract void close();
+
+    @Shadow public abstract void setupDimensions(int targetsWidth, int targetsHeight);
+
     @Shadow @Final private List<PostProcessShader> passes;
 
     @Override
-    @Shadow
-    public void setupDimensions(int width, int height) {
-
+    public void bs$setupDimensions(int width, int height) {
+        setupDimensions(width, height);
     }
 
     @Override
@@ -25,8 +28,7 @@ public class MixinPostEffectProcessor implements IBridge.ShaderEffect {
     }
 
     @Override
-    @Shadow
-    public void close() {
-
+    public void bs$close() {
+        close();
     }
 }

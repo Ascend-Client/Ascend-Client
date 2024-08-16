@@ -53,7 +53,7 @@ public class SettingsGui extends Screen {
         TextRenderer renderer = MinecraftClient.getInstance().getTextRenderer();
         UIUtil.drawRoundedRect(w2 - 200, h2 - 190, w2 + 200, h2 + 190, 10f, c1);
 
-        int w3 = renderer.getWidth("<- Back");
+        int w3 = renderer.bs$getWidth("<- Back");
         fill(matrices, w2 - 200, h2 - 168, w2 - 188 + w3, h2 - 180, c2);
         fill(matrices, w2 - 190, h2 - 180, w2 - 188 + w3, h2 - 190, c2);
 
@@ -88,13 +88,13 @@ public class SettingsGui extends Screen {
 
         if(this.isNumberHolding && this.extendedNumberSetting != null) {
             int mouseHold = mouseX + numHold;
-            if(mouseHold < (w2 - 188) + renderer.getWidth(this.extendedNumberSetting.name) + 30)
-                mouseHold = (w2 - 188) + renderer.getWidth(this.extendedNumberSetting.name) + 30;
+            if(mouseHold < (w2 - 188) + renderer.bs$getWidth(this.extendedNumberSetting.name) + 30)
+                mouseHold = (w2 - 188) + renderer.bs$getWidth(this.extendedNumberSetting.name) + 30;
 
             if(mouseHold > w2 + 165)
                 mouseHold = w2 + 165;
 
-            this.extendedNumberSetting.value = (int) UIUtil.map(mouseHold, (w2 - 188) + renderer.getWidth(this.extendedNumberSetting.name) + 30, w2 + 165, this.extendedNumberSetting.min, this.extendedNumberSetting.max);
+            this.extendedNumberSetting.value = (int) UIUtil.map(mouseHold, (w2 - 188) + renderer.bs$getWidth(this.extendedNumberSetting.name) + 30, w2 + 165, this.extendedNumberSetting.min, this.extendedNumberSetting.max);
         }
 
         if(this.isAlphaHolding && this.extendedColorSetting != null) {
@@ -132,13 +132,13 @@ public class SettingsGui extends Screen {
         UIUtil.enableScissor(w2 - 200, h2 - 168, w2 + 200, h2 + 190);
         for(Setting set : this.module.getSettings()) {
             if(set instanceof NoneSetting) {
-                renderer.draw(matrices, set.name, w2 - (renderer.getWidth(set.name) / 2f), curY, c3);
+                renderer.draw(matrices, set.name, w2 - (renderer.bs$getWidth(set.name) / 2f), curY, c3);
                 curY += 30;
                 continue;
             }
 
             int drawX = w2 - 188;
-            int endDrawX = renderer.getWidth(set.name);
+            int endDrawX = renderer.bs$getWidth(set.name);
 
             if(set instanceof BooleanSetting bool) {
                 UIUtil.drawRoundedRect(drawX, curY - 2.5, drawX + 15, curY + 12.5, 2f, c1);
@@ -150,7 +150,7 @@ public class SettingsGui extends Screen {
             } else if(set instanceof ModeSetting mode) {
                 int width = 75;
                 for (String value : mode.values) {
-                    int gg = renderer.getWidth(value) + 15;
+                    int gg = renderer.bs$getWidth(value) + 15;
                     if(gg > width) width = gg;
                 }
 
@@ -169,12 +169,12 @@ public class SettingsGui extends Screen {
                     }
                 }
             } else if(set instanceof NumberSetting number) {
-                renderer.draw(matrices, number.min + "", drawX + endDrawX + 30 - (renderer.getWidth(number.min + "")), curY, c3);
+                renderer.draw(matrices, number.min + "", drawX + endDrawX + 30 - (renderer.bs$getWidth(number.min + "")), curY, c3);
                 renderer.draw(matrices, number.max + "", w2 + 167, curY, c3);
 
                 UIUtil.drawRoundedRect(drawX + endDrawX + 30, curY + 3, w2 + 165, curY + 5, 2f, -1);
                 float area = (float) UIUtil.map(number.value, number.min, number.max, drawX + endDrawX + 30, w2 + 165);
-                renderer.draw(matrices, number.value + "", area - (renderer.getWidth(number.value + "") / 2f), curY + 10, -1);
+                renderer.draw(matrices, number.value + "", area - (renderer.bs$getWidth(number.value + "") / 2f), curY + 10, -1);
 
                 UIUtil.drawRoundedRect(area - 5, curY - 1, area + 5, curY + 9, 10f, c3);
             } else if(set instanceof KeyBindSetting key) {
@@ -309,7 +309,7 @@ public class SettingsGui extends Screen {
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         TextRenderer renderer = MinecraftClient.getInstance().getTextRenderer();
-        int w3 = renderer.getWidth("<- Back");
+        int w3 = renderer.bs$getWidth("<- Back");
         if(button == 0 && UIUtil.basicCollisionCheck(mouseX, mouseY, w2 - 188 + w3, h2 - 190, w2 - 200, h2 - 170)) {
             if(goBackToOtherMods)
                 MinecraftClient.getInstance().setGuiScreen(new ClickGui());
@@ -327,7 +327,7 @@ public class SettingsGui extends Screen {
             }
 
             int drawX = w2 - 188;
-            int endDrawX = renderer.getWidth(set.name);
+            int endDrawX = renderer.bs$getWidth(set.name);
 
             if(set instanceof BooleanSetting bool) {
                 if(UIUtil.basicCollisionCheck(mouseX, mouseY, drawX, curY - 2.5, drawX + 15, curY + 12.5)) {
@@ -336,7 +336,7 @@ public class SettingsGui extends Screen {
             } else if(set instanceof ModeSetting mode) {
                 int width = 75;
                 for (String value : mode.values) {
-                    int gg = renderer.getWidth(value) + 15;
+                    int gg = renderer.bs$getWidth(value) + 15;
                     if(gg > width) width = gg;
                 }
 

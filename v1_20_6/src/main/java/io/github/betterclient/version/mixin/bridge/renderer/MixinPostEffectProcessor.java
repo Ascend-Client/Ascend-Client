@@ -11,13 +11,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Mixin(PostEffectProcessor.class)
-public class MixinPostEffectProcessor implements IBridge.ShaderEffect {
+public abstract class MixinPostEffectProcessor implements IBridge.ShaderEffect {
+    @Shadow public abstract void close();
+
+    @Shadow public abstract void setupDimensions(int targetsWidth, int targetsHeight);
+
     @Shadow @Final private List<PostEffectPass> passes;
 
-    @Shadow
-    public void setupDimensions(int width, int height) {
-
-    }
+    public void bs$setupDimensions(int width, int height) {setupDimensions(width, height);}
 
     @Override
     public List<IBridge.ShaderPass> getPasses() {
@@ -28,8 +29,5 @@ public class MixinPostEffectProcessor implements IBridge.ShaderEffect {
         return returne;
     }
 
-    @Shadow
-    public void close() {
-
-    }
+    public void bs$close() {close();}
 }

@@ -5,7 +5,6 @@ import io.github.betterclient.client.BallSack;
 import io.github.betterclient.client.bridge.IBridge.*;
 import io.github.betterclient.client.mod.Category;
 import io.github.betterclient.client.mod.Module;
-import io.github.betterclient.client.mod.impl.other.SmoothFont;
 import io.github.betterclient.client.ui.StringTypeUI;
 import io.github.betterclient.client.util.StringTypeHandler;
 import io.github.betterclient.client.util.UIUtil;
@@ -53,7 +52,7 @@ public class ClickGui extends Screen implements StringTypeHandler {
 
         UIUtil.drawRoundedRect(w2 - 200, h2 - 190, w2 + 200, h2 + 190, 10f, c1);
 
-        int w3 = renderer.getWidth("Ballsack Client");
+        int w3 = renderer.bs$getWidth("Ballsack Client");
         fill(matrices, w2 - 200, h2 - 168, w2 - 188 + w3, h2 - 180, c2);
         fill(matrices, w2 - 190, h2 - 180, w2 - 188 + w3, h2 - 190, c2);
 
@@ -77,7 +76,7 @@ public class ClickGui extends Screen implements StringTypeHandler {
             String configName = configs[i].getName().substring(0, configs[i].getName().lastIndexOf('.'));
             configName = UIUtil.capitalize(configName);
 
-            float scale = (60f / renderer.getWidth(configName));
+            float scale = (60f / renderer.bs$getWidth(configName));
             if(scale > 1)
                 scale = 1;
 
@@ -86,28 +85,28 @@ public class ClickGui extends Screen implements StringTypeHandler {
             float x = pos[0];
             float y = pos[1];
 
-            matrices.push();
-            matrices.translate(x,y,1);
-            matrices.scale(scale,scale,1);
-            matrices.translate(-x,-y,1);
+            matrices.bs$push();
+            matrices.bs$translate(x,y,1);
+            matrices.bs$scale(scale,scale,1);
+            matrices.bs$translate(-x,-y,1);
             renderer.drawWithShadow(matrices, configName, x, y, -1);
-            matrices.pop();
+            matrices.bs$pop();
         }
 
         int cx = w2 - 190, cy = h2 + 170 - (configPopulation * 30);
-        matrices.push();
-        matrices.translate(cx,cy,1);
-        matrices.scale(0.9f, 0.9f, 1f);
-        matrices.translate(-cx,-cy,1);
+        matrices.bs$push();
+        matrices.bs$translate(cx,cy,1);
+        matrices.bs$scale(0.9f, 0.9f, 1f);
+        matrices.bs$translate(-cx,-cy,1);
         renderer.drawWithShadow(matrices, "Configs", cx, cy, -1);
-        matrices.pop();
+        matrices.bs$pop();
 
         int cex = (-198 + w3 - (-190)) / 2;
         UIUtil.drawRoundedRect(w2 - 190, h2 + 175, (w2 - 190) + cex - 5, h2 + 185, 2f, c3);
         pos = UIUtil.getIdealRenderingPosForText("+", w2 - 190, h2 + 175, (w2 - 190) + cex - 5, h2 + 185);
         renderer.drawWithShadow(matrices, "+", pos[0], pos[1], -1);
         if(UIUtil.basicCollisionCheck(mouseX, mouseY, w2 - 190, h2 + 175, (w2 - 190) + cex - 5, h2 + 185)) {
-            int csx = renderer.getWidth("New Config");
+            int csx = renderer.bs$getWidth("New Config");
             UIUtil.drawRoundedRect(mouseX, mouseY, mouseX + csx + 10, mouseY + 20, 2f, c1);
             pos = UIUtil.getIdealRenderingPosForText("New Config", mouseX, mouseY, mouseX + csx + 10, mouseY + 20);
             renderer.draw(matrices, "New Config", pos[0], pos[1], -1);
@@ -117,7 +116,7 @@ public class ClickGui extends Screen implements StringTypeHandler {
         pos = UIUtil.getIdealRenderingPosForText("-", (w2 - 190) + cex + 5, h2 + 175, w2 - 198 + w3, h2 + 185);
         renderer.drawWithShadow(matrices, "-", pos[0], pos[1], -1);
         if(UIUtil.basicCollisionCheck(mouseX, mouseY, (w2 - 190) + cex + 5, h2 + 175, w2 - 198 + w3, h2 + 185)) {
-            int csx = renderer.getWidth("Delete Config");
+            int csx = renderer.bs$getWidth("Delete Config");
             UIUtil.drawRoundedRect(mouseX, mouseY, mouseX + csx + 10, mouseY + 20, 2f, c1);
             pos = UIUtil.getIdealRenderingPosForText("Delete Config", mouseX, mouseY, mouseX + csx + 10, mouseY + 20);
             renderer.draw(matrices, "Delete Config", pos[0], pos[1], -1);
@@ -206,7 +205,7 @@ public class ClickGui extends Screen implements StringTypeHandler {
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         TextRenderer renderer = MinecraftClient.getInstance().getTextRenderer();
-        int w3 = renderer.getWidth("Ballsack Client");
+        int w3 = renderer.bs$getWidth("Ballsack Client");
 
         if(button == 0) {
             if(UIUtil.basicCollisionCheck(mouseX, mouseY, w2 - 185, h2 - 160, w2 - 203 + w3, h2 - 145)) {

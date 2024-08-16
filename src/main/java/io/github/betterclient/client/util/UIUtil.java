@@ -121,7 +121,7 @@ public class UIUtil {
 
         MinecraftClient minecraft = MinecraftClient.getInstance();
         TextRenderer textRenderer = minecraft.getTextRenderer();
-        int textWidth = textRenderer.getWidth(text);
+        int textWidth = textRenderer.bs$getWidth(text);
         int textHeight = textRenderer.fontHeight();
 
         // Adjust the rendering position based on the specified parameters and scale

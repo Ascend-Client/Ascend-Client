@@ -6,10 +6,14 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(Mouse.class)
-public class MixinMouse implements IBridge.Mouse {
+public abstract class MixinMouse implements IBridge.Mouse {
     @Shadow private double x;
 
     @Shadow private double y;
+
+    @Shadow public abstract boolean wasLeftButtonClicked();
+
+    @Shadow public abstract boolean wasRightButtonClicked();
 
     @Override
     public int getX() {
@@ -22,14 +26,12 @@ public class MixinMouse implements IBridge.Mouse {
     }
 
     @Override
-    @Shadow
-    public boolean wasRightButtonClicked() {
-        return false;
+    public boolean bs$wasRightButtonClicked() {
+        return this.wasRightButtonClicked();
     }
 
     @Override
-    @Shadow
-    public boolean wasLeftButtonClicked() {
-        return false;
+    public boolean bs$wasLeftButtonClicked() {
+        return this.wasLeftButtonClicked();
     }
 }

@@ -21,9 +21,8 @@ public class MixinTextRenderer implements IBridge.TextRenderer {
         textRenderer.draw((MatrixStack) matrices, (MutableText) text.pointer, x, y, color);
     }
 
-    @Shadow
-    public int getWidth(String text) {
-        return 0;
+    public int bs$getWidth(String text) {
+        return textRenderer.getWidth(text);
     }
 
     @Override

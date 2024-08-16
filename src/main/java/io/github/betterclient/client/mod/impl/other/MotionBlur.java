@@ -49,11 +49,11 @@ public class MotionBlur extends Module {
             if(client.getWindow().isNotFocused() || client.getWindow().width() <= 0 || client.getWindow().height() <= 0) return;
             currentBlur = getBlur();
             if(shader != null)
-                shader.close();
+                shader.bs$close();
 
             shader = IBridge.newShaderEffect(shaderLocation);
 
-            shader.setupDimensions(client.getWindow().width(),
+            shader.bs$setupDimensions(client.getWindow().width(),
                     client.getWindow().height());
         }
         if (currentBlur != getBlur() && shader != null) {

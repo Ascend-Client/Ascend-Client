@@ -15,7 +15,6 @@ import io.github.betterclient.quixotic.QuixoticClassLoader;
 
 import java.io.File;
 import java.lang.reflect.Field;
-import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;

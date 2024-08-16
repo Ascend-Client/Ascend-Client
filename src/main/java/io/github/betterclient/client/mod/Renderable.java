@@ -85,7 +85,7 @@ public class Renderable {
     }
 
     public Renderable renderText(String text, int x, int y, Color color) {
-        int endX = x + this.textRenderer.getWidth(text);
+        int endX = x + this.textRenderer.bs$getWidth(text);
         int endY = y + this.textRenderer.fontHeight();
         Runnable rrrr = render;
         render = () -> {
@@ -104,19 +104,19 @@ public class Renderable {
     }
 
     public Renderable renderText(String text, int x, int y, Color color, float scale) {
-        double endX = x + (this.textRenderer.getWidth(text) * scale);
+        double endX = x + (this.textRenderer.bs$getWidth(text) * scale);
         double endY = y + (this.textRenderer.fontHeight() * scale);
         Runnable rrrr = render;
         render = () -> {
             rrrr.run();
             IBridge.getInstance().getClient().emptyShaderColor();
             MatrixStack matrices = IBridge.newMatrixStack();
-            matrices.push();
-            matrices.translate(x,y,1);
-            matrices.scale(scale,scale,1);
-            matrices.translate(-x,-y,1);
+            matrices.bs$push();
+            matrices.bs$translate(x,y,1);
+            matrices.bs$scale(scale,scale,1);
+            matrices.bs$translate(-x,-y,1);
             this.textRenderer.draw(matrices, text, x, y, color.getRGB());
-            matrices.pop();
+            matrices.bs$pop();
         };
 
         if(endX > width) {
@@ -156,7 +156,7 @@ public class Renderable {
     public int[] getIdealRenderingPosForText(String text, int x, int y, int endX, int endY) {
         int[] pos = new int[2];
 
-        int textWidth = this.textRenderer.getWidth(text);
+        int textWidth = this.textRenderer.bs$getWidth(text);
         int textHeight = this.textRenderer.fontHeight();
 
         int idealX = x + ((endX - x) / 2) - (textWidth / 2);
@@ -219,7 +219,7 @@ public class Renderable {
             if (is.stackable) { //Render Amount
                 String text = count + "";
                 this.textRenderer.draw(IBridge.newMatrixStack(), text, this.getX() + endX - 3, this.getY() + endY - 3, color.getRGB());
-                float[] width = new float[] {this.textRenderer.getWidth(text), this.textRenderer.fontHeight()};
+                float[] width = new float[] {this.textRenderer.bs$getWidth(text), this.textRenderer.fontHeight()};
 
                 endX = (int) ((endX - 3) + width[0]);
                 endY = (int) ((endY - 3) + width[1]);
