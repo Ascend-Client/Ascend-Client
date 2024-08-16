@@ -24,15 +24,15 @@ public class HitEntityEvent extends Event {
         Vec3d maxPos = receiving.getPos();
         AtomicReference<Double> max = new AtomicReference<>(0D);
 
-        maxPos = compareTo(camera, maxPos.add(0, 0, receiving.getBox().maxZ), max);
-        maxPos = compareTo(camera, maxPos.add(0, 0, receiving.getBox().minZ), max);
-        maxPos = compareTo(camera, maxPos.add(0, receiving.getBox().maxY, 0), max);
-        maxPos = compareTo(camera, maxPos.add(0, receiving.getBox().minY, 0), max);
-        maxPos = compareTo(camera, maxPos.add(receiving.getBox().maxX, 0, 0), max);
-        compareTo(camera, maxPos.add(receiving.getBox().minX, 0, 0), max);
+        maxPos = compareTo(camera, maxPos.add(0, 0, receiving.getBox().maxZ()), max);
+        maxPos = compareTo(camera, maxPos.add(0, 0, receiving.getBox().minZ()), max);
+        maxPos = compareTo(camera, maxPos.add(0, receiving.getBox().maxY(), 0), max);
+        maxPos = compareTo(camera, maxPos.add(0, receiving.getBox().minY(), 0), max);
+        maxPos = compareTo(camera, maxPos.add(receiving.getBox().maxX(), 0, 0), max);
+        compareTo(camera, maxPos.add(receiving.getBox().minX(), 0, 0), max);
 
         double d = max.get() + .5;
-        Vec3d possibleHits = camera.add(rotation.x * d, rotation.y * d, rotation.z * d);
+        Vec3d possibleHits = camera.add(rotation.x() * d, rotation.y() * d, rotation.z() * d);
         BoundingBox box = attacking.getBox().stretch(rotation.multiply(d)).expand(1.0, 1.0, 1.0);
 
         RaycastResult raycast = IBridge.getInstance().getClient().raycast(attacking, camera, possibleHits, box, receiving.getID(), d);

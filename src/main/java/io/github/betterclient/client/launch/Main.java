@@ -2,7 +2,6 @@ package io.github.betterclient.client.launch;
 
 import io.github.betterclient.quixotic.Quixotic;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

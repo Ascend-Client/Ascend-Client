@@ -36,11 +36,15 @@ public class ModRemapper {
     private static boolean mappingMethod = false;
 
     public static File remapMod(File toRemap, boolean isBuiltin) throws IOException {
+        if(!Application.isDev) return toRemap;
+
         DownloadedMinecraft version = Application.minecraft;
         return remapMod(toRemap, isBuiltin, false, version.intermediaryToYarn(), version.intermediaryJar());
     }
 
     public static File remapInternalMod(File toRemap, boolean isBuiltin) throws IOException {
+        if(!Application.isDev) return toRemap;
+
         DownloadedMinecraft version = Application.minecraft;
         return remapMod(toRemap, isBuiltin, true, version.intermediaryToYarn(), version.intermediaryJar());
     }

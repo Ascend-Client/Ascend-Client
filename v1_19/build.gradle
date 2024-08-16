@@ -16,6 +16,11 @@ repositories {
 }
 
 loom {
+    mixin {
+        defaultRefmapName = "ballsack.refmap.json"
+        useLegacyMixinAp = false
+    }
+
     runConfigs.configureEach {
         if(it.name == "server") {
             ideConfigGenerated = false

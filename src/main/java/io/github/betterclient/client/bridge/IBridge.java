@@ -362,82 +362,63 @@ public interface IBridge {
 
     record CommandArgument(String name, Class<?> clazz) { }
 
-    class Vec3d {
-        public final double x, y, z;
-
-        public Vec3d(double x, double y, double z) {
-            this.x = x;
-            this.y = y;
-            this.z = z;
-        }
-
+    record Vec3d(double x, double y, double z) {
         public double distanceTo(Vec3d vec) {
-            double deltaX = vec.x - this.x;
-            double deltaY = vec.y - this.y;
-            double deltaZ = vec.z - this.z;
+                double deltaX = vec.x - this.x;
+                double deltaY = vec.y - this.y;
+                double deltaZ = vec.z - this.z;
 
-            return Math.sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ);
+                return Math.sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ);
+            }
+
+            public Vec3d add(double x, double y, double z) {
+                return new Vec3d(this.x + x, this.y + y, this.z + z);
+            }
+
+            public Vec3d multiply(double value) {
+                return new Vec3d(this.x * value, this.y * value, this.z * value);
+            }
         }
 
-        public Vec3d add(double x, double y, double z) {
-            return new Vec3d(this.x + x, this.y + y, this.z + z);
-        }
-
-        public Vec3d multiply(double value) {
-            return new Vec3d(this.x * value, this.y * value, this.z * value);
-        }
-    }
-
-    class BoundingBox {
-        public final double minX, minY, minZ, maxX, maxY, maxZ;
-
-        public BoundingBox(double minX, double minY, double minZ, double maxX, double maxY, double maxZ) {
-            this.minX = minX;
-            this.minY = minY;
-            this.minZ = minZ;
-            this.maxX = maxX;
-            this.maxY = maxY;
-            this.maxZ = maxZ;
-        }
-
+    record BoundingBox(double minX, double minY, double minZ, double maxX, double maxY, double maxZ) {
         public BoundingBox stretch(Vec3d vec3d) {
-            double d = this.minX;
-            double e = this.minY;
-            double f = this.minZ;
-            double g = this.maxX;
-            double h = this.maxY;
-            double i = this.maxZ;
-            if (vec3d.x < 0.0) {
-                d += vec3d.x;
-            } else if (vec3d.x > 0.0) {
-                g += vec3d.x;
+                double d = this.minX;
+                double e = this.minY;
+                double f = this.minZ;
+                double g = this.maxX;
+                double h = this.maxY;
+                double i = this.maxZ;
+                if (vec3d.x < 0.0) {
+                    d += vec3d.x;
+                } else if (vec3d.x > 0.0) {
+                    g += vec3d.x;
+                }
+
+                if (vec3d.y < 0.0) {
+                    e += vec3d.y;
+                } else if (vec3d.y > 0.0) {
+                    h += vec3d.y;
+                }
+
+                if (vec3d.z < 0.0) {
+                    f += vec3d.z;
+                } else if (vec3d.z > 0.0) {
+                    i += vec3d.z;
+                }
+
+                return new BoundingBox(d, e, f, g, h, i);
             }
 
-            if (vec3d.y < 0.0) {
-                e += vec3d.y;
-            } else if (vec3d.y > 0.0) {
-                h += vec3d.y;
+            public BoundingBox expand(double x, double y, double z) {
+                double d = this.minX - x;
+                double e = this.minY - y;
+                double f = this.minZ - z;
+                double g = this.maxX + x;
+                double h = this.maxY + y;
+                double i = this.maxZ + z;
+                return new BoundingBox(d, e, f, g, h, i);
             }
-
-            if (vec3d.z < 0.0) {
-                f += vec3d.z;
-            } else if (vec3d.z > 0.0) {
-                i += vec3d.z;
-            }
-
-            return new BoundingBox(d, e, f, g, h, i);
         }
-
-        public BoundingBox expand(double x, double y, double z) {
-            double d = this.minX - x;
-            double e = this.minY - y;
-            double f = this.minZ - z;
-            double g = this.maxX + x;
-            double h = this.maxY + y;
-            double i = this.maxZ + z;
-            return new BoundingBox(d, e, f, g, h, i);
-        }
-    }
 
     interface Entity {
         Vec3d getCameraPosVec(int number);

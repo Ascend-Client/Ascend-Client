@@ -86,7 +86,7 @@ public abstract class MixinMinecraftClient implements IBridge.MinecraftClient {
 
     @Override
     public IBridge.RaycastResult raycast(IBridge.Entity entity, IBridge.Vec3d camera, IBridge.Vec3d hits, IBridge.BoundingBox box, int id, double d) {
-        EntityHitResult hitResult = ProjectileUtil.raycast((Entity) entity, new Vec3d(camera.x, camera.y, camera.z), new Vec3d(hits.x, hits.y, hits.z), new Box(box.minX, box.minY, box.minZ, box.maxX, box.maxY, box.maxZ), entity1 -> entity1.getId() == id, d);
+        EntityHitResult hitResult = ProjectileUtil.raycast((Entity) entity, new Vec3d(camera.x(), camera.y(), camera.z()), new Vec3d(hits.x(), hits.y(), hits.z()), new Box(box.minX(), box.minY(), box.minZ(), box.maxX(), box.maxY(), box.maxZ()), entity1 -> entity1.getId() == id, d);
 
         return hitResult == null ? null : new IBridge.RaycastResult((IBridge.Entity) hitResult.getEntity(), new IBridge.Vec3d(hitResult.getPos().x, hitResult.getPos().y, hitResult.getPos().z));
     }

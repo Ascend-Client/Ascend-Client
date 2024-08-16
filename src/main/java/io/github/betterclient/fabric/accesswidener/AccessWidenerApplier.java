@@ -2,8 +2,6 @@ package io.github.betterclient.fabric.accesswidener;
 
 import io.github.betterclient.client.bridge.IBridge;
 import io.github.betterclient.fabric.FabricLoader;
-import io.github.betterclient.fabric.accesswidener.AccessWidener;
-import io.github.betterclient.fabric.accesswidener.AccessWidenerFieldOrMethod;
 import io.github.betterclient.quixotic.ClassTransformer;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
@@ -15,7 +13,6 @@ import org.objectweb.asm.tree.MethodNode;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.objectweb.asm.Opcodes.*;
 
@@ -41,7 +38,6 @@ public class AccessWidenerApplier implements ClassTransformer {
         this.parsed.methods.forEach(accessWidenerFieldOrMethod -> allClasses.add(accessWidenerFieldOrMethod.containerClass()));
 
     }
-
 
     @Override
     public byte[] transform(String s, byte[] bytes) {

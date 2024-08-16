@@ -37,9 +37,9 @@ public class PositionMod extends HUDModule {
         }
 
         IBridge.Vec3d pos = entity.getPos();
-        renderable.renderText("X: " + ((int) pos.x), 0, 0, textColor.getColor())
-                .renderText("Y: " + ((int) pos.y), 0, 10, textColor.getColor())
-                .renderText("Z: " + ((int) pos.z), 0, 20, textColor.getColor());
+        renderable.renderText("X: " + ((int) pos.x()), 0, 0, textColor.getColor())
+                .renderText("Y: " + ((int) pos.y()), 0, 10, textColor.getColor())
+                .renderText("Z: " + ((int) pos.z()), 0, 20, textColor.getColor());
 
         int cy = 30;
 

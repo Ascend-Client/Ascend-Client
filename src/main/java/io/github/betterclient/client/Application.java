@@ -42,7 +42,8 @@ public class Application {
             mcVersionFolder;
 
     public static final boolean doRemappingOfAlreadyRemappedMods = false,
-                          ignoreDownloadedMinecraft = false;
+                          ignoreDownloadedMinecraft = false,
+                          isDev = Boolean.getBoolean("fabric.development");
     public static DownloadedMinecraft minecraft;
 
     public static AtomicReference<StatusFrame> statusFrame = new AtomicReference<>(null);
@@ -111,7 +112,7 @@ public class Application {
                 bridge.info("Removed Minecraft");
             }
 
-            Quixotic.classLoader.addURL(minecraft.yarnJar().toURI().toURL());
+            Quixotic.classLoader.addURL((isDev ? minecraft.yarnJar() : minecraft.intermediaryJar()).toURI().toURL());
             bridge.info("Re-added minecraft");
         } catch (Exception e) {
             throw new RuntimeException("Failed to " + (hasDownloaded ? "replace" : "download") +  " minecraft.", e);

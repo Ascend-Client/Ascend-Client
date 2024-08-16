@@ -14,7 +14,7 @@ public class MarkCommand implements CommandExecutor {
 
     @Override
     public int execute(List<?> arguments) {
-        String playerName = (String) arguments.get(0);
+        String playerName = (String) arguments.getFirst();
 
         if(markedPlayers.contains(playerName)) {
             markedPlayers.remove(playerName);

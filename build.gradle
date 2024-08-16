@@ -1,5 +1,11 @@
+import org.gradle.api.services.BuildService
+
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption
+import java.time.Duration
+import java.util.jar.JarFile
+import java.util.jar.JarOutputStream
+import java.util.zip.ZipEntry
 
 buildscript {
     repositories {
@@ -30,6 +36,7 @@ repositories {
 File downloadQuixotic() {
     File f = file("quixotic.jar")
     if(f.exists()) return f
+    println("Downloading quixotic")
 
     f.createNewFile()
     def is = new URI("https://github.com/betterclient/Quixotic-Loader/releases/download/ithinkiforgoralreadyexists/Quixotic-1.0.jar").toURL().openStream()
@@ -119,6 +126,54 @@ subprojects {
         dependencies {}
         configurations = [project.configurations.shade]
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-        archiveClassifier = project.objects.property(String.class).convention("")
+        archiveClassifier = project.objects.property(String.class).convention("all")
     }
 }
+
+abstract class MergeJarsTask extends DefaultTask {
+    @TaskAction
+    //@NotStatic
+    void taskAction() {
+        println("Merging jars!")
+        var versions = new String[] {"1.16-combat-6", "1.19.4", "1.20.6"}
+
+        for (final def ver in versions) {
+            println("Merge: ${ver}.jar with ${ver}-deps.jar")
+            var mapFiles = new HashMap<String, byte[]>()
+
+            readFile(project.file("${ver}-deps.jar") as File, mapFiles)
+            //read normal after deps so it overrides the deps
+            readFile(project.file("${ver}.jar") as File, mapFiles)
+
+            var finalOut = project.file("${ver}.jar") as File
+            var fos = new JarOutputStream(new FileOutputStream(finalOut))
+            for (final def k in mapFiles.keySet()) {
+                fos.putNextEntry(new ZipEntry(k))
+                fos.write(mapFiles[k])
+                fos.closeEntry()
+            }
+            fos.close()
+        }
+
+        println("Done!")
+    }
+
+    static void readFile(File f, Map<String, byte[]> mapFiles) {
+        var jf = new JarFile(f)
+        var jes = jf.entries()
+
+        while (jes.hasMoreElements()) {
+            var je = jes.nextElement()
+
+            if(!je.directory && je.name != "fabric.mod.json") {
+                var str = jf.getInputStream(je)
+                mapFiles[je.name] = str.readAllBytes()
+                str.close()
+            }
+        }
+
+        jf.close()
+    }
+}
+
+tasks.create("mergeJars", MergeJarsTask.class)
