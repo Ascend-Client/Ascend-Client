@@ -21,6 +21,10 @@ import static org.objectweb.asm.Opcodes.*;
  */
 public class ModIssueFixer {
     public static void edit(ClassNode node, File currentMod) throws Exception {
+        if(Application.minecraft.version().version() != MinecraftVersion.Version.V1_20_6)
+            if(!node.name.equals("net/fabricmc/fabric/mixin/entity/event/LivingEntityMixin"))
+                node.methods.removeIf(method -> method.name.equals("onGetSleepingDirection"));
+
         if(Application.minecraft.version().version() == MinecraftVersion.Version.V1_19_4)
             edit_1_19_4(node);
 
