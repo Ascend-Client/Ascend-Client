@@ -10,11 +10,23 @@ import org.spongepowered.asm.mixin.Shadow;
 import java.util.List;
 
 @Mixin(ShaderEffect.class)
-public abstract class MixinPostEffectProcessor implements IBridge.ShaderEffect {
+public class MixinPostEffectProcessor implements IBridge.ShaderEffect {
     @Shadow @Final private List<PostProcessShader> passes;
+
+    @Override
+    @Shadow
+    public void setupDimensions(int width, int height) {
+
+    }
 
     @Override
     public List<IBridge.ShaderPass> getPasses() {
         return this.passes.stream().map(IBridge.ShaderPass.class::cast).toList();
+    }
+
+    @Override
+    @Shadow
+    public void close() {
+
     }
 }

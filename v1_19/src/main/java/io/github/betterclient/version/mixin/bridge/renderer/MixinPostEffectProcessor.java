@@ -11,8 +11,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Mixin(PostEffectProcessor.class)
-public abstract class MixinPostEffectProcessor implements IBridge.ShaderEffect {
+public class MixinPostEffectProcessor implements IBridge.ShaderEffect {
     @Shadow @Final private List<PostEffectPass> passes;
+
+    @Shadow
+    public void setupDimensions(int width, int height) {}
 
     @Override
     public List<IBridge.ShaderPass> getPasses() {
@@ -22,4 +25,7 @@ public abstract class MixinPostEffectProcessor implements IBridge.ShaderEffect {
         }
         return returne;
     }
+
+    @Shadow
+    public void close() {}
 }

@@ -5,9 +5,10 @@ import io.github.betterclient.version.util.InternalBridgeImplementation;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(TextRenderer.class)
-public abstract class MixinTextRenderer implements IBridge.TextRenderer {
+public class MixinTextRenderer implements IBridge.TextRenderer {
     public TextRenderer textRenderer = (TextRenderer) (Object) this;
 
     @Override
@@ -18,6 +19,11 @@ public abstract class MixinTextRenderer implements IBridge.TextRenderer {
     @Override
     public void draw(IBridge.MatrixStack matrices, IBridge.Text text, float x, float y, int color) {
         InternalBridgeImplementation.getContextForMatrices(matrices).drawText(textRenderer, (Text) text.pointer, (int) x, (int) y, color, false);
+    }
+
+    @Shadow
+    public int getWidth(String text) {
+        return 0;
     }
 
     @Override
