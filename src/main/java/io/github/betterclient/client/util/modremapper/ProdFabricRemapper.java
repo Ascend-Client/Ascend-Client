@@ -69,8 +69,8 @@ public class ProdFabricRemapper {
             if(!entry.getName().endsWith(".class") && !entry.getName().equals("META-INF/MANIFEST.MF")) {
                 byte[] bites = Util.readAndClose(file.getInputStream(entry));
                 if(entry.getName().endsWith(".json")) {
-                    String str = new String(bites);
-                    str = String.join("\n", Arrays.stream(str.split("\n")).filter(string -> !string.contains("//")).toArray(String[]::new));
+                    String str = ModRemapper.fixIssue(new String(bites));
+                    str = String.join("\n", Arrays.stream(str.split("\n")).filter(string -> !string.replaceAll(" ", "").startsWith("//")).toArray(String[]::new));
                     str = str.replace("\"MixinMinecraft_NoAuthInDev\",", "");
                     bites = str.getBytes();
                 }

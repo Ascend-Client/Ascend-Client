@@ -2,6 +2,8 @@ package io.github.betterclient.client.util;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
+import io.github.betterclient.client.Application;
+import io.github.betterclient.client.BallSack;
 import io.github.betterclient.client.bridge.IBridge;
 
 import java.io.File;
@@ -23,8 +25,14 @@ public class GithubMan {
     public String branch = "";
 
     public GithubMan() {
+        if(Application.isDev) {
+            commitId = "dev";
+            branch = "development";
+            return;
+        }
+
         try {
-            List<String> text = Files.readAllLines(toPath(GithubMan.class.getResourceAsStream("/ballsack/github/github.txt")));
+            List<String> text = Files.readAllLines(toPath(BallSack.class.getResourceAsStream("/ballsack/github/github.txt")));
 
             for(String line : text) {
                 if(line.startsWith("git.branch=")) {

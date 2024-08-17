@@ -99,9 +99,9 @@ public class ModRemapper {
                 byte[] bites = Util.readAndClose(file.getInputStream(entry));
                 if(entry.getName().endsWith(".json")) {
                     String str = new String(bites);
-                    str = String.join("\n", Arrays.stream(str.split("\n")).filter(string -> !string.contains("//")).toArray(String[]::new));
+                    str = String.join("\n", Arrays.stream(str.split("\n")).filter(string -> !string.replaceAll(" ", "").startsWith("//")).toArray(String[]::new));
 
-                    determineMappingMethod(str);
+                    determineMappingMethod(fixIssue(str));
                     str = str.replace("\"MixinMinecraft_NoAuthInDev\",", "");
                     bites = str.getBytes();
                 }
@@ -122,7 +122,7 @@ public class ModRemapper {
             byte[] bytes = finalFile.get(s);
 
             if(s.endsWith(".json")) {
-                bytes = modifyRefmap(new String(bytes), tinyMappings).getBytes();
+                bytes = modifyRefmap(fixIssue(new String(bytes)), tinyMappings).getBytes();
             } else if(s.endsWith(".lang")) {
                 s = s.substring(0, s.lastIndexOf('.')) + ".json";
                 bytes = convertLangToJSON(bytes);
@@ -375,5 +375,27 @@ public class ModRemapper {
         }
 
         return finalFile;
+    }
+
+    public static String fixIssue(String src) {
+        String[] ss = src.split("\n");
+        List<String> sss = new ArrayList<>(Arrays.stream(ss).toList());
+
+        String before = ss[0];
+        for (String s : ss) {
+            int indexInSSS = sss.indexOf(s);
+            String withoutAny = s.replace(" ", "");
+            if(withoutAny.isEmpty()) continue;
+            char at = withoutAny.charAt(0);
+
+            if(Character.isAlphabetic(at)) {
+                sss.set(indexInSSS - 1, before + " " + s);
+                sss.remove(indexInSSS);
+            }
+
+            before = s;
+        }
+
+        return String.join("\n", sss);
     }
 }

@@ -71,7 +71,7 @@ public class FabricLoader {
             for (JarEntry entry : Util.getEntries(mod)) {
                 if(entry.getName().equals("fabric.mod.json")) {
                     String src = new String(Util.readAndClose(mod.getInputStream(entry)));
-                    JSONObject obj = new JSONObject(src);
+                    JSONObject obj = new JSONObject(ModRemapper.fixIssue(src));
                     String name;
                     String id = obj.getString("id");
                     if(obj.has("name"))
@@ -195,7 +195,7 @@ public class FabricLoader {
 
                     HashMap<String, CustomValue> values = new HashMap<>();
                     if(obj.has("custom") || obj.has("icon")) {
-                        JsonReader reader = new JsonReader(new StringReader(src));
+                        JsonReader reader = new JsonReader(new StringReader(ModRemapper.fixIssue(src)));
 
                         reader.beginObject();
 
@@ -621,7 +621,7 @@ public class FabricLoader {
         }
         JarEntry modJson = mod.getJarEntry("fabric.mod.json");
         String src = new String(Util.readAndClose(mod.getInputStream(modJson)));
-        JSONObject obj = new JSONObject(src);
+        JSONObject obj = new JSONObject(ModRemapper.fixIssue(src));
 
         String name;
         String id = obj.getString("id");
