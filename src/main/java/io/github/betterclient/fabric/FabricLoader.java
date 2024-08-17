@@ -31,9 +31,13 @@ import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -636,12 +640,27 @@ public class FabricLoader {
         return name;
     }
 
+    File getBallsack() throws URISyntaxException, IOException {
+        URL location = FabricLoader.class.getProtectionDomain().getCodeSource().getLocation();
+
+        if ("file".equals(location.getProtocol())) {
+            return new File(location.toURI());
+        } else if ("jar".equals(location.getProtocol())) {
+            String path = location.getPath();
+            path = path.substring(0, path.indexOf("!"));
+            Path jarPath = Paths.get(new URI(path));
+            return jarPath.toFile();
+        }
+
+        throw new IOException("Unsupported protocol: " + location.getProtocol());
+    }
+
     public void loadDefault() throws URISyntaxException, IOException {
         List<String> version = Files.readAllLines(toPath(BallSack.class.getResourceAsStream("/ballsack/github/github.txt")));
         version.removeIf(string -> !string.contains("git.commit.id.abbrev="));
         String ver = version.getFirst().replaceAll("git.commit.id.abbrev=", "");
 
-        File fabric_ballsack = new File(FabricLoader.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+        File fabric_ballsack = getBallsack();
         File minecraft = Application.minecraft.intermediaryJar();
         PlaceholderMod ballsack_client = new PlaceholderMod("Minecraft client with very cool things", "ballsack-client", ver + "/modern", "Ballsack Client", fabric_ballsack);
         PlaceholderMod fabricLoader = new PlaceholderMod("Quixotic/Ballsack client implementation of the fabric loader", "fabric-loader", "0.69.0", "Fabric Loader", fabric_ballsack);
