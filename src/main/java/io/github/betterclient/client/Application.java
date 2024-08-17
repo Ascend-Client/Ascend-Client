@@ -81,11 +81,8 @@ public class Application {
             hasDownloaded = true;
 
             //remove mc if it exists
-            Field f = QuixoticClassLoader.class.getDeclaredField("listURLs");
-            f.setAccessible(true);
-            List<?> listURLs = (List<?>) f.get(quixoticClassLoader);
             URL mcURL = null;
-            for (Object url : listURLs) {
+            for (Object url : Quixotic.classLoader.getURLs()) {
                 if(url instanceof URL listURL && listURL.toString().contains("minecraft"))
                     mcURL = listURL;
             }
@@ -93,7 +90,7 @@ public class Application {
             IBridge.PreLaunchBridge bridge = IBridge.getPreLaunch();
 
             if(mcURL != null) {
-                f = URLClassLoader.class.getDeclaredField("ucp");
+                Field f = URLClassLoader.class.getDeclaredField("ucp");
                 f.setAccessible(true);
                 Object ucp = f.get(quixoticClassLoader);
 
@@ -107,7 +104,6 @@ public class Application {
 
                 path.remove(mcURL);
                 unopenedUrls.remove(mcURL);
-                listURLs.remove(mcURL);
                 bridge.info("Removed Minecraft");
             }
 

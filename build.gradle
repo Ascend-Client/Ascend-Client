@@ -39,7 +39,7 @@ File downloadQuixotic() {
     println("Downloading quixotic")
 
     f.createNewFile()
-    def is = new URI("https://github.com/betterclient/Quixotic-Loader/releases/download/ithinkiforgoralreadyexists/Quixotic-1.0.jar").toURL().openStream()
+    def is = new URI("https://github.com/betterclient/Quixotic-Loader/releases/download/iforgordoesntexist/Quixotic-1.0.jar").toURL().openStream()
     Files.copy(
             is,
             f.toPath(),
