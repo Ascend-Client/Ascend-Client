@@ -9,6 +9,7 @@ import io.github.betterclient.client.mod.Category;
 import io.github.betterclient.client.mod.Module;
 import io.github.betterclient.client.mod.setting.BooleanSetting;
 import io.github.betterclient.client.mod.setting.KeyBindSetting;
+import io.github.betterclient.client.mod.setting.NumberSetting;
 
 public class Zoom extends Module {
     public boolean isZooming = false;
@@ -19,15 +20,22 @@ public class Zoom extends Module {
 
     public KeyBindSetting bind = new KeyBindSetting("Zoom Key", IBridge.getKeys().KEY_C, () -> isZooming = true, () -> isZooming = false);
     public BooleanSetting flip = new BooleanSetting("Flip Scroll", false);
+    public NumberSetting zoomFactorStart = new NumberSetting("Start zoom", 25, 10, 50);
 
     public Zoom() {
         super("Zoom", Category.OTHER, null);
         this.addSetting(this.bind);
-        this.addSetting(flip);
+        this.addSetting(this.flip);
+        this.addSetting(this.zoomFactorStart);
     }
 
     public static Zoom get() {
         return (Zoom) BallSack.getInstance().moduleManager.getModuleByName("Zoom");
+    }
+
+    @Override
+    public void onEnabled() {
+        zoomFactor = zoomFactorStart.value / 100D;
     }
 
     public double handleZoom(double fov) {
@@ -55,7 +63,7 @@ public class Zoom extends Module {
             if (isZoomed) {
                 mc.getOptions().setSmoothCameraEnabled(cachedSmoothCamera);
                 isZoomed = false;
-                zoomFactor = 0.25D;
+                zoomFactor = this.zoomFactorStart.value / 100D;
             }
 
         }

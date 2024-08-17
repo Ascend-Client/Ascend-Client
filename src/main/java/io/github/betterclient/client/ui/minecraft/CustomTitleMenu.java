@@ -3,6 +3,7 @@ package io.github.betterclient.client.ui.minecraft;
 import io.github.betterclient.client.Application;
 import io.github.betterclient.client.BallSack;
 import io.github.betterclient.client.bridge.IBridge.*;
+import io.github.betterclient.client.mod.impl.ClientMod;
 import io.github.betterclient.client.ui.clickgui.HUDMoveUI;
 import io.github.betterclient.client.util.UIUtil;
 import io.github.betterclient.client.util.autoupdater.AutoUpdaterScreen;
@@ -32,6 +33,9 @@ public class CustomTitleMenu extends Screen {
     public CustomTitleMenu(boolean firstLaunch) {
         super();
         this.isFirstLaunch = firstLaunch;
+
+        if(!ClientMod.titleScreenAnimEnabled.isValue())
+            this.isFirstLaunch = false;
 
         int backgroundNumber = new Random().nextInt(2);
         this.chosenBackground = new Identifier("textures/ballsack/backgrounds/background" + backgroundNumber + ".png");
@@ -81,10 +85,12 @@ public class CustomTitleMenu extends Screen {
 
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        int animSeconds = ClientMod.titleScreenSeconds.value * 100;
+
         if(startAnim == 0) {
             startAnim = System.currentTimeMillis();
 
-            endAnim = System.currentTimeMillis() + 2000; //2 second animation
+            endAnim = System.currentTimeMillis() + animSeconds; //x second animation
         }
 
         if(BallSack.getInstance().doUpdate && BallSack.getInstance().man.checkUpdate())
@@ -103,11 +109,12 @@ public class CustomTitleMenu extends Screen {
         if(CustomLoadingOverlay.isDoingAnimation && this.isFirstLaunch && System.currentTimeMillis() < (endAnim + 250)) { //continue the animation for extra time so its smoother
             CustomLoadingOverlay.doRender = false;
 
-            int alpha = (int) map(System.currentTimeMillis() - startAnim, 0, 2000, 0, 120);
+
+            int alpha = (int) map(System.currentTimeMillis() - startAnim, 0, animSeconds, 0, 120);
             fill(matrices, 0, 0, width, height, new Color(255, 255, 255, Math.max(120 - alpha, 0)).getRGB());
 
-            panoramaY = (int) map(System.currentTimeMillis() - startAnim, 0, 2000, width, prepanY + 15);
-            buttonWallY = (int) map(System.currentTimeMillis() - startAnim, 0, 2000, width, 0);
+            panoramaY = (int) map(System.currentTimeMillis() - startAnim, 0, animSeconds, width, prepanY + 15);
+            buttonWallY = (int) map(System.currentTimeMillis() - startAnim, 0, animSeconds, width, 0);
             if(System.currentTimeMillis() >= endAnim) {
                 panoramaY = prepanY;
                 buttonWallY = 0;

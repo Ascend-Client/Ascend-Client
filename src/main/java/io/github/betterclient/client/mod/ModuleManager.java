@@ -1,6 +1,7 @@
 package io.github.betterclient.client.mod;
 
 import io.github.betterclient.client.bridge.IBridge;
+import io.github.betterclient.client.mod.impl.ClientMod;
 import io.github.betterclient.client.mod.impl.hud.*;
 import io.github.betterclient.client.mod.impl.other.*;
 
@@ -11,6 +12,7 @@ public class ModuleManager {
     public List<Module> moduleList  = new Vector<>();
 
     public ModuleManager() {
+        moduleList.add(new ClientMod()); //first mod should be client itself
         moduleList.add(new FPSMod());
         moduleList.add(new KeyStrokesMod());
         moduleList.add(new CPSMod());
