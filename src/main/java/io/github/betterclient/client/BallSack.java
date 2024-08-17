@@ -57,6 +57,8 @@ public class BallSack {
         String addr = "assets/" + id.namespace() + "/" + id.path();
 
         for (FabricMod mod : FabricLoader.getInstance().loadedMods) {
+            if(FabricLoader.getInstance().builtin_donotfind.contains(mod)) continue;
+
             try {
                 JarFile f = new JarFile(mod.from());
                 ZipEntry entry = f.getEntry(addr);
@@ -71,9 +73,7 @@ public class BallSack {
                     });
                 }
                 f.close();
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
+            } catch (Exception ignored) {}
         }
 
         return null;

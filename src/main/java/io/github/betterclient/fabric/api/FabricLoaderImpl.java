@@ -112,7 +112,7 @@ public class FabricLoaderImpl implements FabricLoader {
                 String val = loadedMod.allEntries().get(keya);
                 if(keya.equals(key)) {
                     if(type.equals(Consumer.class)) {
-                        Consumer<?> a = o -> {
+                        Consumer<Function<?, ?>> a = o -> {
                             try {
                                 Class<?> lmd = Class.forName(val.substring(0, val.indexOf(":")), false, Quixotic.classLoader);
                                 String methodName = val.substring(val.lastIndexOf(":") + 1);

@@ -3,6 +3,7 @@ package io.github.betterclient.fabric;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import io.github.betterclient.client.Application;
+import io.github.betterclient.client.BallSack;
 import io.github.betterclient.client.bridge.IBridge;
 import io.github.betterclient.client.util.modremapper.utility.ModLoadingInformation;
 import io.github.betterclient.client.util.modremapper.ModRemapper;
@@ -30,7 +31,9 @@ import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -38,6 +41,7 @@ import java.util.jar.JarFile;
 public class FabricLoader {
     private static final FabricLoader instance = new FabricLoader();
     public List<FabricMod> loadedMods = new ArrayList<>();
+    public List<FabricMod> builtin_donotfind = new ArrayList<>();
 
     public boolean isMod(JarFile f) {
         return f.getEntry("fabric.mod.json") != null;
@@ -630,5 +634,41 @@ public class FabricLoader {
         else
             name = id;
         return name;
+    }
+
+    public void loadDefault() throws URISyntaxException, IOException {
+        List<String> version = Files.readAllLines(toPath(BallSack.class.getResourceAsStream("/ballsack/github/github.txt")));
+        version.removeIf(string -> !string.contains("git.commit.id.abbrev="));
+        String ver = version.getFirst().replaceAll("git.commit.id.abbrev=", "");
+
+        File fabric_ballsack = new File(FabricLoader.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+        File minecraft = Application.minecraft.intermediaryJar();
+        PlaceholderMod ballsack_client = new PlaceholderMod("Minecraft client with very cool things", "ballsack-client", ver + "/modern", "Ballsack Client", fabric_ballsack);
+        PlaceholderMod fabricLoader = new PlaceholderMod("Quixotic/Ballsack client implementation of the fabric loader", "fabric-loader", "0.69.0", "Fabric Loader", fabric_ballsack);
+        PlaceholderMod minecraft_ = new PlaceholderMod("Base game", "minecraft", Application.minecraft.version().version().name(), "Minecraft", minecraft);
+
+        this.loadedMods.add(ballsack_client);
+        this.loadedMods.add(fabricLoader);
+        this.loadedMods.add(minecraft_);
+
+        this.builtin_donotfind.add(ballsack_client);
+        this.builtin_donotfind.add(fabricLoader);
+        this.builtin_donotfind.add(minecraft_);
+    }
+
+    private Path toPath(InputStream is) {
+        try {
+            File gitFile = File.createTempFile("git", ".txt");
+            FileOutputStream fos = new FileOutputStream(gitFile);
+
+            fos.write(is.readAllBytes());
+
+            fos.close();
+            is.close();
+
+            return gitFile.toPath();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

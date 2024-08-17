@@ -118,6 +118,8 @@ public class Application {
         long startt = System.currentTimeMillis();
 
         try {
+            FabricLoader.getInstance().loadDefault();
+
             new Thread(StatusFrame::new).start();
             while (statusFrame.get() == null) {}
             modLoadingInformation = new ModLoadingInformation(new ArrayList<>(), new ArrayList<>(), ModLoadingInformation.State.LOADING_BUILTIN, null);
