@@ -31,7 +31,7 @@ public class BallSack {
     public String categoryName = "BallSack Client";
     public GithubMan man;
     public Commands commands;
-    public boolean doUpdate = true;
+    public boolean doUpdate = !Application.isDev;
 
     public BallSack() {
         instance = this;

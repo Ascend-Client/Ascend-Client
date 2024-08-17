@@ -78,4 +78,9 @@ public class MappingResolverImpl implements MappingResolver {
             }
         }
     }
+
+    @Override
+    public String mapFieldName(String namespace, String owner, String name, String desc) {
+        return name;
+    }
 }
