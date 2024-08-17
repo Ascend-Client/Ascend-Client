@@ -107,6 +107,10 @@ public class StatusFrame extends JFrame {
     }
 
     static int mapTo100(int val, int max) {
+        if(max == 0) {
+            return 100;
+        }
+
         return val * 100 / max;
     }
 }

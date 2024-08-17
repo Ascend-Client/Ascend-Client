@@ -38,6 +38,7 @@ public class Application {
             remappedModJarsFolder = new File(modJarsFolder, "remapped"),
             remappedBuiltinModJarsFolder = new File(remappedModJarsFolder, "builtin"),
             customJarsRequestedFolder = new File(customJarsFolder, "requested"),
+            modsFolder = new File(clientFolder.getParentFile(), "mods"),
             mcVersionFolder;
 
     public static final boolean doRemappingOfAlreadyRemappedMods = false,
@@ -71,6 +72,7 @@ public class Application {
             Files.createDirectories(remappedModJarsFolder.toPath());
             Files.createDirectories(remappedBuiltinModJarsFolder.toPath());
             Files.createDirectories(customJarsRequestedFolder.toPath());
+            Files.createDirectories(modsFolder.toPath());
             Files.createDirectories(mcVersionFolder.toPath());
         } catch (Exception e) { IBridge.getPreLaunch().error(e); }
 
@@ -139,6 +141,16 @@ public class Application {
             modLoadingInformation = new ModLoadingInformation(modLoadingInformation.minecraftClasses(), modLoadingInformation.nonCustomMods(), ModLoadingInformation.State.LOADING_CUSTOM, null);
 
             for (File customMod : Objects.requireNonNull(customJarsFolder.listFiles())) {
+                if(customMod.getName().endsWith(".jar")) {
+                    long start = System.currentTimeMillis();
+                    FabricMod loaded = FabricLoader.getInstance().loadMod(ModRemapper.remapMod(customMod, false));
+                    long time = System.currentTimeMillis() - start;
+                    if(loaded != null)
+                        IBridge.getPreLaunch().info("Mod " + loaded.name() + " loaded in " + time / 1000 + " seconds");
+                }
+            }
+
+            for (File customMod : Objects.requireNonNull(modsFolder.listFiles())) {
                 if(customMod.getName().endsWith(".jar")) {
                     long start = System.currentTimeMillis();
                     FabricMod loaded = FabricLoader.getInstance().loadMod(ModRemapper.remapMod(customMod, false));

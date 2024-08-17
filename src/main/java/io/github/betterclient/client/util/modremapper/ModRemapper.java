@@ -279,10 +279,11 @@ public class ModRemapper {
     }
 
     private static String modifyRefmap(String old, Map<String, String> maps) {
+        if(old.replace(" ", "").charAt(0) != '{') return old;
         JSONObject obj = new JSONObject(old);
 
         if (!obj.has("mappings") || !obj.has("data")) {
-            return obj.toString(6);
+            return old;
         }
 
         JSONObject mappings = obj.getJSONObject("mappings");
@@ -313,6 +314,7 @@ public class ModRemapper {
     }
 
     private static void determineMappingMethod(String old) {
+        if(old.replace(" ", "").charAt(0) != '{') return;
         JSONObject obj = new JSONObject(old);
 
         if(obj.has("package") && obj.has("refmap"))
@@ -362,7 +364,7 @@ public class ModRemapper {
         });
 
         if(classSize != 100000) {
-            while(mappings.size() != classSize) {} //Wait For remapper to finish
+            while((mappings.size() + 1) != classSize && mappings.size() != classSize) {} //Wait For remapper to finish
             remapper.finish();
         }
 

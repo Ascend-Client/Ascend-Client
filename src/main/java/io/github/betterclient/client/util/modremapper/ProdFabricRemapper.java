@@ -156,7 +156,7 @@ public class ProdFabricRemapper {
         });
 
         if(classSize != 100000) {
-            while(mappings.size() != classSize) {} //Wait For remapper to finish
+            while((mappings.size() + 1) != classSize && mappings.size() != classSize) {} //Wait For remapper to finish
             remapper.finish();
         }
 
