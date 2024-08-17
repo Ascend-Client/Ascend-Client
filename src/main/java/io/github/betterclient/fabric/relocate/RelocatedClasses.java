@@ -26,7 +26,10 @@ public class RelocatedClasses {
                 "net/fabricmc/loader/api/metadata/CustomValue$CvType",
                 "net/fabricmc/loader/api/metadata/ModEnvironment",
                 "net/fabricmc/loader/api/entrypoint/EntrypointContainer",
-                "net/fabricmc/loader/impl/gui/FabricStatusTree"
+                "net/fabricmc/loader/impl/gui/FabricStatusTree",
+                "net/fabricmc/loader/impl/gui/FabricStatusTree$FabricTreeWarningLevel",
+                "net/fabricmc/loader/impl/gui/FabricStatusTree$FabricStatusNode",
+                "net/fabricmc/loader/impl/gui/FabricStatusTree$FabricStatusTab"
         );
     }
 }

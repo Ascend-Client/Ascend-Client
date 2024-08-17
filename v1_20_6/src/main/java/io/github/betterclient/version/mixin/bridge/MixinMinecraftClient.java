@@ -59,6 +59,8 @@ public abstract class MixinMinecraftClient implements IBridge.MinecraftClient {
 
     @Shadow @Nullable public Screen currentScreen;
 
+    @Shadow public abstract void scheduleStop();
+
     @Override
     public void setGuiScreen(IBridge.Screen ui) {
         this.setScreen(new ScreenLoader(ui));
@@ -181,6 +183,11 @@ public abstract class MixinMinecraftClient implements IBridge.MinecraftClient {
         RenderSystem.setShaderTexture(texNum, (Identifier) identifier.pointer);
         if(texNum == 0)
             InternalBridgeImplementation.lastText = (Identifier) identifier.pointer;
+    }
+
+    @Override
+    public void bs$scheduleStop() {
+        scheduleStop();
     }
 
     @Override
