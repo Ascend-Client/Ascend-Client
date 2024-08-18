@@ -55,8 +55,8 @@ public abstract class MixinItemEntityRenderer extends EntityRenderer<Entity> {
         this.shadowRadius = 0;
     }
 
-    @Inject(at = @At("HEAD"), method = "render*", cancellable = true)
-    private void render(Entity e, float f, float partialTicks, MatrixStack matrix, VertexConsumerProvider vertexConsumerProvider, int i, CallbackInfo callback) {
+    @Inject(at = @At("HEAD"), method = "render(Lnet/minecraft/entity/ItemEntity;FFLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V", cancellable = true)
+    private void render(ItemEntity e, float f, float partialTicks, MatrixStack matrix, VertexConsumerProvider vertexConsumerProvider, int i, CallbackInfo ci) {
         if(!(e instanceof ItemEntity dropped)) return;
         if(ItemPhysics.isDisabled()) return;
         Random random = Random.create();
@@ -232,6 +232,6 @@ public abstract class MixinItemEntityRenderer extends EntityRenderer<Entity> {
         // end
         matrix.pop();
         super.render(dropped, f, partialTicks, matrix, vertexConsumerProvider, i);
-        callback.cancel();
+        ci.cancel();
     }
 }
