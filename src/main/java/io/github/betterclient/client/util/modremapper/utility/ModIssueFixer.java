@@ -38,14 +38,13 @@ public class ModIssueFixer {
             }
         }
 
-        if(Application.minecraft.version().version() != MinecraftVersion.Version.V1_20_6)
-            if(node.name.equals("net/fabricmc/fabric/mixin/entity/event/LivingEntityMixin"))
-                node.methods.removeIf(method -> method.name.equals("onGetSleepingDirection"));
-
         if(Application.minecraft.version().version() == MinecraftVersion.Version.V1_19_4)
             edit_1_19_4(node);
 
         if(Application.minecraft.version().version() != MinecraftVersion.Version.COMBAT_TEST_8C) return;
+
+        if(node.name.equals("net/fabricmc/fabric/mixin/entity/event/LivingEntityMixin"))
+            node.methods.removeIf(method -> method.name.equals("onGetSleepingDirection"));
 
         if(node.name.equals("com/replaymod/core/versions/MCVer") && FabricLoader.getInstance().getModName(currentMod).equals("Replay Mod")) {
             for (MethodNode method : node.methods) {
@@ -124,6 +123,9 @@ public class ModIssueFixer {
     }
 
     private static void edit_1_19_4(ClassNode node) {
+        if(node.name.equals("net/fabricmc/fabric/mixin/entity/event/LivingEntityMixin"))
+            node.methods.removeIf(method -> method.name.equals("onGetSleepingDirection"));
+
         if(node.name.equals("net/coderbot/iris/compat/sodium/mixin/vertex_format/entity/MixinEntityRenderDispatcher")) {
             for (MethodNode method : node.methods) {
                 if(method.name.equals("renderShadowPart")) {
