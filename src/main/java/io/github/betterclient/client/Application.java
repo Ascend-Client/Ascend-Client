@@ -2,6 +2,7 @@ package io.github.betterclient.client;
 
 import io.github.betterclient.client.asm.YarnFix;
 import io.github.betterclient.client.bridge.IBridge;
+import io.github.betterclient.client.util.PrelaunchUpdateChecker;
 import io.github.betterclient.client.util.downloader.DownloadedMinecraft;
 import io.github.betterclient.client.util.downloader.MinecraftDownloader;
 import io.github.betterclient.client.util.mclaunch.StatusFrame;
@@ -14,6 +15,7 @@ import io.github.betterclient.quixotic.Quixotic;
 import io.github.betterclient.quixotic.QuixoticClassLoader;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -53,6 +55,12 @@ public class Application {
         quixoticClassLoader.addExclusion("io.github.betterclient.client.asm.Better");
         quixoticClassLoader.addExclusion("io.github.betterclient.client.asm.ASMHelper");
         quixoticClassLoader.addExclusion("org.slf4j.");
+
+        try {
+            PrelaunchUpdateChecker.check();
+        } catch (IOException e) {
+            e.printStackTrace(System.err);
+        }
 
         try {
             /*for (File file : remappedBuiltinModJarsFolder.listFiles()) {
