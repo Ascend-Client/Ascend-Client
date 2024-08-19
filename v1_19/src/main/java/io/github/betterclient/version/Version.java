@@ -8,6 +8,9 @@ import io.github.betterclient.version.util.InternalBridgeImplementation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFW;
+import org.objectweb.asm.tree.AnnotationNode;
+import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.MethodNode;
 
 import java.io.File;
 import java.io.IOException;
@@ -66,6 +69,17 @@ public class Version {
         @Override
         public void registerVersionBallsackMods(ModuleManager manager) {
             //1.19 doesn't have any version specific mods atm
+        }
+
+        @Override
+        public void modifyVersion(ClassNode node, File mod) throws IOException {
+            if(node.name.equals("net/coderbot/iris/compat/sodium/mixin/vertex_format/entity/MixinEntityRenderDispatcher")) {
+                for (MethodNode method : node.methods) {
+                    if(method.name.equals("renderShadowPart")) {
+                        method.visibleAnnotations = new ArrayList<>(List.of(new AnnotationNode("Lorg/spongepowered/asm/mixin/Unique;")));
+                    }
+                }
+            }
         }
     };
 

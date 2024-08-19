@@ -8,6 +8,7 @@ import io.github.betterclient.version.util.InternalBridgeImplementation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFW;
+import org.objectweb.asm.tree.ClassNode;
 
 import java.io.File;
 import java.io.IOException;
@@ -67,6 +68,9 @@ public class Version {
         public void registerVersionBallsackMods(ModuleManager manager) {
 
         }
+
+        @Override
+        public void modifyVersion(ClassNode node, File mod) throws IOException {}
     };
 
     public static void setup() {

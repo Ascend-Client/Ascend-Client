@@ -2,6 +2,7 @@ package io.github.betterclient.client.bridge;
 
 import io.github.betterclient.client.mod.ModuleManager;
 import io.github.betterclient.client.util.downloader.MinecraftVersion;
+import org.objectweb.asm.tree.ClassNode;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -45,6 +46,7 @@ public interface IBridge {
         void error(Exception e);
         List<File> getVersionMods();
         void registerVersionBallsackMods(ModuleManager manager);
+        void modifyVersion(ClassNode node, File mod) throws IOException;
     }
 
     interface InternalBridge {
