@@ -71,7 +71,7 @@ public class PrelaunchUpdateChecker {
     public static void update() {
         IBridge.getPreLaunch().info("Updating!");
         try {
-            String command = getJava() + " -jar \"" + downloadUpdater() + "\" \"" + IBridge.getInstance().getVersion() + "\"";
+            String command = getJava() + " -jar \"" + downloadUpdater() + "\" \"" + IBridge.getPreLaunch().getVersion().version().goodName() + "\"";
             IBridge.getPreLaunch().info("Command: \"" + command + "\"");
 
             Runtime.getRuntime().exec(command.split(" "));
