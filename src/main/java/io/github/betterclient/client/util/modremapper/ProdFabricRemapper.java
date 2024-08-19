@@ -72,6 +72,11 @@ public class ProdFabricRemapper {
                     String str = ModRemapper.fixIssue(new String(bites));
                     str = String.join("\n", Arrays.stream(str.split("\n")).filter(string -> !string.replaceAll(" ", "").startsWith("//")).toArray(String[]::new));
                     str = str.replace("\"MixinMinecraft_NoAuthInDev\",", "");
+
+                    if(Application.minecraft.version().version().equals(MinecraftVersion.Version.COMBAT_TEST_8C) && str.contains("method_3129(Z)V")) {
+                        str = str.replace("method_3129(Z)V", "method_3129(ZZ)V");
+                    }
+
                     bites = str.getBytes();
                 }
 
