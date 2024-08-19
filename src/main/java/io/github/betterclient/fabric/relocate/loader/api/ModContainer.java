@@ -16,4 +16,5 @@ public interface ModContainer {
     List<Path> getRootPaths();
     Path getRootPath();
     Path getPath(String s);
+    Optional<Path> findPath(String s);
 }

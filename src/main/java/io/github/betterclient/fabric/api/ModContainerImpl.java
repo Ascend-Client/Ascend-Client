@@ -162,4 +162,9 @@ public class ModContainerImpl implements ModContainer {
 
         return null;
     }
+
+    @Override
+    public Optional<Path> findPath(String s) {
+        return Optional.ofNullable(getPath(s));
+    }
 }
