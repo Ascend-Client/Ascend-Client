@@ -62,11 +62,6 @@ public class FabricLoader {
             return null;
         }
 
-        if(f.getName().contains("fabric-biome-api")) {
-            IBridge.getPreLaunch().info("Skipping mod \"Fabric Biome Api\"");
-            return null;
-        }
-
         try {
             JarFile mod = new JarFile(f);
             if(!isMod(mod)) {

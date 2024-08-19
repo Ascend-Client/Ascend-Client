@@ -158,7 +158,7 @@ public final class RecursiveAnnotationMapper implements MixinMethodMapper {
             ownerClass = mappings.getOrDefault(ownerClass, ownerClass);
             fieldName = mappings.getOrDefault(fieldName, fieldName);
 
-            return "L" + ownerClass + ";" + fieldName + ":" + (isArray ? "[" : "") + fieldDesc;
+            return "L" + ownerClass + ";" + fieldName + ":" + fieldDesc;
         } else if(fieldDesc.charAt(0) != 'L') {
             ownerClass = mappings.getOrDefault(ownerClass, ownerClass);
             fieldName = mappings.getOrDefault(fieldName, fieldName);
