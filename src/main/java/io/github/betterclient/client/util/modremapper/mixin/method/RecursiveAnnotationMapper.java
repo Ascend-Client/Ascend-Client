@@ -1,5 +1,7 @@
 package io.github.betterclient.client.util.modremapper.mixin.method;
 
+import io.github.betterclient.client.Application;
+import io.github.betterclient.client.util.downloader.MinecraftVersion;
 import io.github.betterclient.client.util.modremapper.mixin.MixinMethodMapper;
 import io.github.betterclient.client.util.modremapper.utility.ModRemapperUtility;
 import org.objectweb.asm.tree.AnnotationNode;
@@ -177,6 +179,11 @@ public final class RecursiveAnnotationMapper implements MixinMethodMapper {
     private static String mapMethodName(String toMap, Map<String, String> mappings) {
         String methodName = toMap.split("\\(")[0];
         String desc = "(" + toMap.split("\\(")[1];
+
+        if(Application.minecraft.version().version() == MinecraftVersion.Version.COMBAT_TEST_8C && methodName.equals("method_3129")) {
+            desc = desc.replace("Z", "ZZ");
+        }
+
         List<String> signature = ModRemapperUtility.parseMethodDescriptor(desc);
 
         int i = 0;

@@ -3,8 +3,10 @@ package io.github.betterclient.client.util.modremapper.utility;
 import io.github.betterclient.client.util.downloader.DownloadedMinecraft;
 import io.github.betterclient.fabric.relocate.RelocatedClasses;
 import org.json.JSONObject;
+import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.AnnotationNode;
 import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.MethodNode;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -260,5 +262,53 @@ public class ModRemapperUtility {
         }
 
         return string;
+    }
+
+    public static String getDetectMixin(ClassNode node) {
+        if(node.visibleAnnotations != null) {
+            for (AnnotationNode visibleAnnotation : node.visibleAnnotations) {
+                if (visibleAnnotation.desc.equals("Lorg/spongepowered/asm/mixin/Mixin;")) {
+                    return (String) visibleAnnotation.values.get(1);
+                }
+            }
+        }
+
+        if(node.invisibleAnnotations != null) {
+            for (AnnotationNode visibleAnnotation : node.invisibleAnnotations) {
+                if (visibleAnnotation.desc.equals("Lorg/spongepowered/asm/mixin/Mixin;")) {
+                    Object obj = visibleAnnotation.values.get(1);
+                    if(obj instanceof ArrayList<?> alist) {
+                         return ((Type) alist.getFirst()).getDescriptor();
+                    } else if(obj instanceof String alol) {
+                        return alol;
+                    }
+                }
+            }
+        }
+
+        return "";
+    }
+
+    public static String getMixinTarget(MethodNode method) {
+        for (AnnotationNode visibleAnnotation : method.visibleAnnotations) {
+            if (visibleAnnotation.desc.equals("Lorg/spongepowered/asm/mixin/injection/Inject;")) {
+                boolean isThisOne = false;
+                for (Object value : visibleAnnotation.values) {
+                    if(isThisOne) {
+                        if(value instanceof ArrayList<?> arrayList) {
+                            return (String) arrayList.getFirst();
+                        } else {
+                            return (String) value;
+                        }
+                    }
+
+                    if(value.equals("method")) {
+                        isThisOne = true;
+                    }
+                }
+            }
+        }
+
+        return "";
     }
 }

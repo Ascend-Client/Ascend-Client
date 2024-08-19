@@ -4,6 +4,7 @@ import io.github.betterclient.client.Application;
 import io.github.betterclient.client.bridge.IBridge;
 import io.github.betterclient.client.mod.ModuleManager;
 import io.github.betterclient.client.util.downloader.MinecraftVersion;
+import io.github.betterclient.client.util.modremapper.utility.ModRemapperUtility;
 import io.github.betterclient.fabric.FabricLoader;
 import io.github.betterclient.fabric.Util;
 import io.github.betterclient.version.mods.BedrockBridge;
@@ -18,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.objectweb.asm.Opcodes.*;
-import static org.objectweb.asm.Opcodes.INVOKEVIRTUAL;
 
 public class Version {
     public static IBridge bridge;
@@ -157,6 +157,27 @@ public class Version {
                     injection.add(new MethodInsnNode(INVOKEVIRTUAL, "io/github/betterclient/version/mods/BedrockBridge", "setServerAllowing", "(Z)V", false));
 
                     method.instructions.insert(injectAfter, injection);
+                }
+            }
+        }
+
+        //CTS Input.tick has 2 booleans instead of 1
+        if(ModRemapperUtility.detectMixin(node)) {
+            String mixinTarget = ModRemapperUtility.getDetectMixin(node);
+
+            String mixinTarget0 = "L" + (Application.isDev ? "net/minecraft/client/input/Input" : "net/minecraft/class_744") + ";";
+            String mixinTarget1 = "L" + (Application.isDev ? "net/minecraft/client/input/KeyboardInput" : "net/minecraft/class_743") + ";";
+
+            if(!mixinTarget.equals(mixinTarget1) && !mixinTarget.equals(mixinTarget0)) return;
+            for (MethodNode method : node.methods) {
+                String mixinMethodTarget = ModRemapperUtility.getMixinTarget(method);
+
+                if(mixinMethodTarget.equals("method_3129") || mixinMethodTarget.equals("tick")) {
+                    method.desc = method.desc.replace("Z", "ZZ");
+
+                    for (AbstractInsnNode instruction : method.instructions) {
+                        if(instruction instanceof VarInsnNode vin && vin.var == 2 && vin.getOpcode() == ALOAD) vin.var = 3;
+                    }
                 }
             }
         }
