@@ -23,6 +23,10 @@ public class HUDMoveUI extends Screen {
     public boolean isDropDown = false;
     public int dropdownx, dropdowny;
 
+    public boolean isSize = false;
+    public int sizeX, sizeStartX, sizeEndX;
+    public HUDModule sizeMod = null;
+
     public HUDMoveUI() {
         super();
         hudMods.addAll(modMan.getByCategory(Category.HUD).stream().map(HUDModule::cast).toList());
@@ -46,18 +50,14 @@ public class HUDMoveUI extends Screen {
                     render.x - 4, render.y - 4,
                     render.x + render.width + 4,
                     render.y + render.height + 4,
-                    10f, new Color(0, 0, 0, 84).getRGB()
-            );
+                    10f, new Color(0, 0, 0, 84).getRGB(),
+                    matrices);
 
-            /*
-            Renderable Bug fixing:
-
-            UIUtil.drawRoundedRect(
-                    render.x, render.y,
-                    render.x + render.uiwidth,
-                    render.y + render.uiheight,
-                    0f, Color.WHITE.getRGB()
-            );*/
+            if(mod.isSizeable()) {
+                UIUtil.drawRoundedRect(render.x + render.width, render.y + render.height,
+                        render.x + render.width + 6, render.y + render.height + 6,
+                        2f, Color.BLUE.getRGB(), matrices);
+            }
 
             mod.render(new RenderEvent());
         }
@@ -66,8 +66,8 @@ public class HUDMoveUI extends Screen {
             UIUtil.drawRoundedRect(
                     dropdownx, dropdowny,
                     dropdownx + 100, dropdowny + 70,
-                    20f, new Color(0, 0, 0, 150).getRGB()
-            );
+                    20f, new Color(0, 0, 0, 150).getRGB(),
+                    matrices);
 
             HUDModule dropDownMod = null;
             for(HUDModule mod : hudMods) {
@@ -80,18 +80,18 @@ public class HUDMoveUI extends Screen {
             }
 
             if(dropDownMod != null)
-                textRenderer.draw(IBridge.newMatrixStack(), dropDownMod.name, dropdownx + 4, dropdowny + 10, -1);
+                textRenderer.draw(matrices, dropDownMod.name, dropdownx + 4, dropdowny + 10, -1);
 
-            textRenderer.draw(IBridge.newMatrixStack(), Text.literal("Settings").withStyle(Style.withUnderline(UIUtil.basicCollisionCheck(mouseX, mouseY, dropdownx, dropdowny + 20, dropdownx + 100, dropdowny + 40))), dropdownx + 4, dropdowny + 30, -1);
-            textRenderer.draw(IBridge.newMatrixStack(), Text.literal("Disable").withStyle(Style.withUnderline(UIUtil.basicCollisionCheck(mouseX, mouseY, dropdownx, dropdowny + 40, dropdownx + 100, dropdowny + 60))), dropdownx + 4, dropdowny + 50, -1);
+            textRenderer.draw(matrices, Text.literal("Settings").withStyle(Style.withUnderline(UIUtil.basicCollisionCheck(mouseX, mouseY, dropdownx, dropdowny + 20, dropdownx + 100, dropdowny + 40))), dropdownx + 4, dropdowny + 30, -1);
+            textRenderer.draw(matrices, Text.literal("Disable").withStyle(Style.withUnderline(UIUtil.basicCollisionCheck(mouseX, mouseY, dropdownx, dropdowny + 40, dropdownx + 100, dropdowny + 60))), dropdownx + 4, dropdowny + 50, -1);
         }
 
         if(isEnabling) {
             UIUtil.drawRoundedRect(
                     enableX, enableY,
                     enableX + 100, enableY + 200,
-                    20f, new Color(0, 0, 0, 150).getRGB()
-            );
+                    20f, new Color(0, 0, 0, 150).getRGB(),
+                   matrices);
 
             int y = enableY + 10;
             int x = enableX + 5;
@@ -102,11 +102,11 @@ public class HUDMoveUI extends Screen {
                 boolean withStyle = false;
                 if(UIUtil.basicCollisionCheck(mouseX, mouseY, x - 5, y - 10, x + 95, y + 10)) {
                     UIUtil.drawRoundedRect(x - 5, y - 6, x + 95, y + 14, 20f,
-                            new Color(0, 0, 0, 150).getRGB());
+                            new Color(0, 0, 0, 150).getRGB(), matrices);
                     withStyle = true;
                 }
 
-                textRenderer.draw(IBridge.newMatrixStack(),
+                textRenderer.draw(matrices,
                         Text.literal(m.name).withStyle(Style.withUnderline(withStyle)),
                          x, y, -1
                 );
@@ -115,14 +115,23 @@ public class HUDMoveUI extends Screen {
             }
         }
 
+        if(isSize) {
+            sizeMod.size.value = mouseX - sizeStartX;
+            if(sizeMod.size.value > 200) {
+               sizeMod.size.value = 200;
+            } else if(sizeMod.size.value < 50) {
+                sizeMod.size.value = 50;
+            }
+        }
+
         UIUtil.drawRoundedRect(width / 2f - 40, height / 2f - 55, width / 2f + 40, height / 2f - 30,
-                5F, new Color(0, 0, 0, 120).getRGB());
+                5F, new Color(0, 0, 0, 120).getRGB(), matrices);
 
         String text = "Enable Mods";
 
         float[] renderPos = UIUtil.getIdealRenderingPosForText(text, width / 2f - 40, height / 2f - 55, width / 2f + 40, height / 2f - 30);
 
-        textRenderer.draw(IBridge.newMatrixStack(), text, renderPos[0], renderPos[1], -1);
+        textRenderer.draw(matrices, text, renderPos[0], renderPos[1], -1);
 
         if(moving != null) {
             int finalX = mouseX - moveX;
@@ -137,7 +146,7 @@ public class HUDMoveUI extends Screen {
                 if(mouseX >= rend.x - 5 && mouseX <= (rend.x + rend.width + 5) && Math.abs(mouseY - rend.y) < 150) {
                     boolean renderPlusHeight = rend.y < moving.y;
 
-                    fill(IBridge.newMatrixStack(), rend.x - 1, rend.y + 2 + (renderPlusHeight ? rend.height : 0), rend.x + 1, moving.y - 2 + (renderPlusHeight ? 0 : rend.height), -1);
+                    fill(matrices, rend.x - 1, rend.y + 2 + (renderPlusHeight ? rend.height : 0), rend.x + 1, moving.y - 2 + (renderPlusHeight ? 0 : rend.height), -1);
 
                     finalX = rend.x;
                     break;
@@ -146,7 +155,7 @@ public class HUDMoveUI extends Screen {
                 if(mouseY >= rend.y - 5 && mouseY <= (rend.y + rend.height + 5) && Math.abs(mouseX - rend.x) < 150) {
                     boolean renderPlusWidth = rend.x < moving.x;
 
-                    fill(IBridge.newMatrixStack(), rend.x + (renderPlusWidth ? rend.width : 0), rend.y + rend.height - (rend.height / 2) - 1, moving.x + (renderPlusWidth ? 0 : moving.width), rend.y + rend.height - (rend.height / 2) + 1, -1);
+                    fill(matrices, rend.x + (renderPlusWidth ? rend.width : 0), rend.y + rend.height - (rend.height / 2) - 1, moving.x + (renderPlusWidth ? 0 : moving.width), rend.y + rend.height - (rend.height / 2) + 1, -1);
 
                     finalY = rend.y;
                     break;
@@ -236,6 +245,20 @@ public class HUDMoveUI extends Screen {
                     isDropDown = false;
                 }
             }
+
+            Renderable render = mod.renderable;
+            if(UIUtil.basicCollisionCheck(mouseX, mouseY, render.x + render.width, render.y + render.height,
+                    render.x + render.width + 6, render.y + render.height + 6) && mod.isSizeable()) {
+                isSize = true;
+                isDropDown = false;
+                isEnabling = false;
+                sizeX = (int) mouseX;
+
+                sizeStartX = sizeX - mod.size.value;
+                sizeEndX = sizeStartX + mod.size.max;
+
+                sizeMod = mod;
+            }
         }
 
         if(button == 1) {
@@ -254,6 +277,8 @@ public class HUDMoveUI extends Screen {
             moving = null;
             BallSack.getInstance().config.save();
         }
+
+        isSize = false;
 
         return super.mouseReleased(mouseX, mouseY, button);
     }

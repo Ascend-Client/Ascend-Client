@@ -19,6 +19,10 @@ public abstract class MixinEntity implements IBridge.Entity {
 
     @Shadow private int entityId;
 
+    @Shadow public abstract float getYaw(float tickDelta);
+
+    @Shadow public abstract float getPitch(float tickDelta);
+
     private IBridge.Vec3d translate(Vec3d vec) {
         return new IBridge.Vec3d(vec.x, vec.y, vec.z);
     }
@@ -53,5 +57,15 @@ public abstract class MixinEntity implements IBridge.Entity {
     @Override
     public int getID() {
         return this.entityId;
+    }
+
+    @Override
+    public float bs$getYaw() {
+        return this.getYaw(0);
+    }
+
+    @Override
+    public float bs$getPitch() {
+        return this.getPitch(0);
     }
 }

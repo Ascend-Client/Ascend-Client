@@ -15,14 +15,15 @@ public class UIUtil {
     }
 
     /**
-     * @param x x pos
-     * @param y y pos
-     * @param endX ending x (x + uiwidth)
-     * @param endY ending y (y + uiheight)
+     * @param x      x pos
+     * @param y      y pos
+     * @param endX   ending x (x + uiwidth)
+     * @param endY   ending y (y + uiheight)
      * @param radius radius of round
-     * @param color rect color
+     * @param color  rect color
+     * @param mat matrices
      */
-    public static void drawRoundedRect(double x, double y, double endX, double endY, double radius, int color) {
+    public static void drawRoundedRect(double x, double y, double endX, double endY, double radius, int color, MatrixStack mat) {
         x+=stX;
         y+=stY;
         endX+=stX;
@@ -41,8 +42,6 @@ public class UIUtil {
         BufferBuilder builder = MinecraftClient.getInstance().getBufferBuilder();
 
         int n2;
-
-        MatrixStack mat = IBridge.newMatrixStack();
 
         builder.begin(BeginMode.TRIANGLE_FAN);
 
@@ -69,8 +68,8 @@ public class UIUtil {
         IBridge.internal().screen_fill(i, endingX, y, endingX + 1, endingY, color);
     }
 
-    public static void renderCircle(double x, double y, float halfRadius, int color) {
-        drawRoundedRect(x - halfRadius, y - halfRadius, x + halfRadius, y + halfRadius, halfRadius * 2, color);
+    public static void renderCircle(double x, double y, float halfRadius, int color, MatrixStack mat) {
+        drawRoundedRect(x - halfRadius, y - halfRadius, x + halfRadius, y + halfRadius, halfRadius * 2, color, mat);
     }
 
     public static boolean basicCollisionCheck(double mouseX, double mouseY, double x, double y, double endX, double endY) {

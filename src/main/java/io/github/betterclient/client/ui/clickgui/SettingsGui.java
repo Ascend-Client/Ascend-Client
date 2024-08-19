@@ -51,14 +51,14 @@ public class SettingsGui extends Screen {
     public void render(MatrixStack matrices, int mouseX, int mouseY, float partialTicks) {
         super.renderBackground(matrices);
         TextRenderer renderer = MinecraftClient.getInstance().getTextRenderer();
-        UIUtil.drawRoundedRect(w2 - 200, h2 - 190, w2 + 200, h2 + 190, 10f, c1);
+        UIUtil.drawRoundedRect(w2 - 200, h2 - 190, w2 + 200, h2 + 190, 10f, c1, IBridge.newMatrixStack());
 
         int w3 = renderer.bs$getWidth("<- Back");
         fill(matrices, w2 - 200, h2 - 168, w2 - 188 + w3, h2 - 180, c2);
         fill(matrices, w2 - 190, h2 - 180, w2 - 188 + w3, h2 - 190, c2);
 
         UIUtil.enableScissor(w2 - 200, h2 - 190, w2 - 190, h2 - 180);
-        UIUtil.drawRoundedRect(w2 - 200, h2 - 190, w2 - 180, h2 - 170, 10f, c2);
+        UIUtil.drawRoundedRect(w2 - 200, h2 - 190, w2 - 180, h2 - 170, 10f, c2, IBridge.newMatrixStack());
         UIUtil.disableScissor();
 
         float[] pos = UIUtil.getIdealRenderingPosForText("<- Back", w2 - 188 + w3, h2 - 190, w2 - 200, h2 - 170);
@@ -76,7 +76,7 @@ public class SettingsGui extends Screen {
 
         if(this.module instanceof HUDModule hudmod) {
             renderer.draw(matrices, "Preview", w2 + 187 - hudmod.renderable.width, h2 + 175 - hudmod.renderable.height - 10, -1);
-            UIUtil.drawRoundedRect(w2 + 185 - hudmod.renderable.width, h2 + 175 - hudmod.renderable.height, w2 + 195, h2 + 185, 2f, c1);
+            UIUtil.drawRoundedRect(w2 + 185 - hudmod.renderable.width, h2 + 175 - hudmod.renderable.height, w2 + 195, h2 + 185, 2f, c1, IBridge.newMatrixStack());
 
             if(hudmod.forceVanillaFont.value) {
                 hudmod.renderable.textRenderer = IBridge.MinecraftClient.getInstance().getMCRenderer();
@@ -142,7 +142,7 @@ public class SettingsGui extends Screen {
 
             switch (set) {
                 case BooleanSetting bool -> {
-                    UIUtil.drawRoundedRect(drawX, curY - 2.5, drawX + 15, curY + 12.5, 2f, c1);
+                    UIUtil.drawRoundedRect(drawX, curY - 2.5, drawX + 15, curY + 12.5, 2f, c1, IBridge.newMatrixStack());
                     if (bool.isValue()) {
                         pos = UIUtil.getIdealRenderingPosForText("+", drawX, curY - 2.5, drawX + 15, curY + 12.5);
                         renderer.draw(matrices, "+", pos[0], pos[1], -1);
@@ -156,14 +156,14 @@ public class SettingsGui extends Screen {
                         if (gg > width) width = gg;
                     }
 
-                    UIUtil.drawRoundedRect(drawX + endDrawX + 5, curY - 2.5, drawX + endDrawX + width + 5, curY + 12.5, 2f, c1);
+                    UIUtil.drawRoundedRect(drawX + endDrawX + 5, curY - 2.5, drawX + endDrawX + width + 5, curY + 12.5, 2f, c1, IBridge.newMatrixStack());
                     renderer.draw(matrices, mode.value, drawX + endDrawX + 7, curY + 1, -1);
                     renderer.draw(matrices, "v", drawX + endDrawX + width - 3, curY + 1, -1);
 
                     if (mode.equals(this.extendedModeSetting) && this.isModeExtended) {
                         int height = mode.values.size() * 12;
                         int currY = curY + 13;
-                        UIUtil.drawRoundedRect(drawX + endDrawX + 5, curY + 13, drawX + endDrawX + width + 5, curY + 13 + height, 2f, c1);
+                        UIUtil.drawRoundedRect(drawX + endDrawX + 5, curY + 13, drawX + endDrawX + width + 5, curY + 13 + height, 2f, c1, IBridge.newMatrixStack());
                         for (String value : mode.values) {
                             fill(matrices, drawX + endDrawX + 5, currY, drawX + endDrawX + width + 5, currY + 10, Objects.equals(value, mode.value) ? c3 : (UIUtil.basicCollisionCheck(mouseX, mouseY, drawX + endDrawX + 5, currY, drawX + endDrawX + width + 5, currY + 10) ? c1 : c2));
                             renderer.draw(matrices, value, drawX + endDrawX + 5, currY + 1.5f, -1);
@@ -175,14 +175,14 @@ public class SettingsGui extends Screen {
                     renderer.draw(matrices, number.min + "", drawX + endDrawX + 30 - (renderer.bs$getWidth(number.min + "")), curY, c3);
                     renderer.draw(matrices, number.max + "", w2 + 167, curY, c3);
 
-                    UIUtil.drawRoundedRect(drawX + endDrawX + 30, curY + 3, w2 + 165, curY + 5, 2f, -1);
+                    UIUtil.drawRoundedRect(drawX + endDrawX + 30, curY + 3, w2 + 165, curY + 5, 2f, -1, IBridge.newMatrixStack());
                     float area = (float) UIUtil.map(number.value, number.min, number.max, drawX + endDrawX + 30, w2 + 165);
                     renderer.draw(matrices, number.value + "", area - (renderer.bs$getWidth(number.value + "") / 2f), curY + 10, -1);
 
-                    UIUtil.drawRoundedRect(area - 5, curY - 1, area + 5, curY + 9, 10f, c3);
+                    UIUtil.drawRoundedRect(area - 5, curY - 1, area + 5, curY + 9, 10f, c3, IBridge.newMatrixStack());
                 }
                 case KeyBindSetting key -> {
-                    UIUtil.drawRoundedRect(w2 + 135, curY, w2 + 195, curY + 15, 5f, c1);
+                    UIUtil.drawRoundedRect(w2 + 135, curY, w2 + 195, curY + 15, 5f, c1, IBridge.newMatrixStack());
                     String text1 = MinecraftClient.getInstance().getKeyName(key.key, 0);
                     if (isKeyListening) text1 = "Listening";
 
@@ -190,7 +190,7 @@ public class SettingsGui extends Screen {
                     renderer.draw(matrices, text1, pos[0], pos[1], -1);
                 }
                 case ColorSetting color -> {
-                    UIUtil.drawRoundedRect(w2 + 175, curY, w2 + 195, curY + 15, 5f, color.getColor().getRGB());
+                    UIUtil.drawRoundedRect(w2 + 175, curY, w2 + 195, curY + 15, 5f, color.getColor().getRGB(), IBridge.newMatrixStack());
 
                     if (color.equals(this.extendedColorSetting) && this.isColorExtended) {
                         int widthh = 100;
@@ -212,7 +212,7 @@ public class SettingsGui extends Screen {
                         }
 
                         if (dx != -4214)
-                            UIUtil.renderCircle(dx, dy, 4f, -1);
+                            UIUtil.renderCircle(dx, dy, 4f, -1, IBridge.newMatrixStack());
 
                         dx = -4214;
                         for (int y = 0; y < 120; y++) {
@@ -227,7 +227,7 @@ public class SettingsGui extends Screen {
                         }
 
                         if (dx != -4214)
-                            UIUtil.renderCircle(dx, dy, 4f, -1);
+                            UIUtil.renderCircle(dx, dy, 4f, -1, IBridge.newMatrixStack());
 
                         int pickX = 0, pickY = 0;
                         int pickDiff = 256 * 256 * 256;
@@ -289,7 +289,7 @@ public class SettingsGui extends Screen {
                             pickY = colY;
                         }
 
-                        UIUtil.renderCircle(pickX, pickY, 4f, invertColor(color.getColor()).getRGB());
+                        UIUtil.renderCircle(pickX, pickY, 4f, invertColor(color.getColor()).getRGB(), IBridge.newMatrixStack());
                         renderer.draw(matrices, set.name, drawX, curY, -1);
                     }
                 }

@@ -28,7 +28,7 @@ public class StringTypeUI extends IBridge.Screen {
     public void render(IBridge.MatrixStack matrices, int mouseX, int mouseY, float delta) {
         super.renderBackground(matrices);
 
-        UIUtil.drawRoundedRect(width / 2 - 50, height / 2 - 25, width / 2 + 50, height / 2 + 25, 5f, new Color(0, 0, 0, 81).getRGB());
+        UIUtil.drawRoundedRect(width / 2 - 50, height / 2 - 25, width / 2 + 50, height / 2 + 25, 5f, new Color(0, 0, 0, 81).getRGB(), IBridge.newMatrixStack());
         float[] pos = UIUtil.getIdealRenderingPosForText(text, width / 2 - 50, height / 2 - 25, width / 2 + 50, height / 2 + 25);
         textRenderer.draw(IBridge.newMatrixStack(), text, pos[0], pos[1] + 10, -1);
     }

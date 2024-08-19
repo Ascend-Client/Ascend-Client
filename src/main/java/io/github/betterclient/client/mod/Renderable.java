@@ -15,6 +15,9 @@ public class Renderable {
     public Color backgroundColor;
     public TextRenderer textRenderer;
     public final HUDModule owner;
+    public float size = 1;
+    public MatrixStack matrices;
+    public boolean update = false;
 
     public Renderable(int x, int y, HUDModule owner) {
         this.x = x;
@@ -27,7 +30,7 @@ public class Renderable {
         Runnable rrrr = render;
         render = () -> {
             rrrr.run();
-            UIUtil.renderCircle(this.getX() + x, this.getY() + y, halfRadius, color.getRGB());
+            UIUtil.renderCircle(this.getX() + x, this.getY() + y, halfRadius, color.getRGB(), matrices);
         };
 
         if((x + halfRadius) > width) {
@@ -44,7 +47,7 @@ public class Renderable {
         Runnable rrrr = render;
         render = () -> {
             rrrr.run();
-            UIUtil.drawRoundedRect(this.getX() + startX, this.getY() + startY, this.getX() + endX, this.getY() + endY, 5f, color.getRGB());
+            UIUtil.drawRoundedRect(this.getX() + startX, this.getY() + startY, this.getX() + endX, this.getY() + endY, 5f, color.getRGB(), matrices);
         };
 
         if(endX > width) {
@@ -58,14 +61,44 @@ public class Renderable {
     }
 
     public void render() {
+        if(update) {
+            update = false;
+            this.width *= this.size;
+            this.height *= this.size;
+        }
+        matrices = IBridge.newMatrixStack();
+        if(size != 1) {
+            matrices.bs$push();
+            matrices.bs$translate(getX(), getY(), 0);
+            matrices.bs$scale(size, size, 1);
+            matrices.bs$translate(-getX(), -getY(), 0);
+        }
         if(this.renderBackground) {
-            UIUtil.drawRoundedRect(this.x - 4, this.y - 4, this.x + oldWidth + 4, this.y + oldHeight + 4, 10f, this.backgroundColor.getRGB());
+            UIUtil.drawRoundedRect(this.x - 4, this.y - 4, this.x + oldWidth + 4, this.y + oldHeight + 4, 10f, this.backgroundColor.getRGB(), matrices);
         }
 
         this.render.run();
+
+        if(size != 1) {
+            matrices.bs$pop();
+        }
     }
 
     public void renderWithXY(int x, int y) {
+        if(update) {
+            update = false;
+            this.width *= this.size;
+            this.height *= this.size;
+            this.oldWidth *= this.size;
+            this.oldHeight *= this.size;
+        }
+        matrices = IBridge.newMatrixStack();
+        if(size != 1) {
+            matrices.bs$push();
+            matrices.bs$translate(x, y, 0);
+            matrices.bs$scale(size, size, 1);
+            matrices.bs$translate(-x, -y, 0);
+        }
         int xx = this.x;
         int yy = this.y;
 
@@ -73,7 +106,7 @@ public class Renderable {
         this.y = y;
 
         if(this.renderBackground) {
-            UIUtil.drawRoundedRect(this.x - 4, this.y - 4, this.x + oldWidth + 4, this.y + oldHeight + 4, 10f, this.backgroundColor.getRGB());
+            UIUtil.drawRoundedRect(this.x - 4, this.y - 4, this.x + oldWidth + 4, this.y + oldHeight + 4, 10f, this.backgroundColor.getRGB(), matrices);
         }
 
         this.reset();
@@ -82,6 +115,9 @@ public class Renderable {
 
         this.x = xx;
         this.y = yy;
+        if(size != 1) {
+            matrices.bs$pop();
+        }
     }
 
     public Renderable renderText(String text, int x, int y, Color color) {
@@ -90,7 +126,7 @@ public class Renderable {
         Runnable rrrr = render;
         render = () -> {
             rrrr.run();
-            textRenderer.draw(IBridge.newMatrixStack(), text, this.getX() + x, this.getY() + y, color.getRGB());
+            textRenderer.draw(matrices, text, this.getX() + x, this.getY() + y, color.getRGB());
         };
 
         if(endX > width) {
@@ -110,7 +146,6 @@ public class Renderable {
         render = () -> {
             rrrr.run();
             IBridge.getInstance().getClient().emptyShaderColor();
-            MatrixStack matrices = IBridge.newMatrixStack();
             matrices.bs$push();
             matrices.bs$translate(x,y,1);
             matrices.bs$scale(scale,scale,1);
@@ -143,6 +178,7 @@ public class Renderable {
         this.oldWidth = width;
         this.width = 0;
         this.height = 0;
+        this.update = true;
     }
 
     public boolean basicCollisionCheck(double mouseX, double mouseY) {
@@ -192,11 +228,11 @@ public class Renderable {
                     damageColor = new Color(255, 0, 0);
                 }
 
-                UIUtil.drawRoundedRect(this.getX() + x, this.getY() + endY, this.getX() + x + (float) (renderDamage), this.getY() + endY + 2, 1, damageColor.getRGB());
+                UIUtil.drawRoundedRect(this.getX() + x, this.getY() + endY, this.getX() + x + (float) (renderDamage), this.getY() + endY + 2, 1, damageColor.getRGB(), matrices);
                 endY += 6;
             }
 
-            MinecraftClient.getInstance().renderInGui(IBridge.newMatrixStack(), is, this.getX() + x, this.getY() + y);
+            MinecraftClient.getInstance().renderInGui(matrices, is, this.getX() + x, this.getY() + y);
 
             if (endX > width) {
                 width = endX;
@@ -218,14 +254,14 @@ public class Renderable {
 
             if (is.stackable) { //Render Amount
                 String text = count + "";
-                this.textRenderer.draw(IBridge.newMatrixStack(), text, this.getX() + endX - 3, this.getY() + endY - 3, color.getRGB());
+                this.textRenderer.draw(matrices, text, this.getX() + endX - 3, this.getY() + endY - 3, color.getRGB());
                 float[] width = new float[] {this.textRenderer.bs$getWidth(text), this.textRenderer.fontHeight()};
 
                 endX = (int) ((endX - 3) + width[0]);
                 endY = (int) ((endY - 3) + width[1]);
             }
 
-            MinecraftClient.getInstance().renderInGui(IBridge.newMatrixStack(), is, this.getX() + x, this.getY() + y);
+            MinecraftClient.getInstance().renderInGui(matrices, is, this.getX() + x, this.getY() + y);
 
             if (endX > width) {
                 width = endX;
@@ -236,5 +272,37 @@ public class Renderable {
         };
 
         return this;
+    }
+
+    public Renderable renderEntity(Entity entity, int x, int y, int size, float mouseX, float mouseY) {
+        Runnable oldRender = render;
+        render = () -> {
+            oldRender.run();
+            int endX = x + (size * 2);
+            int endY = y + (size * 2);
+            int rx = x + getX() + (size);
+            int ry = y + getY() + (size * 2);
+
+            IBridge.MinecraftClient.getInstance().renderEntityInGUI(entity, rx, ry, size, mouseX, mouseY);
+
+            if (endX > width) {
+                width = endX;
+            }
+            if (endY > height) {
+                height = endY;
+            }
+        };
+
+        return this;
+    }
+
+    public void setSize(float v) {
+        if(this.size != v) {
+            this.size = v;
+            this.width *= v;
+            this.height *= v;
+            this.oldWidth *= v;
+            this.oldHeight *= v;
+        }
     }
 }

@@ -2,6 +2,7 @@ package io.github.betterclient.client.ui.minecraft;
 
 import io.github.betterclient.client.Application;
 import io.github.betterclient.client.BallSack;
+import io.github.betterclient.client.bridge.IBridge;
 import io.github.betterclient.client.bridge.IBridge.*;
 import io.github.betterclient.client.mod.impl.ClientMod;
 import io.github.betterclient.client.ui.clickgui.HUDMoveUI;
@@ -145,23 +146,23 @@ public class CustomTitleMenu extends Screen {
 
         setStart(0, buttonWallY);
 
-        drawRoundedRect(width / 2f - 100, height / 2f - 55, width / 2f + 100, height / 2f - 35, 2f, bgcolor);
+        drawRoundedRect(width / 2f - 100, height / 2f - 55, width / 2f + 100, height / 2f - 35, 2f, bgcolor, IBridge.newMatrixStack());
         float[] iPos = getIdealRenderingPosForText("Singleplayer", width / 2f - 100, height / 2f - 55, width / 2f + 100, height / 2f - 35);
         textRenderer.draw(matrices, "Singleplayer", iPos[0], buttonWallY + iPos[1], -1);
 
-        drawRoundedRect(width / 2f - 100, height / 2f - 25, width / 2f + 100, height / 2f - 5, 2f, bgcolor);
+        drawRoundedRect(width / 2f - 100, height / 2f - 25, width / 2f + 100, height / 2f - 5, 2f, bgcolor, IBridge.newMatrixStack());
         iPos = getIdealRenderingPosForText("Multiplayer", width / 2f - 100, height / 2f - 25, width / 2f + 100, height / 2f - 5);
         textRenderer.draw(matrices, "Multiplayer", iPos[0], buttonWallY + iPos[1], -1);
 
-        drawRoundedRect(width / 2f - 100, height / 2f + 5, width / 2f + 100, height / 2f + 25, 2f, bgcolor);
+        drawRoundedRect(width / 2f - 100, height / 2f + 5, width / 2f + 100, height / 2f + 25, 2f, bgcolor, IBridge.newMatrixStack());
         iPos = getIdealRenderingPosForText("Ballsack Settings", width / 2f - 100, height / 2f + 5, width / 2f + 100, height / 2f + 25);
         textRenderer.draw(matrices, "Ballsack Settings", iPos[0], buttonWallY + iPos[1], -1);
 
-        drawRoundedRect(width / 2f - 100, height / 2f + 35, width / 2f - 5, height / 2f + 55, 2f, bgcolor);
+        drawRoundedRect(width / 2f - 100, height / 2f + 35, width / 2f - 5, height / 2f + 55, 2f, bgcolor, IBridge.newMatrixStack());
         iPos = getIdealRenderingPosForText("Options", width / 2f - 100, height / 2f + 35, width / 2f - 5, height / 2f + 55);
         textRenderer.draw(matrices, "Options", iPos[0], buttonWallY + iPos[1], -1);
 
-        drawRoundedRect(width / 2f + 5, height / 2f + 35, width / 2f + 100, height / 2f + 55, 2f, bgcolor);
+        drawRoundedRect(width / 2f + 5, height / 2f + 35, width / 2f + 100, height / 2f + 55, 2f, bgcolor, IBridge.newMatrixStack());
         iPos = getIdealRenderingPosForText("Quit", width / 2f + 5, height / 2f + 35, width / 2f + 100, height / 2f + 55);
         textRenderer.draw(matrices, "Quit", iPos[0], buttonWallY + iPos[1], -1);
 

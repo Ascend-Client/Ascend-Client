@@ -1,6 +1,7 @@
 package io.github.betterclient.client.ui.minecraft;
 
 import io.github.betterclient.client.Application;
+import io.github.betterclient.client.bridge.IBridge;
 import io.github.betterclient.client.bridge.IBridge.*;
 import io.github.betterclient.client.util.UIUtil;
 import io.github.betterclient.fabric.relocate.loader.api.FabricLoader;
@@ -21,7 +22,7 @@ public class CustomModButtons {
         float[] iPos;
 
         if(FabricLoader.getInstance().isModLoaded("replaymod")) {
-            drawRoundedRect(25, 25, 125, 45, 2f, bgcolor);
+            drawRoundedRect(25, 25, 125, 45, 2f, bgcolor, IBridge.newMatrixStack());
             iPos = getIdealRenderingPosForText("Replays", 25, 25, 125, 45);
             textRenderer.draw(matrices, "Replays", iPos[0], iPos[1], -1);
 
@@ -30,7 +31,7 @@ public class CustomModButtons {
 
 
         if(FabricLoader.getInstance().isModLoaded("mod menu")) {
-            drawRoundedRect(25, 25 + (index * 30), 125, 45 + (index * 30), 2f, bgcolor);
+            drawRoundedRect(25, 25 + (index * 30), 125, 45 + (index * 30), 2f, bgcolor, IBridge.newMatrixStack());
             iPos = getIdealRenderingPosForText("Mod Menu", 25, 25 + (index * 30), 125, 45 + (index * 30));
             textRenderer.draw(matrices, "Mod Menu", iPos[0], iPos[1], -1);
             index++;

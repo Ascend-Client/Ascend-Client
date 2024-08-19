@@ -31,6 +31,8 @@ public class ModuleManager {
         moduleList.add(new CrosshairMod());
         moduleList.add(SmoothFont.instance);
         moduleList.add(new PositionMod());
+        moduleList.add(new SnapLook());
+        moduleList.add(new PaperDoll());
 
         IBridge.getPreLaunch().registerVersionBallsackMods(this);
     }

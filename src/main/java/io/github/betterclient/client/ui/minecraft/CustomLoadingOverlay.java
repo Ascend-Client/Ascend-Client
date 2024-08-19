@@ -47,7 +47,7 @@ public class CustomLoadingOverlay {
             drawTexture(stack, width, height, width, height);
 
             renderOutline(stack, 35, (int) (height * 0.73), width - 35, (int) (height * 0.87), Color.RED.getRGB());
-            drawRoundedRect(40, height * 0.75 , map(progress, 0, 1, 0, width - 40), height * 0.85, 2f, -1);
+            drawRoundedRect(40, height * 0.75 , map(progress, 0, 1, 0, width - 40), height * 0.85, 2f, -1, IBridge.newMatrixStack());
         }
 
         if(progress < 0.8) {
@@ -70,7 +70,7 @@ public class CustomLoadingOverlay {
                 circleRadius = (int) map(progress, 0.84, 1, 10, (Math.max(width, height) / 2) + 100);
                 isDoingAnimation = true;
             }
-            renderCircle(width * 0.5, circleY, circleRadius, circleColor);
+            renderCircle(width * 0.5, circleY, circleRadius, circleColor, IBridge.newMatrixStack());
         }
     }
 

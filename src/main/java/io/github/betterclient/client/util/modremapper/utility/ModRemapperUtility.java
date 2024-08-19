@@ -278,7 +278,12 @@ public class ModRemapperUtility {
                 if (visibleAnnotation.desc.equals("Lorg/spongepowered/asm/mixin/Mixin;")) {
                     Object obj = visibleAnnotation.values.get(1);
                     if(obj instanceof ArrayList<?> alist) {
-                         return ((Type) alist.getFirst()).getDescriptor();
+                        Object a = alist.getFirst();
+
+                        if(a instanceof Type type)
+                            return type.getDescriptor();
+                        else if(a instanceof String alol)
+                            return alol;
                     } else if(obj instanceof String alol) {
                         return alol;
                     }

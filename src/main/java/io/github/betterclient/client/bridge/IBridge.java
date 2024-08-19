@@ -148,6 +148,8 @@ public interface IBridge {
         void openNonCustomScreen(Object screen);
 
         boolean isChat(Object screen);
+
+        void renderEntityInGUI(IBridge.Entity entity, int x, int y, int size, float mouseX, float mouseY);
     }
 
     enum NonCustomScreen {
@@ -302,6 +304,7 @@ public interface IBridge {
     }
 
     class KeyStorage {
+        public final int KEY_V;
         public final int KEY_SHIFT;
         public final int KEY_C;
         public final int KEY_RSHIFT;
@@ -310,7 +313,8 @@ public interface IBridge {
         public final int KEY_ENTER;
         public final int KEY_ALT;
 
-        public KeyStorage(int keyShift, int keyC, int keyRshift, int keyBackspace, int keyEscape, int keyEnter, int keyAlt) {
+        public KeyStorage(int keyV, int keyShift, int keyC, int keyRshift, int keyBackspace, int keyEscape, int keyEnter, int keyAlt) {
+            KEY_V = keyV;
             KEY_SHIFT = keyShift;
             KEY_C = keyC;
             KEY_RSHIFT = keyRshift;
@@ -428,6 +432,8 @@ public interface IBridge {
         Vec3d getPos();
         BoundingBox getBox();
         int getID();
+        float bs$getYaw();
+        float bs$getPitch();
     }
 
     interface PlayerEntity extends Entity {

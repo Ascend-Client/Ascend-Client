@@ -1,6 +1,7 @@
 package io.github.betterclient.client.util.autoupdater;
 
 import io.github.betterclient.client.BallSack;
+import io.github.betterclient.client.bridge.IBridge;
 import io.github.betterclient.client.bridge.IBridge.*;
 import io.github.betterclient.client.ui.minecraft.CustomLoadingOverlay;
 import io.github.betterclient.client.ui.minecraft.CustomTitleMenu;
@@ -44,11 +45,11 @@ public class AutoUpdaterScreen extends Screen {
         this.textRenderer.draw(matrices, str, (float) (width / 2 - (this.textRenderer.bs$getWidth(str) / 2)), (float) (height*0.25), -1);
         this.textRenderer.draw(matrices, str2, (float) (width / 2 - (this.textRenderer.bs$getWidth(str2) / 2)), (float) (height*0.25) + 20, -1);
 
-        drawRoundedRect(width / 2 - 125, height*0.55, width / 2 - 25, height*0.55 + 20, 2f, bgcolor);
+        drawRoundedRect(width / 2 - 125, height*0.55, width / 2 - 25, height*0.55 + 20, 2f, bgcolor, IBridge.newMatrixStack());
         float[] iPos = getIdealRenderingPosForText("Update", width / 2 - 125, height*0.55, width / 2 - 25, height*0.55 + 20);
         textRenderer.draw(matrices, "Update", iPos[0], iPos[1], -1);
 
-        drawRoundedRect(width / 2 + 125, height*0.55, width / 2 + 25, height*0.55 + 20, 2f, bgcolor);
+        drawRoundedRect(width / 2 + 125, height*0.55, width / 2 + 25, height*0.55 + 20, 2f, bgcolor, IBridge.newMatrixStack());
         iPos = getIdealRenderingPosForText("Don't update", width / 2 + 125, height*0.55, width / 2 + 25, height*0.55 + 20);
         textRenderer.draw(matrices, "Don't update", iPos[0], iPos[1], -1);
 

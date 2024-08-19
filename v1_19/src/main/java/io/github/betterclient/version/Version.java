@@ -21,7 +21,7 @@ public class Version {
     private static final Logger LOGGER = LogManager.getLogger("Ballsack Client");
 
     public static IBridge bridge;
-    public static IBridge.KeyStorage keys = new IBridge.KeyStorage(GLFW.GLFW_KEY_LEFT_SHIFT, GLFW.GLFW_KEY_C, GLFW.GLFW_KEY_RIGHT_SHIFT, GLFW.GLFW_KEY_BACKSPACE, GLFW.GLFW_KEY_ESCAPE, GLFW.GLFW_KEY_ENTER, GLFW.GLFW_KEY_LEFT_ALT);
+    public static IBridge.KeyStorage keys = new IBridge.KeyStorage(GLFW.GLFW_KEY_V, GLFW.GLFW_KEY_LEFT_SHIFT, GLFW.GLFW_KEY_C, GLFW.GLFW_KEY_RIGHT_SHIFT, GLFW.GLFW_KEY_BACKSPACE, GLFW.GLFW_KEY_ESCAPE, GLFW.GLFW_KEY_ENTER, GLFW.GLFW_KEY_LEFT_ALT);
     public static IBridge.InternalBridge internal = new InternalBridgeImplementation();
     public static IBridge.PreLaunchBridge preLaunchBridge = new IBridge.PreLaunchBridge() {
         @Override

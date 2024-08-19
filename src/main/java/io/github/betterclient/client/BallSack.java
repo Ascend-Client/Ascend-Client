@@ -40,7 +40,6 @@ public class BallSack {
         config = new Config();
         moduleManager = new ModuleManager();
         man = new GithubMan();
-
         commands = new Commands();
 
         config.load();

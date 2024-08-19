@@ -2,6 +2,7 @@ package io.github.betterclient.client.ui.clickgui;
 
 import io.github.betterclient.client.Application;
 import io.github.betterclient.client.BallSack;
+import io.github.betterclient.client.bridge.IBridge;
 import io.github.betterclient.client.bridge.IBridge.*;
 import io.github.betterclient.client.mod.Category;
 import io.github.betterclient.client.mod.Module;
@@ -50,7 +51,7 @@ public class ClickGui extends Screen implements StringTypeHandler {
         super.renderBackground(matrices);
         TextRenderer renderer = MinecraftClient.getInstance().getTextRenderer();
 
-        UIUtil.drawRoundedRect(w2 - 200, h2 - 190, w2 + 200, h2 + 190, 10f, c1);
+        UIUtil.drawRoundedRect(w2 - 200, h2 - 190, w2 + 200, h2 + 190, 10f, c1, IBridge.newMatrixStack());
 
         int w3 = renderer.bs$getWidth("Ballsack Client");
         fill(matrices, w2 - 200, h2 - 168, w2 - 188 + w3, h2 - 180, c2);
@@ -58,7 +59,7 @@ public class ClickGui extends Screen implements StringTypeHandler {
 
         //1 sided round rect
         UIUtil.enableScissor(w2 - 200, h2 - 190, w2 - 190, h2 - 180);
-        UIUtil.drawRoundedRect(w2 - 200, h2 - 190, w2 - 180, h2 - 170, 10f, c2);
+        UIUtil.drawRoundedRect(w2 - 200, h2 - 190, w2 - 180, h2 - 170, 10f, c2, IBridge.newMatrixStack());
         UIUtil.disableScissor();
 
         float[] pos = UIUtil.getIdealRenderingPosForText("Ballsack Client",
@@ -80,7 +81,7 @@ public class ClickGui extends Screen implements StringTypeHandler {
             if(scale > 1)
                 scale = 1;
 
-            UIUtil.drawRoundedRect(w2 - 190, h2 + 170 - (i * 30), w2 - 198 + w3, h2 + 150 - (i * 30), 2f, c3);
+            UIUtil.drawRoundedRect(w2 - 190, h2 + 170 - (i * 30), w2 - 198 + w3, h2 + 150 - (i * 30), 2f, c3, IBridge.newMatrixStack());
             pos = UIUtil.getIdealRenderingPosForText(configName, w2 - 190, h2 + 170 - (i * 30), w2 - 198 + w3, h2 + 150 - (i * 30), scale);
             float x = pos[0];
             float y = pos[1];
@@ -102,35 +103,35 @@ public class ClickGui extends Screen implements StringTypeHandler {
         matrices.bs$pop();
 
         int cex = (-198 + w3 - (-190)) / 2;
-        UIUtil.drawRoundedRect(w2 - 190, h2 + 175, (w2 - 190) + cex - 5, h2 + 185, 2f, c3);
+        UIUtil.drawRoundedRect(w2 - 190, h2 + 175, (w2 - 190) + cex - 5, h2 + 185, 2f, c3, IBridge.newMatrixStack());
         pos = UIUtil.getIdealRenderingPosForText("+", w2 - 190, h2 + 175, (w2 - 190) + cex - 5, h2 + 185);
         renderer.drawWithShadow(matrices, "+", pos[0], pos[1], -1);
         if(UIUtil.basicCollisionCheck(mouseX, mouseY, w2 - 190, h2 + 175, (w2 - 190) + cex - 5, h2 + 185)) {
             int csx = renderer.bs$getWidth("New Config");
-            UIUtil.drawRoundedRect(mouseX, mouseY, mouseX + csx + 10, mouseY + 20, 2f, c1);
+            UIUtil.drawRoundedRect(mouseX, mouseY, mouseX + csx + 10, mouseY + 20, 2f, c1, IBridge.newMatrixStack());
             pos = UIUtil.getIdealRenderingPosForText("New Config", mouseX, mouseY, mouseX + csx + 10, mouseY + 20);
             renderer.draw(matrices, "New Config", pos[0], pos[1], -1);
         }
 
-        UIUtil.drawRoundedRect((w2 - 190) + cex + 5, h2 + 175, w2 - 198 + w3, h2 + 185, 2f, c3);
+        UIUtil.drawRoundedRect((w2 - 190) + cex + 5, h2 + 175, w2 - 198 + w3, h2 + 185, 2f, c3, IBridge.newMatrixStack());
         pos = UIUtil.getIdealRenderingPosForText("-", (w2 - 190) + cex + 5, h2 + 175, w2 - 198 + w3, h2 + 185);
         renderer.drawWithShadow(matrices, "-", pos[0], pos[1], -1);
         if(UIUtil.basicCollisionCheck(mouseX, mouseY, (w2 - 190) + cex + 5, h2 + 175, w2 - 198 + w3, h2 + 185)) {
             int csx = renderer.bs$getWidth("Delete Config");
-            UIUtil.drawRoundedRect(mouseX, mouseY, mouseX + csx + 10, mouseY + 20, 2f, c1);
+            UIUtil.drawRoundedRect(mouseX, mouseY, mouseX + csx + 10, mouseY + 20, 2f, c1, IBridge.newMatrixStack());
             pos = UIUtil.getIdealRenderingPosForText("Delete Config", mouseX, mouseY, mouseX + csx + 10, mouseY + 20);
             renderer.draw(matrices, "Delete Config", pos[0], pos[1], -1);
         }
 
         int pc = new Color(255, 255, 255, 100).getRGB();
 
-        UIUtil.drawRoundedRect(w2 - 185, h2 - 160, w2 - 203 + w3, h2 - 145, 2f, current == null ? pc : c2);
+        UIUtil.drawRoundedRect(w2 - 185, h2 - 160, w2 - 203 + w3, h2 - 145, 2f, current == null ? pc : c2, IBridge.newMatrixStack());
         pos = UIUtil.getIdealRenderingPosForText("All", w2 - 185, h2 - 160, w2 - 203 + w3, h2 - 145);
         renderer.draw(matrices, "All", pos[0], pos[1], -1);
 
         int y = 1;
         for (Category value : Category.values()) {
-            UIUtil.drawRoundedRect(w2 - 185, h2 - 160 + (y * 20), w2 - 203 + w3, h2 - 145 + (y * 20), 2f, current == value ? pc : c2);
+            UIUtil.drawRoundedRect(w2 - 185, h2 - 160 + (y * 20), w2 - 203 + w3, h2 - 145 + (y * 20), 2f, current == value ? pc : c2, IBridge.newMatrixStack());
             pos = UIUtil.getIdealRenderingPosForText(UIUtil.capitalize(value.name()), w2 - 185, h2 - 160 + (y * 20), w2 - 203 + w3, h2 - 145 + (y * 20));
             renderer.draw(matrices, UIUtil.capitalize(value.name()), pos[0], pos[1], -1);
             y++;
@@ -150,18 +151,18 @@ public class ClickGui extends Screen implements StringTypeHandler {
             int px = (i % 3) * 90;
             int py = (i / 3) * 90 - scrollY;
 
-            UIUtil.drawRoundedRect(w2 - 100 + px, h2 - 170 + py, w2 - 20 + px, h2 - 90 + py, 10f, c3);
+            UIUtil.drawRoundedRect(w2 - 100 + px, h2 - 170 + py, w2 - 20 + px, h2 - 90 + py, 10f, c3, IBridge.newMatrixStack());
             pos = UIUtil.getIdealRenderingPosForText(module.name, w2 - 100 + px, h2 - 120 + py, w2 - 20 + px, h2 - 110 + py);
             renderer.draw(matrices, module.name, pos[0], pos[1], -1);
 
-            UIUtil.drawRoundedRect(w2 - 90 + px, h2 - 95 + py, w2 - 30 + px, h2 - 105 + py, 2f, module.toggled ? ce : cd);
+            UIUtil.drawRoundedRect(w2 - 90 + px, h2 - 95 + py, w2 - 30 + px, h2 - 105 + py, 2f, module.toggled ? ce : cd, IBridge.newMatrixStack());
             pos = UIUtil.getIdealRenderingPosForText(module.toggled ? "Enabled" : "Disabled", w2 - 90 + px, h2 - 95 + py, w2 - 30 + px, h2 - 105 + py);
             renderer.draw(matrices, module.toggled ? "Enabled" : "Disabled", pos[0], pos[1], -1);
 
             if(module.icon == null) {
-                UIUtil.drawRoundedRect(w2 - 90 + px, h2 - 160 + py, w2 - 30 + px, h2 - 125 + py, 2f, -1);
+                UIUtil.drawRoundedRect(w2 - 90 + px, h2 - 160 + py, w2 - 30 + px, h2 - 125 + py, 2f, -1, IBridge.newMatrixStack());
             } else {
-                UIUtil.drawRoundedRect(w2 - 90 + px, h2 - 160 + py, w2 - 30 + px, h2 - 125 + py, 0f, c1);
+                UIUtil.drawRoundedRect(w2 - 90 + px, h2 - 160 + py, w2 - 30 + px, h2 - 125 + py, 0f, c1, IBridge.newMatrixStack());
                 MinecraftClient.getInstance().setShaderTexture(0, module.icon);
                 MinecraftClient.getInstance().setShaderColor(1, 1, 1, 0.7f);
                 drawTexture(matrices, w2 - 90 + px, h2 - 160 + py, 0, 0, 60, 35, 60, 35);

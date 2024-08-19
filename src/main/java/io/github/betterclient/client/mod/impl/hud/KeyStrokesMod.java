@@ -18,7 +18,7 @@ public class KeyStrokesMod extends HUDModule {
         this.addSetting(mouseKeys);
         this.addSetting(backgroundColorPressed);
 
-        this.getSettings().remove(this.backGround);
+        this.getSettings().remove(this.background);
     }
 
     @Override

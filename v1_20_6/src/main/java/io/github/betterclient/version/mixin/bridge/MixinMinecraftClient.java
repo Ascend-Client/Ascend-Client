@@ -14,16 +14,17 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.gui.screen.multiplayer.MultiplayerScreen;
 import net.minecraft.client.gui.screen.option.OptionsScreen;
 import net.minecraft.client.gui.screen.world.SelectWorldScreen;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.option.GameOptions;
 import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.client.util.Window;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
@@ -213,5 +214,10 @@ public abstract class MixinMinecraftClient implements IBridge.MinecraftClient {
     @Override
     public boolean isChat(Object screen) {
         return screen instanceof ChatScreen;
+    }
+
+    @Override
+    public void renderEntityInGUI(IBridge.Entity entity, int x, int y, int size, float mouseX, float mouseY) {
+        InventoryScreen.drawEntity(ScreenLoader.latestDrawContext, x - size, y - (size * 2), x + size, y, size, 0 , mouseX, mouseY, (LivingEntity) entity);
     }
 }
