@@ -35,4 +35,6 @@ jobs:
           path: |
             1.16-combat-6.jar
             1.19.4.jar
+            1.20.1.jar
             1.20.6.jar
+            1.21.1.jar

@@ -1,0 +1,103 @@
+{
+    "targets": [
+        "swap",
+        "swap2",
+        "previous",
+        "merge"
+    ],
+    "passes": [
+        {
+            "name": "ntsc_encode",
+            "intarget": "minecraft:main",
+            "outtarget": "swap"
+        },
+        {
+            "name": "ntsc_decode",
+            "intarget": "swap",
+            "outtarget": "swap2",
+            "auxtargets": [
+                {
+                    "name": "BaseSampler",
+                    "id": "minecraft:main"
+                }
+            ]
+        },
+        {
+            "name": "color_convolve",
+            "intarget": "swap2",
+            "outtarget": "swap"
+        },
+        {
+            "name": "deconverge",
+            "intarget": "swap",
+            "outtarget": "merge"
+        },
+        {
+            "name": "box_blur",
+            "intarget": "minecraft:main",
+            "outtarget": "swap",
+            "uniforms": [
+                {
+                    "name": "BlurDir",
+                    "values": [ 1.0, 0.0 ]
+                },
+                {
+                    "name": "Radius",
+                    "values": [ 10.0 ]
+                }
+            ]
+        },
+        {
+            "name": "box_blur",
+            "intarget": "swap",
+            "outtarget": "merge",
+            "uniforms": [
+                {
+                    "name": "BlurDir",
+                    "values": [ 0.0, 1.0 ]
+                },
+                {
+                    "name": "Radius",
+                    "values": [ 10.0 ]
+                }
+            ]
+        },
+        {
+            "name": "scan_pincushion",
+            "intarget": "minecraft:main",
+            "outtarget": "swap"
+        },
+        {
+            "name": "phosphor",
+            "intarget": "swap",
+            "outtarget": "merge",
+            "auxtargets": [
+                {
+                    "name": "PrevSampler",
+                    "id": "previous"
+                }
+            ],
+            "uniforms": [
+                {
+                    "name": "Phosphor",
+                    "values": [ 0.4, 0.4, 0.4 ]
+                }
+            ]
+        },
+        {
+            "name": "blit",
+            "intarget": "minecraft:main",
+            "outtarget": "previous"
+        },
+        {
+            "name": "blit",
+            "intarget": "swap",
+            "outtarget": "merge"
+        },
+        {
+            "name": "blit",
+            "intarget": "merge",
+            "outtarget": "minecraft:main"
+        }
+    ]
+}

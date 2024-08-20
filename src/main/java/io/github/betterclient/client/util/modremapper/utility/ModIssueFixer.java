@@ -39,7 +39,7 @@ public class ModIssueFixer {
             }
         }
 
-        if(Application.minecraft.version().version() != MinecraftVersion.Version.V1_20_6)
+        if(Application.minecraft.version().version() == MinecraftVersion.Version.V1_19_4 || Application.minecraft.version().version() == MinecraftVersion.Version.COMBAT_TEST_8C)
             if(node.name.equals("net/fabricmc/fabric/mixin/entity/event/LivingEntityMixin") || node.name.equals("net/fabricmc/fabric/mixin/entity/event/client/LivingEntityMixin"))
                 node.methods.removeIf(method -> method.name.equals("onGetSleepingDirection"));
 

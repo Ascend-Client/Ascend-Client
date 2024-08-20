@@ -134,7 +134,7 @@ abstract class MergeJarsTask extends DefaultTask {
     @TaskAction
     //@NotStatic
     void taskAction() {
-        var versions = new String[] {"1.16-combat-6", "1.19.4", "1.20.6"}
+        var versions = new String[] {"1.16-combat-6", "1.19.4", "1.20.1", "1.20.6", "1.21.1"}
         println("Copy jars")
 
         Files.copy((project.file("v1_16-combat\\build\\libs\\v1_16-combat-1.0.jar") as File).toPath(), (project.file("1.16-combat-6.jar") as File).toPath(), StandardCopyOption.REPLACE_EXISTING)
@@ -143,8 +143,14 @@ abstract class MergeJarsTask extends DefaultTask {
         Files.copy((project.file("v1_19\\build\\libs\\v1_19-1.0.jar") as File).toPath(), (project.file("1.19.4.jar") as File).toPath(), StandardCopyOption.REPLACE_EXISTING)
         Files.copy((project.file("v1_19\\build\\libs\\v1_19-1.0-all.jar") as File).toPath(), (project.file("1.19.4-deps.jar") as File).toPath(), StandardCopyOption.REPLACE_EXISTING)
 
+        Files.copy((project.file("v1_20_1\\build\\libs\\v1_20_1-1.0.jar") as File).toPath(), (project.file("1.20.1.jar") as File).toPath(), StandardCopyOption.REPLACE_EXISTING)
+        Files.copy((project.file("v1_20_1\\build\\libs\\v1_20_1-1.0-all.jar") as File).toPath(), (project.file("1.20.1-deps.jar") as File).toPath(), StandardCopyOption.REPLACE_EXISTING)
+
         Files.copy((project.file("v1_20_6\\build\\libs\\v1_20_6-1.0.jar") as File).toPath(), (project.file("1.20.6.jar") as File).toPath(), StandardCopyOption.REPLACE_EXISTING)
         Files.copy((project.file("v1_20_6\\build\\libs\\v1_20_6-1.0-all.jar") as File).toPath(), (project.file("1.20.6-deps.jar") as File).toPath(), StandardCopyOption.REPLACE_EXISTING)
+
+        Files.copy((project.file("v1_21_1\\build\\libs\\v1_21_1-1.0.jar") as File).toPath(), (project.file("1.21.1.jar") as File).toPath(), StandardCopyOption.REPLACE_EXISTING)
+        Files.copy((project.file("v1_21_1\\build\\libs\\v1_21_1-1.0-all.jar") as File).toPath(), (project.file("1.21.1-deps.jar") as File).toPath(), StandardCopyOption.REPLACE_EXISTING)
 
         println("Merge jars")
         for (final def ver in versions) {
