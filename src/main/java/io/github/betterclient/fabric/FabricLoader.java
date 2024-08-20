@@ -659,7 +659,7 @@ public class FabricLoader {
         File minecraft = Application.minecraft.intermediaryJar();
         PlaceholderMod ballsack_client = new PlaceholderMod("Minecraft client with very cool things", "ballsack-client", ver + "/modern", "Ballsack Client", fabric_ballsack);
         PlaceholderMod fabricLoader = new PlaceholderMod("Quixotic/Ballsack client implementation of the fabric loader", "fabric-loader", "0.69.0", "Fabric Loader", fabric_ballsack);
-        PlaceholderMod minecraft_ = new PlaceholderMod("Base game", "minecraft", Application.minecraft.version().version().name(), "Minecraft", minecraft);
+        PlaceholderMod minecraft_ = new PlaceholderMod("Base game", "minecraft", Application.minecraft.version().version().goodName(), "Minecraft", minecraft);
 
         this.loadedMods.add(ballsack_client);
         this.loadedMods.add(fabricLoader);

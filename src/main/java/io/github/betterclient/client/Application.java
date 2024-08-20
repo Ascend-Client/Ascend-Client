@@ -10,6 +10,7 @@ import io.github.betterclient.client.util.modremapper.utility.ModLoadingInformat
 import io.github.betterclient.client.util.modremapper.ModRemapper;
 import io.github.betterclient.fabric.FabricLoader;
 import io.github.betterclient.fabric.FabricMod;
+import io.github.betterclient.fabric.FabricVersionParser;
 import io.github.betterclient.fabric.Util;
 import io.github.betterclient.quixotic.Quixotic;
 import io.github.betterclient.quixotic.QuixoticClassLoader;
@@ -167,6 +168,14 @@ public class Application {
                     long time = System.currentTimeMillis() - start;
                     if(loaded != null)
                         IBridge.getPreLaunch().info("Mod " + loaded.name() + " loaded in " + time / 1000 + " seconds");
+                }
+            }
+
+            for (FabricMod loadedMod : FabricLoader.getInstance().loadedMods) {
+                var val = FabricVersionParser.checkIncompatible(loadedMod.from());
+                if(!FabricLoader.getInstance().builtin_donotfind.contains(loadedMod) && val != FabricVersionParser.LoadingError.NONE) {
+                    IBridge.getPreLaunch().error(val.getError() + " ( " + loadedMod.from().getName() + " )");
+                    System.exit(1);
                 }
             }
 
