@@ -17,7 +17,7 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Build updater
-        run: ./gradlew shadowJar --no-daemon
+        run: ./gradlew shadowJar
 
       - name: Copy artifacts
         run: |

@@ -17,16 +17,16 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Before build
-        run: ./gradlew removeAll --no-daemon
+        run: ./gradlew removeAll
 
       - name: Build dependencies
-        run: ./gradlew shadowJar --no-daemon
+        run: ./gradlew shadowJar
 
       - name: Build
-        run: ./gradlew build --no-daemon
+        run: ./gradlew build
 
       - name: Merge artifacts
-        run: ./gradlew mergeJars --no-daemon
+        run: ./gradlew mergeJars
 
       - name: Upload archive
         uses: actions/upload-artifact@v4

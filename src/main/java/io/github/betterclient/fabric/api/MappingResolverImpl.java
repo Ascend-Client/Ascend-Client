@@ -83,4 +83,9 @@ public class MappingResolverImpl implements MappingResolver {
     public String mapFieldName(String namespace, String owner, String name, String desc) {
         return name;
     }
+
+    @Override
+    public String mapMethodName(String namespace, String owner, String name, String desc) {
+        return name;
+    }
 }
