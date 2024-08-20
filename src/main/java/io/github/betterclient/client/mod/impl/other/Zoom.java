@@ -20,7 +20,7 @@ public class Zoom extends Module {
 
     public KeyBindSetting bind = new KeyBindSetting("Zoom Key", IBridge.getKeys().KEY_C, () -> isZooming = true, () -> isZooming = false);
     public BooleanSetting flip = new BooleanSetting("Flip Scroll", false);
-    public NumberSetting zoomFactorStart = new NumberSetting("Start zoom", 25, 10, 50);
+    public NumberSetting zoomFactorStart = new NumberSetting("Start zoom", 25, 10, 70);
 
     public Zoom() {
         super("Zoom", Category.OTHER, null);
