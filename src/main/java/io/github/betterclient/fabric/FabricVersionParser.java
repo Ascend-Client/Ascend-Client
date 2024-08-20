@@ -1,6 +1,8 @@
 package io.github.betterclient.fabric;
 
+import io.github.betterclient.client.Application;
 import io.github.betterclient.client.bridge.IBridge;
+import io.github.betterclient.client.util.downloader.MinecraftVersion;
 import io.github.betterclient.fabric.relocate.loader.api.FabricLoader;
 import io.github.betterclient.fabric.relocate.loader.api.SemanticVersion;
 import io.github.betterclient.fabric.relocate.loader.api.VersionParsingException;
@@ -49,7 +51,10 @@ public class FabricVersionParser {
                                 boolean isBroken = false;
                                 if(a instanceof JSONArray arr) {
                                     for (String string : arr.toList().stream().map(String.class::cast).toList()) {
-                                        if (checkDep(string, loadedVersion)) {
+                                        if (!checkDep(string, loadedVersion)) {
+                                            isBroken = false;
+                                            break;
+                                        } else {
                                             isBroken = true;
                                         }
                                     }
@@ -101,17 +106,20 @@ public class FabricVersionParser {
         FabricVersionParser unwanted = new FabricVersionParser(unwantedVersion);
         int out = loaded.compareTo(unwanted);
 
-        return !(out >= -80 && out <= 10);
+        return out == -1;
     }
 
     private static boolean checkDep(String wantedVersion, String loadedVersion) throws VersionParsingException {
         if(wantedVersion.equals("*")) return false;
+        if(wantedVersion.equals("1.16.5") && Application.minecraft.version().version() == MinecraftVersion.Version.COMBAT_TEST_8C) return false;
 
         FabricVersionParser loaded = new FabricVersionParser(loadedVersion);
         FabricVersionParser unwanted = new FabricVersionParser(wantedVersion);
         int out = loaded.compareTo(unwanted);
 
-        return !(out >= -80 && out <= 10);
+        if(out == -1)
+            IBridge.getPreLaunch().error("Mod wants: \"" + wantedVersion + "\" but found: \"" + loadedVersion + "\"");
+        return out == -1;
     }
 
     public enum LoadingError {
@@ -132,19 +140,14 @@ public class FabricVersionParser {
 
     private static final Pattern DOT_SEPARATED_ID = Pattern.compile("|[-0-9A-Za-z]+(\\.[-0-9A-Za-z]+)*");
     private static final Pattern UNSIGNED_INTEGER = Pattern.compile("0|[1-9][0-9]*");
-    private final String build;
     private final String prerelease;
     private final int[] components;
-    private String friendlyName;
 
     public FabricVersionParser(String version) throws VersionParsingException {
         int buildDelimPos = version.indexOf('+');
 
         if (buildDelimPos >= 0) {
-            build = version.substring(buildDelimPos + 1);
             version = version.substring(0, buildDelimPos);
-        } else {
-            build = null;
         }
 
         int dashDelimPos = version.indexOf('-');
@@ -211,44 +214,9 @@ public class FabricVersionParser {
         }
 
         this.components = components;
-
-        buildFriendlyName();
     }
 
-    private void buildFriendlyName() {
-        StringBuilder fnBuilder = new StringBuilder();
-        boolean first = true;
-
-        for (int i : components) {
-            if (first) {
-                first = false;
-            } else {
-                fnBuilder.append('.');
-            }
-
-            if (i == SemanticVersion.COMPONENT_WILDCARD) {
-                fnBuilder.append('x');
-            } else {
-                fnBuilder.append(i);
-            }
-        }
-
-        if (prerelease != null) {
-            fnBuilder.append('-').append(prerelease);
-        }
-
-        if (build != null) {
-            fnBuilder.append('+').append(build);
-        }
-
-        friendlyName = fnBuilder.toString();
-    }
-
-    public int compareTo(FabricVersionParser other) {
-        if (!(other instanceof SemanticVersion o)) {
-            return getFriendlyString().compareTo(other.getFriendlyString());
-        }
-
+    public int compareTo(FabricVersionParser o) {
         for (int i = 0; i < Math.max(getVersionComponentCount(), o.getVersionComponentCount()); i++) {
             int first = getVersionComponent(i);
             int second = o.getVersionComponent(i);
@@ -303,10 +271,6 @@ public class FabricVersionParser {
         } else {
             return 0;
         }
-    }
-
-    private String getFriendlyString() {
-        return friendlyName;
     }
 
     public boolean hasWildcard() {
