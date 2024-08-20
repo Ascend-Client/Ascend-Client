@@ -6,6 +6,7 @@ import io.github.betterclient.quixotic.Side;
 import io.github.betterclient.version.transformers.PlayerInteractEntityC2SPacketEditor;
 import io.github.betterclient.quixotic.QuixoticApplication;
 import io.github.betterclient.quixotic.QuixoticClassLoader;
+import org.spongepowered.asm.mixin.Mixins;
 
 import java.io.File;
 import java.util.List;
@@ -38,9 +39,10 @@ public class VersionApplication implements QuixoticApplication {
 
     @Override
     public List<String> getMixinConfigurations() {
+        Mixins.addConfiguration("v1_20_6.mixins.json");
         FabricLoader.getInstance().doMixin();
 
-        return List.of("v1_20_6.mixins.json");
+        return List.of();
     }
 
     @Override

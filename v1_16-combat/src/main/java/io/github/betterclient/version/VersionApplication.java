@@ -7,6 +7,7 @@ import io.github.betterclient.quixotic.QuixoticClassLoader;
 import io.github.betterclient.quixotic.Side;
 import io.github.betterclient.version.transformers.RenderSystemTransformer;
 import io.github.betterclient.version.transformers.TexturedButtonWidgetTransformer;
+import org.spongepowered.asm.mixin.Mixins;
 
 import java.io.File;
 import java.util.List;
@@ -39,9 +40,10 @@ public class VersionApplication implements QuixoticApplication {
 
     @Override
     public List<String> getMixinConfigurations() {
+        Mixins.addConfiguration("v1_16-combat.mixins.json");
         FabricLoader.getInstance().doMixin();
 
-        return List.of("v1_16-combat.mixins.json");
+        return List.of();
     }
 
     @Override
