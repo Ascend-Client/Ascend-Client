@@ -128,6 +128,16 @@ public class FabricLoaderImpl implements FabricLoader {
                         };
 
                         ts.add((T) a);
+                    } else if(type.equals(Runnable.class)) {
+                        try {
+                            @SuppressWarnings("unchecked") //normal behaviour
+                            Class<? extends T> timita = (Class<? extends T>) Class.forName(val);
+                            ts.add(timita.getConstructor().newInstance());
+                        } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException |
+                                 InstantiationException | IllegalAccessException e) {
+                            IBridge.getPreLaunch().error(e);
+                        }
+
                     }
                 }
             }

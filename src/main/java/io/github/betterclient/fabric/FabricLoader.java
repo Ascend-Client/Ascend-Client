@@ -130,8 +130,7 @@ public class FabricLoader {
                         if(mixes.get(i) instanceof String) {
                             mixins.add(mixes.getString(i));
                         } else {
-                            if(mixes.getJSONObject(i).getString("environment").equals("client"))
-                                mixins.add(mixes.getJSONObject(i).getString("config"));
+                            mixins.add(mixes.getJSONObject(i).getString("config"));
                         }
                     }
 

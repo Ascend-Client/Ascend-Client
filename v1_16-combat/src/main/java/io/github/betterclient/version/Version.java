@@ -121,6 +121,10 @@ public class Version {
             }
         }
 
+        if(node.name.equals("org/dimdev/vanillafix/profiler/mixins/client/KeyboardMixin")) {
+            node.methods.removeIf(methodNode -> methodNode.name.equals("addF3SHelpMessage"));
+        }
+
         //Not an issue
         if(node.name.equals("net/notcoded/cts8a_parity/CTS8aParity") && FabricLoader.getInstance().getModName(mod).equals("CTS 8a Parity")) {
             for (MethodNode method : node.methods) {
