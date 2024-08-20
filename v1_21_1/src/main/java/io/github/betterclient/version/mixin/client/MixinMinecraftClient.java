@@ -55,7 +55,7 @@ public abstract class MixinMinecraftClient {
         return client;
     }
 
-    @Redirect(method = "<init>", at = @At(value = "INVOKE", target = "Ljava/lang/Thread;currentThread()Ljava/lang/Thread;"))
+    @Redirect(method = "<init>", at = @At(value = "INVOKE", target = "Ljava/lang/Thread;currentThread()Ljava/lang/Thread;", shift = At.Shift.BEFORE))
     public Thread hi() {
         try {
             FabricLoader.getInstance().callClientMain();
