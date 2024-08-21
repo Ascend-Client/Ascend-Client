@@ -74,6 +74,7 @@ public class Config {
                     }
 
                     if(s instanceof KeyBindSetting set) {
+                        set.key = setting.keyBindVal();
                         set.bind.setKey(setting.keyBindVal());
                     }
 

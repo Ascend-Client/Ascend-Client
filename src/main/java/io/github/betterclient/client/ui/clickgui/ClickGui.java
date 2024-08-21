@@ -270,6 +270,7 @@ public class ClickGui extends Screen implements StringTypeHandler {
             int py = (i / 3) * 90 - scrollY;
 
             if(UIUtil.basicCollisionCheck(mouseX, mouseY, w2 - 100 + px, h2 - 170 + py, w2 - 20 + px, h2 - 90 + py) && button == 0) {
+                BallSack.getInstance().config.save();
                 module.toggle();
             }
 
