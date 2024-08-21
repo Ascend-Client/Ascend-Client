@@ -5,7 +5,9 @@ import io.github.betterclient.client.bridge.IBridge;
 import io.github.betterclient.client.util.downloader.MinecraftVersion;
 import io.github.betterclient.fabric.relocate.loader.api.FabricLoader;
 import io.github.betterclient.fabric.relocate.loader.api.SemanticVersion;
+import io.github.betterclient.fabric.relocate.loader.api.Version;
 import io.github.betterclient.fabric.relocate.loader.api.VersionParsingException;
+import io.github.betterclient.fabric.relocate.loader.api.metadata.version.VersionPredicate;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -21,7 +23,7 @@ import java.util.regex.Pattern;
 
 import static io.github.betterclient.fabric.FabricVersionParser.LoadingError.*;
 
-public class FabricVersionParser {
+public class FabricVersionParser implements VersionPredicate {
     /**
     Check if mod is missing a dependency
      @param mod The mod to check
@@ -122,6 +124,16 @@ public class FabricVersionParser {
         return out == -1;
     }
 
+    @Override
+    public boolean test(Version ver) throws VersionParsingException {
+        return checkDep(this.getInput(), ver.getFriendlyString());
+    }
+
+    private final String inp;
+    private String getInput() {
+        return inp;
+    }
+
     public enum LoadingError {
         NONE(""),
         MISSING_DEP("Mod is missing a dependency."),
@@ -144,6 +156,7 @@ public class FabricVersionParser {
     private final int[] components;
 
     public FabricVersionParser(String version) throws VersionParsingException {
+        this.inp = version;
         int buildDelimPos = version.indexOf('+');
 
         if (buildDelimPos >= 0) {
