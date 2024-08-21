@@ -43,7 +43,7 @@ public class FabricVersionParser {
                 if(obj.has("depends")) {
                     JSONObject as = obj.getJSONObject("depends");
                     for (String s : as.keySet()) {
-                        if((!s.equals("fabricloader") && !s.equals("fabric-loader") && !s.equals("java"))) {
+                        if((!s.equals("fabricloader") && !s.equals("fabric-loader") && !s.equals("java") && !s.equals("fabric"))) {
                             if (FabricLoader.instance.isModLoaded(s)) {
                                 Object a = as.get(s);
                                 String loadedVersion = FabricLoader.getInstance().getModContainer(s).orElseThrow().getMetadata().getVersion().getFriendlyString();
