@@ -59,14 +59,13 @@ public abstract class MixinMinecraftClient {
         return client;
     }
 
-    @WrapOperation(method = "<init>", at = @At(value = "NEW", target = "(Lnet/minecraft/client/MinecraftClient;Lnet/minecraft/client/option/GameOptions;)Lnet/minecraft/client/tutorial/TutorialManager;"))
-    public TutorialManager hi(MinecraftClient minecraftClient, GameOptions gameOptions, Operation<TutorialManager> original) {
+    @Inject(method = {"<init>"}, at = {@At(value = "INVOKE", target = "Ljava/lang/Thread;currentThread()Ljava/lang/Thread;")})
+    public void hi(RunArgs args, CallbackInfo ci) {
         try {
             FabricLoader.getInstance().callClientMain();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        return original.call(minecraftClient, gameOptions);
     }
 
     @Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/resource/PeriodicNotificationManager;<init>(Lnet/minecraft/util/Identifier;Lit/unimi/dsi/fastutil/objects/Object2BooleanFunction;)V"))

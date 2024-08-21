@@ -1,7 +1,5 @@
 package io.github.betterclient.version.mixin.client;
 
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import io.github.betterclient.client.BallSack;
 import io.github.betterclient.client.bridge.IBridge;
 import io.github.betterclient.client.mod.impl.other.SuperSecretSettings;
@@ -12,8 +10,6 @@ import io.github.betterclient.fabric.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.RunArgs;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.option.GameOptions;
-import net.minecraft.client.tutorial.TutorialManager;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import org.jetbrains.annotations.Nullable;
@@ -58,14 +54,13 @@ public abstract class MixinMinecraftClient {
         return client;
     }
 
-    @WrapOperation(method = "<init>", at = @At(value = "NEW", target = "(Lnet/minecraft/client/MinecraftClient;Lnet/minecraft/client/option/GameOptions;)Lnet/minecraft/client/tutorial/TutorialManager;"))
-    public TutorialManager hi(MinecraftClient minecraftClient, GameOptions gameOptions, Operation<TutorialManager> original) {
+    @Inject(method = {"<init>"}, at = {@At(value = "INVOKE", target = "Ljava/lang/Thread;currentThread()Ljava/lang/Thread;")})
+    public void hi(RunArgs args, CallbackInfo ci) {
         try {
             FabricLoader.getInstance().callClientMain();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        return original.call(minecraftClient, gameOptions);
     }
 
     @Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/resource/PeriodicNotificationManager;<init>(Lnet/minecraft/util/Identifier;Lit/unimi/dsi/fastutil/objects/Object2BooleanFunction;)V"))
