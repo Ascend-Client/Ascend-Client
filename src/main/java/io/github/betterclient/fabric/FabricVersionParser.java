@@ -125,7 +125,9 @@ public class FabricVersionParser implements VersionPredicate {
     }
 
     @Override
-    public boolean test(Version ver) throws VersionParsingException {
+    public boolean test(Object o) throws VersionParsingException {
+        if(!(o instanceof Version ver)) return false;
+
         return checkDep(this.getInput(), ver.getFriendlyString());
     }
 
