@@ -43,6 +43,14 @@ public class YarnFix implements ClassTransformer {
         return fixAccess(access);
     }
 
+    private static int fixMethodAccess(int access) {
+        if (isFinal(access)) {
+            access &= ~Opcodes.ACC_FINAL;
+        }
+
+        return fixAccess(access);
+    }
+
 
     public void fixAccess(ClassNode node) {
         if(isPublic(node.access) && isFinal(node.access) && !isInterface(node.access) && (node.name.startsWith("net/minecraft/")) && !node.superName.equals("java/lang/Enum")) {
@@ -51,7 +59,7 @@ public class YarnFix implements ClassTransformer {
 
         node.access = fixAccess(node.access);
         node.fields.forEach((field) -> field.access = fixFieldAccess(node, field.access));
-        node.methods.forEach((method) -> method.access = fixAccess(method.access));
+        node.methods.forEach((method) -> method.access = fixMethodAccess(method.access));
         node.innerClasses.forEach(clazz -> clazz.access = fixAccess(clazz.access));
     }
 }
