@@ -4,14 +4,19 @@ import io.github.betterclient.client.bridge.IBridge;
 import io.github.betterclient.client.mod.impl.ClientMod;
 import io.github.betterclient.client.mod.impl.hud.*;
 import io.github.betterclient.client.mod.impl.other.*;
+import io.github.betterclient.fabric.FabricLoader;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Vector;
 
 public class ModuleManager {
+    private boolean isEnabled = true;
     public List<Module> moduleList  = new Vector<>();
+    public static ModuleManager instance;
 
     public ModuleManager() {
+        instance = this;
         moduleList.add(new ClientMod()); //first mod should be client itself
         moduleList.add(new FPSMod());
         moduleList.add(new KeyStrokesMod());
@@ -35,6 +40,15 @@ public class ModuleManager {
         moduleList.add(new PaperDoll());
 
         IBridge.getPreLaunch().registerVersionAscendMods(this);
+
+        this.isEnabled = true;
+        try {
+            FabricLoader.getInstance().callAscendMain();
+        } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | InstantiationException |
+                 IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+        this.isEnabled = false;
     }
 
     public Module getModuleByName(String name) {
@@ -51,5 +65,12 @@ public class ModuleManager {
 
     public List<Module> getEnabledMods() {
         return this.moduleList.stream().filter(Module::isToggled).toList();
+    }
+
+    public void addModule(Module module) {
+        if (!isEnabled)
+            throw new IllegalStateException("Cannot add modules in current state, use the ACL initializer.");
+
+        this.moduleList.add(module);
     }
 }

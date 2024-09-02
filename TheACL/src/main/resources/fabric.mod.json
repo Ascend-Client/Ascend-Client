@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "acl",
+  "version": "1.0",
+  "name": "Ascend Config Library",
+  "description": "The config library used to create custom mods for ascend client!",
+  "authors": [
+    "betterclient"
+  ],
+  "contact": {
+    "sources": "https://github.com/betterclient/Minecraft-Client",
+    "issues": "https://github.com/betterclient/Minecraft-Client/issues",
+    "homepage": "https://discord.gg/FmKNQverS7"
+  },
+  "license": "CC0-1.0",
+  "environment": "client",
+  "entrypoints": {},
+  "mixins": [],
+  "depends": {}
+}

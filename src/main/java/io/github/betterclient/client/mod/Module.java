@@ -7,15 +7,17 @@ import io.github.betterclient.client.util.FileResource;
 
 import java.util.List;
 import java.util.Vector;
+import java.util.function.Consumer;
 
 public class Module {
     public String name;
     public boolean toggled;
     public Category cat;
-    public Ascend sack = Ascend.getInstance();
+    public Ascend ascend = Ascend.getInstance();
     public final IBridge.Identifier icon;
 
     private final List<Setting> settings = new Vector<>();
+    public Consumer<Boolean> saveFunction;
 
     public Module(String name, Category cat, IBridge.Identifier icon) {
         this.name = name;
@@ -57,11 +59,11 @@ public class Module {
         toggled = !toggled;
         if(toggled) {
             onEnabled();
-            sack.bus.subscribe(this);
+            ascend.bus.subscribe(this);
         }
         else {
             onDisabled();
-            sack.bus.unSubscribe(this);
+            ascend.bus.unSubscribe(this);
         }
     }
 

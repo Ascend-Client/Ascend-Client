@@ -1,6 +1,6 @@
 package io.github.betterclient.client.mod.setting;
 
-public class NumberSetting extends Setting {
+public class NumberSetting extends Setting<Integer> {
     public int value;
     public int min;
     public int max;
@@ -22,5 +22,10 @@ public class NumberSetting extends Setting {
 
     public int getMax() {
         return max;
+    }
+
+    @Override
+    public Integer getValues() {
+        return value;
     }
 }

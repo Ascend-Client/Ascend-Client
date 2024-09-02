@@ -29,6 +29,7 @@ import org.spongepowered.asm.util.asm.ASM;
 
 import java.io.*;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.URI;
@@ -145,6 +146,7 @@ public class FabricLoader {
                     }
 
                     IconMap iconMap = null;
+                    List<String> aclEntries = new ArrayList<>();
 
                     if(obj.has("entrypoints")) {
                         JSONObject entrypoints = obj.getJSONObject("entrypoints");
@@ -157,6 +159,17 @@ public class FabricLoader {
                                         mainPoints.add(aa);
                                     } else if(o instanceof HashMap aa) {
                                         mainPoints.add((String) aa.get("value"));
+                                    }
+                                }
+                            }
+
+                            if(key.equals("acl")) {
+                                JSONArray arr = entrypoints.getJSONArray(key);
+                                for (Object o : arr) {
+                                    if(o instanceof String aa) {
+                                        aclEntries.add(aa);
+                                    } else if(o instanceof HashMap aa) {
+                                        aclEntries.add((String) aa.get("value"));
                                     }
                                 }
                             }
@@ -416,6 +429,11 @@ public class FabricLoader {
                         @Override
                         public IconMap getIconMap() {
                             return finalIconMap;
+                        }
+
+                        @Override
+                        public List<String> aclEntries() {
+                            return aclEntries;
                         }
                     };
                 }
@@ -681,6 +699,25 @@ public class FabricLoader {
             return gitFile.toPath();
         } catch (Exception e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public void callAscendMain() throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        for (FabricMod mod : loadedMods) {
+            for (String entry : mod.aclEntries()) {
+                Class<?> loadedMod = Class.forName(entry, false, Quixotic.classLoader);
+
+                Method foundInit = null;
+
+                for (Method method : loadedMod.getDeclaredMethods()) {
+                    if(method.getName().equals("onAscend"))
+                        foundInit = method;
+                }
+
+                if(foundInit == null)
+                    continue;
+                foundInit.invoke(loadedMod.getConstructor().newInstance());
+            }
         }
     }
 }

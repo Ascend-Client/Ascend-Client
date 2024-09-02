@@ -3,7 +3,7 @@ package io.github.betterclient.client.mod.setting;
 import io.github.betterclient.client.Ascend;
 import io.github.betterclient.client.util.ClickableBind;
 
-public class KeyBindSetting extends Setting {
+public class KeyBindSetting extends Setting<Integer> {
     public int key;
     public ClickableBind bind;
 
@@ -15,6 +15,11 @@ public class KeyBindSetting extends Setting {
     }
 
     public int isValue() {
+        return key;
+    }
+
+    @Override
+    public Integer getValues() {
         return key;
     }
 }

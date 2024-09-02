@@ -40,4 +40,6 @@ public interface FabricMod {
     Collection<Person> authors();
 
     IconMap getIconMap();
+
+    List<String> aclEntries();
 }

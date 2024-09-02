@@ -92,4 +92,9 @@ public record PlaceholderMod(String description, String id, String version, Stri
     public IconMap getIconMap() {
         return null;
     }
+
+    @Override
+    public List<String> aclEntries() {
+        return List.of();
+    }
 }
