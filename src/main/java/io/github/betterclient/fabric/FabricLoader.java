@@ -3,7 +3,7 @@ package io.github.betterclient.fabric;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import io.github.betterclient.client.Application;
-import io.github.betterclient.client.BallSack;
+import io.github.betterclient.client.Ascend;
 import io.github.betterclient.client.bridge.IBridge;
 import io.github.betterclient.client.util.modremapper.utility.ModLoadingInformation;
 import io.github.betterclient.client.util.modremapper.ModRemapper;
@@ -29,9 +29,9 @@ import org.spongepowered.asm.util.asm.ASM;
 
 import java.io.*;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -146,6 +146,7 @@ public class FabricLoader {
                     }
 
                     IconMap iconMap = null;
+                    List<String> aclEntries = new ArrayList<>();
 
                     if(obj.has("entrypoints")) {
                         JSONObject entrypoints = obj.getJSONObject("entrypoints");
@@ -158,6 +159,17 @@ public class FabricLoader {
                                         mainPoints.add(aa);
                                     } else if(o instanceof HashMap aa) {
                                         mainPoints.add((String) aa.get("value"));
+                                    }
+                                }
+                            }
+
+                            if(key.equals("acl")) {
+                                JSONArray arr = entrypoints.getJSONArray(key);
+                                for (Object o : arr) {
+                                    if(o instanceof String aa) {
+                                        aclEntries.add(aa);
+                                    } else if(o instanceof HashMap aa) {
+                                        aclEntries.add((String) aa.get("value"));
                                     }
                                 }
                             }
@@ -418,6 +430,11 @@ public class FabricLoader {
                         public IconMap getIconMap() {
                             return finalIconMap;
                         }
+
+                        @Override
+                        public List<String> aclEntries() {
+                            return aclEntries;
+                        }
                     };
                 }
             }
@@ -517,7 +534,7 @@ public class FabricLoader {
             FabricMod mod = configToModMap.get(rawConfig.getName());
             if (mod == null) {
                 IMixinConfig config = rawConfig.getConfig();
-                config.decorate(FabricUtil.KEY_MOD_ID, "Ballsack_Client");
+                config.decorate(FabricUtil.KEY_MOD_ID, "AscendClient");
 
                 continue;
             }
@@ -634,7 +651,7 @@ public class FabricLoader {
         return name;
     }
 
-    File getBallsack() throws URISyntaxException, IOException {
+    File getAscend() throws URISyntaxException, IOException {
         URL location = FabricLoader.class.getProtectionDomain().getCodeSource().getLocation();
 
         if ("file".equals(location.getProtocol())) {
@@ -650,21 +667,21 @@ public class FabricLoader {
     }
 
     public void loadDefault() throws URISyntaxException, IOException {
-        List<String> version = Files.readAllLines(toPath(BallSack.class.getResourceAsStream("/ballsack/github/github.txt")));
+        List<String> version = Files.readAllLines(toPath(Ascend.class.getResourceAsStream("/ascend/github/github.txt")));
         version.removeIf(string -> !string.contains("git.commit.id.abbrev="));
         String ver = version.getFirst().replaceAll("git.commit.id.abbrev=", "");
 
-        File fabric_ballsack = getBallsack();
+        File fabric_ascend = getAscend();
         File minecraft = Application.minecraft.intermediaryJar();
-        PlaceholderMod ballsack_client = new PlaceholderMod("Minecraft client with very cool things", "ballsack-client", ver + "/modern", "Ballsack Client", fabric_ballsack);
-        PlaceholderMod fabricLoader = new PlaceholderMod("Quixotic/Ballsack client implementation of the fabric loader", "fabric-loader", "0.69.0", "Fabric Loader", fabric_ballsack);
+        PlaceholderMod ascend_client = new PlaceholderMod("Minecraft client with very cool things", "ascend-client", ver + "/modern", "Ascend Client", fabric_ascend);
+        PlaceholderMod fabricLoader = new PlaceholderMod("Quixotic/Ascend client implementation of the fabric loader", "fabric-loader", "0.69.0", "Fabric Loader", fabric_ascend);
         PlaceholderMod minecraft_ = new PlaceholderMod("Base game", "minecraft", Application.minecraft.version().version().realName(), "Minecraft", minecraft);
 
-        this.loadedMods.add(ballsack_client);
+        this.loadedMods.add(ascend_client);
         this.loadedMods.add(fabricLoader);
         this.loadedMods.add(minecraft_);
 
-        this.builtin_donotfind.add(ballsack_client);
+        this.builtin_donotfind.add(ascend_client);
         this.builtin_donotfind.add(fabricLoader);
         this.builtin_donotfind.add(minecraft_);
     }
@@ -682,6 +699,25 @@ public class FabricLoader {
             return gitFile.toPath();
         } catch (Exception e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public void callAscendMain() throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        for (FabricMod mod : loadedMods) {
+            for (String entry : mod.aclEntries()) {
+                Class<?> loadedMod = Class.forName(entry, false, Quixotic.classLoader);
+
+                Method foundInit = null;
+
+                for (Method method : loadedMod.getDeclaredMethods()) {
+                    if(method.getName().equals("onAscend"))
+                        foundInit = method;
+                }
+
+                if(foundInit == null)
+                    continue;
+                foundInit.invoke(loadedMod.getConstructor().newInstance());
+            }
         }
     }
 }

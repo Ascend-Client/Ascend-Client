@@ -1,12 +1,11 @@
 package io.github.betterclient.version.mixin.client.gui;
 
-import io.github.betterclient.client.BallSack;
+import io.github.betterclient.client.Ascend;
 import io.github.betterclient.client.bridge.IBridge;
 import io.github.betterclient.client.ui.GithubRenderer;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.util.math.MatrixStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -21,6 +20,6 @@ public class MixinScreen {
 
     @Inject(method = "render", at = @At("RETURN"))
     public void onRender(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
-        GithubRenderer.render(this, BallSack.getInstance().man, (IBridge.TextRenderer) textRenderer, height);
+        GithubRenderer.render(this, Ascend.getInstance().man, (IBridge.TextRenderer) textRenderer, height);
     }
 }

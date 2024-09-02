@@ -1,6 +1,6 @@
 package io.github.betterclient.client.mod.impl.other;
 
-import io.github.betterclient.client.BallSack;
+import io.github.betterclient.client.Ascend;
 import io.github.betterclient.client.bridge.IBridge;
 import io.github.betterclient.client.bridge.IBridge.*;
 import io.github.betterclient.client.mod.Category;
@@ -23,13 +23,13 @@ public class MotionBlur extends Module {
         super("Motion Blur", Category.OTHER, null);
         this.addSetting(blurStrength);
 
-        BallSack.getInstance().resources.put(shaderLocation, new MotionBlurShader());
-        BallSack.getInstance().resources.put(new Identifier("minecraft:shaders/program/motion_blur.json"), new FileResource("/assets/minecraft/shaders/program/motion_blur.json"));
-        BallSack.getInstance().resources.put(new Identifier("minecraft:shaders/program/motion_blur.fsh"), new FileResource("/assets/minecraft/shaders/program/motion_blur.fsh"));
+        Ascend.getInstance().resources.put(shaderLocation, new MotionBlurShader());
+        Ascend.getInstance().resources.put(new Identifier("minecraft:shaders/program/motion_blur.json"), new FileResource("/assets/minecraft/shaders/program/motion_blur.json"));
+        Ascend.getInstance().resources.put(new Identifier("minecraft:shaders/program/motion_blur.fsh"), new FileResource("/assets/minecraft/shaders/program/motion_blur.fsh"));
     }
 
     public static MotionBlur get() {
-        return (MotionBlur) BallSack.getInstance().moduleManager.getModuleByName("Motion Blur");
+        return (MotionBlur) Ascend.getInstance().moduleManager.getModuleByName("Motion Blur");
     }
 
     @Override

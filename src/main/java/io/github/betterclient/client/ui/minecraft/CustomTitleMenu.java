@@ -1,7 +1,7 @@
 package io.github.betterclient.client.ui.minecraft;
 
 import io.github.betterclient.client.Application;
-import io.github.betterclient.client.BallSack;
+import io.github.betterclient.client.Ascend;
 import io.github.betterclient.client.bridge.IBridge;
 import io.github.betterclient.client.bridge.IBridge.*;
 import io.github.betterclient.client.mod.impl.ClientMod;
@@ -39,7 +39,7 @@ public class CustomTitleMenu extends Screen {
             this.isFirstLaunch = false;
 
         int backgroundNumber = new Random().nextInt(2);
-        this.chosenBackground = new Identifier("textures/ballsack/backgrounds/background" + backgroundNumber + ".png");
+        this.chosenBackground = new Identifier("textures/ascend/backgrounds/background" + backgroundNumber + ".png");
     }
 
     @Override
@@ -94,10 +94,10 @@ public class CustomTitleMenu extends Screen {
             endAnim = System.currentTimeMillis() + animSeconds; //x second animation
         }
 
-        if(BallSack.getInstance().doUpdate && BallSack.getInstance().man.checkUpdate())
+        if(Ascend.getInstance().doUpdate && Ascend.getInstance().man.checkUpdate())
             MinecraftClient.getInstance().setGuiScreen(new AutoUpdaterScreen(chosenBackground, this));
         else
-            BallSack.getInstance().doUpdate = false;
+            Ascend.getInstance().doUpdate = false;
 
         lastMouseX = mouseX;
         lastMouseY = mouseY;
@@ -155,8 +155,8 @@ public class CustomTitleMenu extends Screen {
         textRenderer.draw(matrices, "Multiplayer", iPos[0], buttonWallY + iPos[1], -1);
 
         drawRoundedRect(width / 2f - 100, height / 2f + 5, width / 2f + 100, height / 2f + 25, 2f, bgcolor, IBridge.newMatrixStack());
-        iPos = getIdealRenderingPosForText("Ballsack Settings", width / 2f - 100, height / 2f + 5, width / 2f + 100, height / 2f + 25);
-        textRenderer.draw(matrices, "Ballsack Settings", iPos[0], buttonWallY + iPos[1], -1);
+        iPos = getIdealRenderingPosForText("Ascend Settings", width / 2f - 100, height / 2f + 5, width / 2f + 100, height / 2f + 25);
+        textRenderer.draw(matrices, "Ascend Settings", iPos[0], buttonWallY + iPos[1], -1);
 
         drawRoundedRect(width / 2f - 100, height / 2f + 35, width / 2f - 5, height / 2f + 55, 2f, bgcolor, IBridge.newMatrixStack());
         iPos = getIdealRenderingPosForText("Options", width / 2f - 100, height / 2f + 35, width / 2f - 5, height / 2f + 55);
@@ -170,7 +170,7 @@ public class CustomTitleMenu extends Screen {
 
         setStart(0, 0);
 
-        textRenderer.draw(matrices, "Ballsack Client (" + BallSack.getInstance().man.commitId + "/" + BallSack.getInstance().man.branch + ")", 5, height - 10, -1);
+        textRenderer.draw(matrices, "Ascend Client (" + Ascend.getInstance().man.commitId + "/" + Ascend.getInstance().man.branch + ")", 5, height - 10, -1);
     }
 
     @Override

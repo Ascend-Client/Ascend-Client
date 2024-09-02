@@ -31,7 +31,7 @@ import java.util.jar.JarFile;
 
 public class Application {
     public static File
-            clientFolder = new File(".ballsack"),
+            clientFolder = new File(new File("").getParentFile(), ".ascend"),
             configFolder = new File(clientFolder, "config"),
             modJarsFolder = new File(clientFolder, "modjars"),
             errorsFolder = new File(clientFolder, "error-reports"),

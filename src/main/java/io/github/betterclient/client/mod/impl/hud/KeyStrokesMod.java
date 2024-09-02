@@ -14,7 +14,7 @@ public class KeyStrokesMod extends HUDModule {
     public ColorSetting backgroundColorPressed = new ColorSetting("Background Color (Pressed)", new Color(150, 140, 140,156)); // This one aswell
 
     public KeyStrokesMod() {
-        super("Keystrokes", 10, 10, new IBridge.Identifier("minecraft:textures/ballsack/modules/keystrokes.png"));
+        super("Keystrokes", 10, 10, new IBridge.Identifier("minecraft:textures/ascend/modules/keystrokes.png"));
         this.addSetting(mouseKeys);
         this.addSetting(backgroundColorPressed);
 

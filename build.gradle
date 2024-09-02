@@ -77,7 +77,7 @@ tasks.processResources {
 
 gitProperties {
     gitPropertiesName = "github.txt"
-    gitPropertiesResourceDir = file("src/main/resources/ballsack/github")
+    gitPropertiesResourceDir = file("src/main/resources/ascend/github")
     keys = ["git.branch", "git.commit.id.abbrev"]
 }
 
@@ -100,8 +100,10 @@ subprojects {
 
     dependencies {
         if(project.name == "Version-Auto-Updater") return
+        if(project.name == "TheACL") return
 
         shade parent
+        shade project(":TheACL")
         shade files(downloadQuixotic())
 
         shade "org.json:json:20231013"

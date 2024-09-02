@@ -11,7 +11,7 @@ public class ArmorStatusMod extends HUDModule {
     public BooleanSetting renderDurability = new BooleanSetting("Render Durability", false);
 
     public ArmorStatusMod() {
-        super("Armor Status", 20, 50, new IBridge.Identifier("minecraft:textures/ballsack/modules/armor.png"));
+        super("Armor Status", 20, 50, new IBridge.Identifier("minecraft:textures/ascend/modules/armor.png"));
         this.addSetting(leftToRight);
         this.addSetting(renderDurability);
 

@@ -1,6 +1,6 @@
 package io.github.betterclient.client.mod.impl.other;
 
-import io.github.betterclient.client.BallSack;
+import io.github.betterclient.client.Ascend;
 import io.github.betterclient.client.bridge.IBridge;
 import io.github.betterclient.client.bridge.IBridge.MinecraftClient;
 import io.github.betterclient.client.bridge.IBridge.Perspective;
@@ -43,6 +43,6 @@ public class SnapLook extends Module {
     }
 
     public static SnapLook get() {
-        return (SnapLook) BallSack.getInstance().moduleManager.getModuleByName("FreeLook");
+        return (SnapLook) Ascend.getInstance().moduleManager.getModuleByName("FreeLook");
     }
 }

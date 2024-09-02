@@ -45,7 +45,7 @@ public interface IBridge {
         void error(String s);
         void error(Exception e);
         List<File> getVersionMods();
-        void registerVersionBallsackMods(ModuleManager manager);
+        void registerVersionAscendMods(ModuleManager manager);
         void modifyVersion(ClassNode node, File mod) throws IOException;
     }
 

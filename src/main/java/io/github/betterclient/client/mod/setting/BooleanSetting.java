@@ -1,6 +1,6 @@
 package io.github.betterclient.client.mod.setting;
 
-public class BooleanSetting extends Setting {
+public class BooleanSetting extends Setting<Boolean> {
     public boolean value;
 
     public BooleanSetting(String name, boolean val) {
@@ -14,5 +14,10 @@ public class BooleanSetting extends Setting {
 
     public void toggle() {
         this.value = !this.value;
+    }
+
+    @Override
+    public Boolean getValues() {
+        return value;
     }
 }

@@ -1,7 +1,7 @@
 package io.github.betterclient.client.config;
 
 import io.github.betterclient.client.Application;
-import io.github.betterclient.client.BallSack;
+import io.github.betterclient.client.Ascend;
 import io.github.betterclient.client.bridge.IBridge;
 import io.github.betterclient.client.config.impl.ClientImplementation;
 import io.github.betterclient.client.mod.HUDModule;
@@ -40,9 +40,9 @@ public class Config {
             ClientConfig.Config loaded = this.convertJsonToConfig(new JSONObject(Files.readString(toLoad.toPath())));
 
             for (ClientConfig.Module mod : loaded.mods()) {
-                if(!BallSack.getInstance().moduleManager.hasModule(mod.name())) continue;
+                if(!Ascend.getInstance().moduleManager.hasModule(mod.name())) continue;
 
-                Module clientMod = BallSack.getInstance().moduleManager.getModuleByName(mod.name());
+                Module clientMod = Ascend.getInstance().moduleManager.getModuleByName(mod.name());
 
                 if(mod.toggled() != clientMod.toggled) {
                     clientMod.toggle();

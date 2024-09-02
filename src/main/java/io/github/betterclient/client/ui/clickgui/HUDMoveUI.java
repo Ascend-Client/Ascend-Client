@@ -1,7 +1,6 @@
 package io.github.betterclient.client.ui.clickgui;
 
-import io.github.betterclient.client.BallSack;
-import io.github.betterclient.client.bridge.IBridge;
+import io.github.betterclient.client.Ascend;
 import io.github.betterclient.client.bridge.IBridge.*;
 import io.github.betterclient.client.event.impl.RenderEvent;
 import io.github.betterclient.client.mod.*;
@@ -12,7 +11,7 @@ import java.util.List;
 import java.util.Vector;
 
 public class HUDMoveUI extends Screen {
-    public ModuleManager modMan = BallSack.getInstance().moduleManager;
+    public ModuleManager modMan = Ascend.getInstance().moduleManager;
 
     public Renderable moving = null;
     public int moveX = 0, moveY = 0;
@@ -275,7 +274,7 @@ public class HUDMoveUI extends Screen {
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
         if(button == 0 && moving != null) {
             moving = null;
-            BallSack.getInstance().config.save();
+            Ascend.getInstance().config.save();
         }
 
         isSize = false;

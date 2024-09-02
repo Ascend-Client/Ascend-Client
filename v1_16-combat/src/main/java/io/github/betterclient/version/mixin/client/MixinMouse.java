@@ -1,6 +1,6 @@
 package io.github.betterclient.version.mixin.client;
 
-import io.github.betterclient.client.BallSack;
+import io.github.betterclient.client.Ascend;
 import io.github.betterclient.client.event.impl.MouseEvent;
 import io.github.betterclient.client.event.impl.MouseScrollEvent;
 import net.minecraft.client.MinecraftClient;
@@ -18,14 +18,14 @@ public class MixinMouse {
 
     @Inject(method = "onMouseButton", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/options/KeyBinding;setKeyPressed(Lnet/minecraft/client/util/InputUtil$Key;Z)V", shift = At.Shift.BEFORE))
     public void beforeSet(long window, int button, int action, int mods, CallbackInfo ci) {
-        BallSack.getInstance().bus.call(new MouseEvent(button, action == 1));
+        Ascend.getInstance().bus.call(new MouseEvent(button, action == 1));
     }
 
     @Inject(method = "onMouseScroll", at = @At(value = "HEAD"), cancellable = true)
     public void handleMouseScroll(long window, double horizontal, double vertical, CallbackInfo ci) {
         double d = (this.client.options.discreteMouseScroll ? Math.signum(vertical) : vertical) * this.client.options.mouseWheelSensitivity;
         MouseScrollEvent event = new MouseScrollEvent(d);
-        BallSack.getInstance().bus.call(event);
+        Ascend.getInstance().bus.call(event);
         if(event.cancelled) ci.cancel();
     }
 }

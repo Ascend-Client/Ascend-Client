@@ -1,0 +1,22 @@
+plugins {
+    id "java"
+}
+
+group 'io.github.betterclient'
+version '1.0'
+
+repositories {
+    mavenCentral()
+
+    maven {
+        name = 'Fabric'
+        url = 'https://maven.fabricmc.net/'
+    }
+}
+
+dependencies {
+    implementation parent
+
+    implementation "net.fabricmc:fabric-loader:0.16.2"
+    implementation "org.jetbrains:annotations:24.1.0"
+}

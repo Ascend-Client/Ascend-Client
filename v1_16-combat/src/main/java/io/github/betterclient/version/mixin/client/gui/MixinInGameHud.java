@@ -1,6 +1,6 @@
 package io.github.betterclient.version.mixin.client.gui;
 
-import io.github.betterclient.client.BallSack;
+import io.github.betterclient.client.Ascend;
 import io.github.betterclient.client.event.impl.RenderEvent;
 import io.github.betterclient.client.mod.impl.other.CrosshairMod;
 import net.minecraft.client.MinecraftClient;
@@ -20,10 +20,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class MixinInGameHud {
     @Inject(method = "render", at = @At(value = "TAIL"), slice = @Slice(from = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/PlayerListHud;render(Lnet/minecraft/client/util/math/MatrixStack;ILnet/minecraft/scoreboard/Scoreboard;Lnet/minecraft/scoreboard/ScoreboardObjective;)V")))
     public void render(MatrixStack matrixStack, float tickDelta, CallbackInfo callbackInfo) {
-        BallSack.getInstance().bus.call(new RenderEvent());
+        Ascend.getInstance().bus.call(new RenderEvent());
     }
     @Unique
-    private final CrosshairMod cross = (CrosshairMod) BallSack.getInstance().moduleManager.getModuleByName("Crosshair");
+    private final CrosshairMod cross = (CrosshairMod) Ascend.getInstance().moduleManager.getModuleByName("Crosshair");
 
     @Inject(method = "renderCrosshair", at = @At("HEAD"), cancellable = true)
     private void renderCross(MatrixStack matrices, CallbackInfo callback) {

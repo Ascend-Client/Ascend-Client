@@ -1,6 +1,6 @@
 package io.github.betterclient.client.ui.minecraft;
 
-import io.github.betterclient.client.BallSack;
+import io.github.betterclient.client.Ascend;
 import io.github.betterclient.client.bridge.IBridge;
 import io.github.betterclient.client.bridge.IBridge.*;
 import io.github.betterclient.client.util.FileResource;
@@ -18,11 +18,11 @@ public class CustomLoadingOverlay {
     public static boolean isDoingAnimation = false;
     public static boolean doRender = true;
     public static boolean isPackReload = false;
-    public static IBridge.Identifier BALLSACK = new Identifier("minecraft:textures/ballsack/load.png");
+    public static IBridge.Identifier ASCEND = new Identifier("minecraft:textures/ascend/load.png");
 
     public static void init() {
         isPackReload = false;
-        BallSack.getInstance().resources.put(BALLSACK, new FileResource("/assets/ballsack/load.png"));
+        Ascend.getInstance().resources.put(ASCEND, new FileResource("/assets/ascend/load.png"));
     }
 
     public static void render(MatrixStack stack, float progress) {
@@ -42,7 +42,7 @@ public class CustomLoadingOverlay {
         fill(stack, width, height, Color.black.getRGB());
 
         if(progress < 0.9 || isPackReload) {
-            client.setShaderTexture(0, BALLSACK);
+            client.setShaderTexture(0, ASCEND);
             client.setShaderColor(1, 1, 1, 1);
             drawTexture(stack, width, height, width, height);
 

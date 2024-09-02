@@ -1,6 +1,6 @@
 package io.github.betterclient.client.ui.clickgui;
 
-import io.github.betterclient.client.BallSack;
+import io.github.betterclient.client.Ascend;
 import io.github.betterclient.client.bridge.IBridge;
 import io.github.betterclient.client.bridge.IBridge.*;
 import io.github.betterclient.client.mod.HUDModule;
@@ -341,7 +341,7 @@ public class SettingsGui extends Screen {
                 case BooleanSetting bool -> {
                     if (UIUtil.basicCollisionCheck(mouseX, mouseY, drawX, curY - 2.5, drawX + 15, curY + 12.5)) {
                         bool.toggle();
-                        BallSack.getInstance().config.save();
+                        Ascend.getInstance().config.save();
                     }
                 }
                 case ModeSetting mode -> {
@@ -487,7 +487,7 @@ public class SettingsGui extends Screen {
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
         if(holdColor || isNumberHolding || isAlphaHolding || isColorHolding || isHueHolding)
-            BallSack.getInstance().config.save();
+            Ascend.getInstance().config.save();
 
         this.holdColor = false;
         this.isNumberHolding = false;
@@ -542,7 +542,7 @@ public class SettingsGui extends Screen {
             listeningKeyBind.key = keyCode;
             try {
                 listeningKeyBind.bind.setKey(keyCode);
-                BallSack.getInstance().config.save();
+                Ascend.getInstance().config.save();
             } catch (Exception e) {
                 IBridge.getPreLaunch().error(e.toString());
             }

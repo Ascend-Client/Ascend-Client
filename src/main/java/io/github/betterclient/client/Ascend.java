@@ -21,19 +21,19 @@ import java.util.HashMap;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 
-public class BallSack {
-    private static BallSack instance;
+public class Ascend {
+    private static Ascend instance;
 
     public HashMap<Identifier, Resource> resources = new HashMap<>();
     public ModuleManager moduleManager;
     public Config config;
     public EventBus bus;
-    public String categoryName = "BallSack Client";
+    public String categoryName = "Ascend Client";
     public GithubMan man;
     public Commands commands;
     public boolean doUpdate = !Application.isDev;
 
-    public BallSack() {
+    public Ascend() {
         instance = this;
 
         bus = new EventBus();
@@ -48,8 +48,8 @@ public class BallSack {
             IBridge.MinecraftClient.getInstance().setGuiScreen(new HUDMoveUI());
         }, () -> {}));
 
-        this.resources.put(new Identifier("minecraft:textures/ballsack/backgrounds/background0.png"), new FileResource("/assets/ballsack/backgrounds/background0.png"));
-        this.resources.put(new Identifier("minecraft:textures/ballsack/backgrounds/background1.png"), new FileResource("/assets/ballsack/backgrounds/background1.png"));
+        this.resources.put(new Identifier("minecraft:textures/ascend/backgrounds/background0.png"), new FileResource("/assets/ascend/backgrounds/background0.png"));
+        this.resources.put(new Identifier("minecraft:textures/ascend/backgrounds/background1.png"), new FileResource("/assets/ascend/backgrounds/background1.png"));
     }
 
     public Resource findLoadedResource(Identifier id) {
@@ -78,7 +78,7 @@ public class BallSack {
         return null;
     }
 
-    public static BallSack getInstance() {
+    public static Ascend getInstance() {
         return instance;
     }
 }

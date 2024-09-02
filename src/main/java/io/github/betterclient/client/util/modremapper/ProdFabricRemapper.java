@@ -129,7 +129,7 @@ public class ProdFabricRemapper {
 
     private static Map<String, byte[]> mapFabric(File modToRemap) throws IOException {
         TinyRemapper.Builder builder = TinyRemapper.newRemapper();
-        builder.withMappings(TinyUtils.createTinyMappingProvider(generateFabricLoaderMappings().toPath(), "fabric", "ballsack"));
+        builder.withMappings(TinyUtils.createTinyMappingProvider(generateFabricLoaderMappings().toPath(), "fabric", "ascend"));
         builder.ignoreConflicts(true);
         builder.threads(1);
         TinyRemapper remapper = builder.build();

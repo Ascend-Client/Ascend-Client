@@ -1,21 +1,23 @@
 package io.github.betterclient.client.mod;
 
-import io.github.betterclient.client.BallSack;
+import io.github.betterclient.client.Ascend;
 import io.github.betterclient.client.bridge.IBridge;
 import io.github.betterclient.client.mod.setting.Setting;
 import io.github.betterclient.client.util.FileResource;
 
 import java.util.List;
 import java.util.Vector;
+import java.util.function.Consumer;
 
 public class Module {
     public String name;
     public boolean toggled;
     public Category cat;
-    public BallSack sack = BallSack.getInstance();
+    public Ascend ascend = Ascend.getInstance();
     public final IBridge.Identifier icon;
 
     private final List<Setting> settings = new Vector<>();
+    public Consumer<Boolean> saveFunction;
 
     public Module(String name, Category cat, IBridge.Identifier icon) {
         this.name = name;
@@ -24,7 +26,7 @@ public class Module {
         if(icon != null) {
             String s = icon.path;
             s = s.substring(s.indexOf("/") + 1);
-            BallSack.getInstance().resources.put(icon, new FileResource("/assets/" + s));
+            Ascend.getInstance().resources.put(icon, new FileResource("/assets/" + s));
         }
 
     }
@@ -57,11 +59,11 @@ public class Module {
         toggled = !toggled;
         if(toggled) {
             onEnabled();
-            sack.bus.subscribe(this);
+            ascend.bus.subscribe(this);
         }
         else {
             onDisabled();
-            sack.bus.unSubscribe(this);
+            ascend.bus.unSubscribe(this);
         }
     }
 

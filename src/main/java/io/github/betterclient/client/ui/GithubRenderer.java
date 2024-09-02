@@ -19,7 +19,7 @@ public class GithubRenderer {
         matrices.bs$translate(x, y, 1);
         matrices.bs$scale(0.8f, 0.8f, 1f);
         matrices.bs$translate(-x, -y, 1);
-        renderer.draw(matrices, "Ballsack Client " + man.commitId + "/" + man.branch, x, y, Color.gray.getRGB());
+        renderer.draw(matrices, "Ascend Client " + man.commitId + "/" + man.branch, x, y, Color.gray.getRGB());
         matrices.bs$pop();
     }
 }

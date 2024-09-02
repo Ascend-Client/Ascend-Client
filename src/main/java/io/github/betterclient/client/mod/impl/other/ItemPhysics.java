@@ -1,6 +1,6 @@
 package io.github.betterclient.client.mod.impl.other;
 
-import io.github.betterclient.client.BallSack;
+import io.github.betterclient.client.Ascend;
 import io.github.betterclient.client.mod.Category;
 import io.github.betterclient.client.mod.Module;
 
@@ -10,6 +10,6 @@ public class ItemPhysics extends Module {
     }
 
     public static boolean isDisabled() {
-        return !BallSack.getInstance().moduleManager.getModuleByName("Item Physics").toggled;
+        return !Ascend.getInstance().moduleManager.getModuleByName("Item Physics").toggled;
     }
 }

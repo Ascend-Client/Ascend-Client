@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ModeSetting extends Setting {
+public class ModeSetting extends Setting<String> {
     public List<String> values;
     public String value;
 
@@ -20,9 +20,14 @@ public class ModeSetting extends Setting {
 
     public void toggle() {
         if(values.indexOf(value) + 1 >= values.size()) {
-            value = values.get(0);
+            value = values.getFirst();
         } else {
             value = values.get(values.indexOf(value) + 1);
         }
+    }
+
+    @Override
+    public String getValues() {
+        return value;
     }
 }

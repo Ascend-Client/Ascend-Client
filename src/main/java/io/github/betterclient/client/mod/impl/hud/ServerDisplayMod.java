@@ -6,7 +6,7 @@ import io.github.betterclient.client.mod.Renderable;
 
 public class ServerDisplayMod extends HUDModule {
     public ServerDisplayMod() {
-        super("Server Display", 10, 10, new IBridge.Identifier("minecraft:textures/ballsack/modules/server.png"));
+        super("Server Display", 10, 10, new IBridge.Identifier("minecraft:textures/ascend/modules/server.png"));
     }
 
     @Override

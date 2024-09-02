@@ -13,7 +13,7 @@ public class ReachDisplayMod extends HUDModule {
     public double lastTickReach = 0;
 
     public ReachDisplayMod() {
-        super("Reach Display", 10, 10, new IBridge.Identifier("minecraft:textures/ballsack/modules/reach.png"));
+        super("Reach Display", 10, 10, new IBridge.Identifier("minecraft:textures/ascend/modules/reach.png"));
     }
 
     @Override

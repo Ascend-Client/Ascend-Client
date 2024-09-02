@@ -1,6 +1,6 @@
 package io.github.betterclient.version.mixin.client;
 
-import io.github.betterclient.client.BallSack;
+import io.github.betterclient.client.Ascend;
 import io.github.betterclient.client.bridge.IBridge;
 import io.github.betterclient.version.Version;
 import io.github.betterclient.client.event.impl.HitEntityEvent;
@@ -32,7 +32,7 @@ public abstract class MixinMinecraftClient {
 
     @Inject(method = "doAttack", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerInteractionManager;attackEntity(Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/entity/Entity;)V"))
     public void attackSwing(CallbackInfo ci) {
-        BallSack.getInstance().bus.call(new HitEntityEvent((IBridge.PlayerEntity) this.player, (IBridge.Entity) ((EntityHitResult) this.crosshairTarget).getEntity()));
+        Ascend.getInstance().bus.call(new HitEntityEvent((IBridge.PlayerEntity) this.player, (IBridge.Entity) ((EntityHitResult) this.crosshairTarget).getEntity()));
     }
 
     @Inject(method = "disconnect()V", at = @At("HEAD"))
@@ -42,7 +42,7 @@ public abstract class MixinMinecraftClient {
 
     @ModifyArg(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Mouse;<init>(Lnet/minecraft/client/MinecraftClient;)V"))
     public MinecraftClient red(MinecraftClient client) {
-        new BallSack();
+        new Ascend();
 
         return client;
     }

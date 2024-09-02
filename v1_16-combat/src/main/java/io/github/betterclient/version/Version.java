@@ -74,9 +74,9 @@ public class Version {
         }
 
         @Override
-        public void registerVersionBallsackMods(ModuleManager manager) {
-            manager.moduleList.add(new CookeyMod());
-            manager.moduleList.add(new BedrockBridge());
+        public void registerVersionAscendMods(ModuleManager manager) {
+            manager.addModule(new CookeyMod());
+            manager.addModule(new BedrockBridge());
         }
 
         @Override

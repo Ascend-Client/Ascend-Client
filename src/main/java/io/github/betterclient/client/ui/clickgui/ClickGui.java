@@ -1,7 +1,7 @@
 package io.github.betterclient.client.ui.clickgui;
 
 import io.github.betterclient.client.Application;
-import io.github.betterclient.client.BallSack;
+import io.github.betterclient.client.Ascend;
 import io.github.betterclient.client.bridge.IBridge;
 import io.github.betterclient.client.bridge.IBridge.*;
 import io.github.betterclient.client.mod.Category;
@@ -34,7 +34,7 @@ public class ClickGui extends Screen implements StringTypeHandler {
     protected void init() {
         if(isWaitingForString) {
             isWaitingForString = false;
-            BallSack.getInstance().config.switchConfig(currentConfig);
+            Ascend.getInstance().config.switchConfig(currentConfig);
         }
 
         this.w2 = width / 2;
@@ -53,7 +53,7 @@ public class ClickGui extends Screen implements StringTypeHandler {
 
         UIUtil.drawRoundedRect(w2 - 200, h2 - 190, w2 + 200, h2 + 190, 10f, c1, IBridge.newMatrixStack());
 
-        int w3 = renderer.bs$getWidth("Ballsack Client");
+        int w3 = renderer.bs$getWidth("Ascend Client");
         fill(matrices, w2 - 200, h2 - 168, w2 - 188 + w3, h2 - 180, c2);
         fill(matrices, w2 - 190, h2 - 180, w2 - 188 + w3, h2 - 190, c2);
 
@@ -62,10 +62,10 @@ public class ClickGui extends Screen implements StringTypeHandler {
         UIUtil.drawRoundedRect(w2 - 200, h2 - 190, w2 - 180, h2 - 170, 10f, c2, IBridge.newMatrixStack());
         UIUtil.disableScissor();
 
-        float[] pos = UIUtil.getIdealRenderingPosForText("Ballsack Client",
+        float[] pos = UIUtil.getIdealRenderingPosForText("Ascend Client",
                 w2 - 188 + w3, h2 - 190,
                 w2 - 200, h2 - 170);
-        renderer.drawWithShadow(matrices, "Ballsack Client", pos[0], pos[1], -1);
+        renderer.drawWithShadow(matrices, "Ascend Client", pos[0], pos[1], -1);
 
         fill(matrices, w2 - 188 + w3, h2 - 170, w2 - 200, h2 - 168, -1);
         fill(matrices, w2 - 188 + w3, h2 - 190, w2 - 186 + w3, h2 + 190, -1);
@@ -139,9 +139,9 @@ public class ClickGui extends Screen implements StringTypeHandler {
 
         List<Module> modules;
         if(this.current == null) {
-            modules = BallSack.getInstance().moduleManager.moduleList;
+            modules = Ascend.getInstance().moduleManager.moduleList;
         } else {
-            modules = BallSack.getInstance().moduleManager.getByCategory(current);
+            modules = Ascend.getInstance().moduleManager.getByCategory(current);
         }
 
         UIUtil.enableScissor(w2 - 200, h2 - 190, w2 + 200, h2 + 190);
@@ -206,7 +206,7 @@ public class ClickGui extends Screen implements StringTypeHandler {
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         TextRenderer renderer = MinecraftClient.getInstance().getTextRenderer();
-        int w3 = renderer.bs$getWidth("Ballsack Client");
+        int w3 = renderer.bs$getWidth("Ascend Client");
 
         if(button == 0) {
             if(UIUtil.basicCollisionCheck(mouseX, mouseY, w2 - 185, h2 - 160, w2 - 203 + w3, h2 - 145)) {
@@ -232,7 +232,7 @@ public class ClickGui extends Screen implements StringTypeHandler {
                 String configName = configs[i].getName().substring(0, configs[i].getName().lastIndexOf('.'));
 
                 if(UIUtil.basicCollisionCheck(mouseX, mouseY, w2 - 190, h2 + 170 - (i * 30), w2 - 198 + w3, h2 + 150 - (i * 30)))
-                    BallSack.getInstance().config.switchConfig(configName);
+                    Ascend.getInstance().config.switchConfig(configName);
             }
 
             int cex = (-198 + w3 - (-190)) / 2;
@@ -243,21 +243,21 @@ public class ClickGui extends Screen implements StringTypeHandler {
 
             if(UIUtil.basicCollisionCheck(mouseX, mouseY, (w2 - 190) + cex + 5, h2 + 175, w2 - 198 + w3, h2 + 185)) {
                 if(configs.length != 1) {
-                    if(!BallSack.getInstance().config.loadedConfig.delete()) {
+                    if(!Ascend.getInstance().config.loadedConfig.delete()) {
                         System.out.println("Failed to delete (?)");
                     }
 
                     String configName = Arrays.stream(Objects.requireNonNullElse(Application.configFolder.listFiles(), new File[0])).filter(file -> file.getName().endsWith(".json")).toList().get(0).getName().replace(".json", "");
-                    BallSack.getInstance().config.switchConfig(configName);
+                    Ascend.getInstance().config.switchConfig(configName);
                 }
             }
         }
 
         List<Module> modules;
         if(this.current == null) {
-            modules = BallSack.getInstance().moduleManager.moduleList;
+            modules = Ascend.getInstance().moduleManager.moduleList;
         } else {
-            modules = BallSack.getInstance().moduleManager.getByCategory(current);
+            modules = Ascend.getInstance().moduleManager.getByCategory(current);
         }
 
         if(mouseY > h2 + 190) {
@@ -270,7 +270,7 @@ public class ClickGui extends Screen implements StringTypeHandler {
             int py = (i / 3) * 90 - scrollY;
 
             if(UIUtil.basicCollisionCheck(mouseX, mouseY, w2 - 100 + px, h2 - 170 + py, w2 - 20 + px, h2 - 90 + py) && button == 0) {
-                BallSack.getInstance().config.save();
+                Ascend.getInstance().config.save();
                 module.toggle();
             }
 

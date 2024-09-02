@@ -1,6 +1,6 @@
 package io.github.betterclient.version.mixin.client;
 
-import io.github.betterclient.client.BallSack;
+import io.github.betterclient.client.Ascend;
 import io.github.betterclient.client.bridge.IBridge;
 import io.github.betterclient.client.mod.impl.other.SuperSecretSettings;
 import io.github.betterclient.client.util.FileResource;
@@ -35,20 +35,20 @@ public abstract class MixinMinecraftClient {
 
     @Inject(method = "doAttack", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerInteractionManager;attackEntity(Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/entity/Entity;)V"))
     public void attackSwing(CallbackInfoReturnable<Boolean> cir) {
-        BallSack.getInstance().bus.call(new HitEntityEvent((IBridge.PlayerEntity) this.player, (IBridge.Entity) ((EntityHitResult) this.crosshairTarget).getEntity()));
+        Ascend.getInstance().bus.call(new HitEntityEvent((IBridge.PlayerEntity) this.player, (IBridge.Entity) ((EntityHitResult) this.crosshairTarget).getEntity()));
     }
 
     @ModifyArg(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Mouse;<init>(Lnet/minecraft/client/MinecraftClient;)V"))
     public MinecraftClient red(MinecraftClient client) {
-        new BallSack();
+        new Ascend();
 
         for (String value : SuperSecretSettings.get().mode.values) {
-            BallSack.getInstance().resources.put(new IBridge.Identifier("shaders/post/" + value.toLowerCase() + ".json"), new FileResource("/assets/minecraft/shaders/post/" + value.toLowerCase() + ".json"));
+            Ascend.getInstance().resources.put(new IBridge.Identifier("shaders/post/" + value.toLowerCase() + ".json"), new FileResource("/assets/minecraft/shaders/post/" + value.toLowerCase() + ".json"));
         }
 
         //I will un-hardcode this later frfr
         for(String value : List.of("antialias.fsh", "antialias.json", "bits_fix.json", "blobs.fsh", "blobs.json", "blobs.vsh", "blobs2.fsh", "blobs2.json", "blur.json", "brightness_threshold.fsh", "brightness_threshold.json", "bumpy.fsh", "bumpy.json", "bumpy.vsh", "deconverge.fsh", "deconverge.json", "downscale.fsh", "downscale.json", "downscale.vsh", "flip.json", "flip.vsh", "fxaa.fsh", "fxaa.json", "fxaa.vsh", "merge_bloom.fsh", "merge_bloom.json", "notch.fsh", "notch.json", "ntsc_decode.fsh", "ntsc_decode.json", "ntsc_encode.fsh", "ntsc_encode.json", "outline.fsh", "outline.json", "outline_combine.fsh", "outline_combine.json", "outline_soft.fsh", "outline_soft.json", "outline_watercolor.fsh", "outline_watercolor.json", "overlay.fsh", "overlay.json", "phosphor.fsh", "phosphor.json", "scan_pincushion.fsh", "scan_pincushion.json", "shareware.fsh", "shareware.json", "sobel.fsh", "sobel.json", "wobble.fsh", "wobble.json")) {
-            BallSack.getInstance().resources.put(new IBridge.Identifier("shaders/program/" + value), new FileResource("/assets/minecraft/shaders/program/" + value));
+            Ascend.getInstance().resources.put(new IBridge.Identifier("shaders/program/" + value), new FileResource("/assets/minecraft/shaders/program/" + value));
         }
 
         return client;

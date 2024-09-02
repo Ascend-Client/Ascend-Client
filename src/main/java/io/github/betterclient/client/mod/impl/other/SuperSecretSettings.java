@@ -1,6 +1,6 @@
 package io.github.betterclient.client.mod.impl.other;
 
-import io.github.betterclient.client.BallSack;
+import io.github.betterclient.client.Ascend;
 import io.github.betterclient.client.bridge.IBridge;
 import io.github.betterclient.client.bridge.IBridge.*;
 import io.github.betterclient.client.mod.Category;
@@ -32,7 +32,7 @@ public class SuperSecretSettings extends Module {
     }
 
     public static SuperSecretSettings get() {
-        return (SuperSecretSettings) BallSack.getInstance().moduleManager.getModuleByName("Super Secret");
+        return (SuperSecretSettings) Ascend.getInstance().moduleManager.getModuleByName("Super Secret");
     }
 
     public void onUpdate() {

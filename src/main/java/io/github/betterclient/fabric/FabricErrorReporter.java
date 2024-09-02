@@ -53,7 +53,7 @@ public class FabricErrorReporter {
 
     @Override
     public String toString() {
-        StringBuilder error = new StringBuilder("Ballsack client error report\n");
+        StringBuilder error = new StringBuilder("Ascend client error report\n");
         error.append("Mod \"").append(this.modName).append("\" failed loading with error: \n");
         error.append(this.errorName).append("\n");
         error.append(this.exception.getLocalizedMessage()).append("\n");

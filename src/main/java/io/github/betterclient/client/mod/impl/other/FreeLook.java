@@ -1,6 +1,6 @@
 package io.github.betterclient.client.mod.impl.other;
 
-import io.github.betterclient.client.BallSack;
+import io.github.betterclient.client.Ascend;
 import io.github.betterclient.client.bridge.IBridge;
 import io.github.betterclient.client.bridge.IBridge.*;
 import io.github.betterclient.client.mod.Category;
@@ -50,6 +50,6 @@ public class FreeLook extends Module {
     }
 
     public static FreeLook get() {
-        return (FreeLook) BallSack.getInstance().moduleManager.getModuleByName("FreeLook");
+        return (FreeLook) Ascend.getInstance().moduleManager.getModuleByName("FreeLook");
     }
 }

@@ -1,6 +1,6 @@
 package io.github.betterclient.version.mods;
 
-import io.github.betterclient.client.BallSack;
+import io.github.betterclient.client.Ascend;
 import io.github.betterclient.client.mod.Category;
 import io.github.betterclient.client.mod.Module;
 import io.github.betterclient.client.mod.setting.BooleanSetting;
@@ -67,7 +67,7 @@ public class CookeyMod extends Module {
     }
 
     public static CookeyMod get() {
-        return (CookeyMod) BallSack.getInstance().moduleManager.getModuleByName("CookeyMod");
+        return (CookeyMod) Ascend.getInstance().moduleManager.getModuleByName("CookeyMod");
     }
 
     public static boolean isBlockingRightClick() {
