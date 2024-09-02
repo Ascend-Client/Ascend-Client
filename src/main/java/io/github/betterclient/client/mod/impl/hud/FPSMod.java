@@ -13,7 +13,7 @@ public class FPSMod extends HUDModule {
     private final List<Long> smoothFPS = new ArrayList<>();
 
     public FPSMod() {
-        super("FPS", 10, 10, new IBridge.Identifier("minecraft:textures/ballsack/modules/fps.png"));
+        super("FPS", 10, 10, new IBridge.Identifier("minecraft:textures/ascend/modules/fps.png"));
         this.addSetting(smooth);
     }
 

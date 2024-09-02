@@ -3,7 +3,7 @@ package io.github.betterclient.fabric;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import io.github.betterclient.client.Application;
-import io.github.betterclient.client.BallSack;
+import io.github.betterclient.client.Ascend;
 import io.github.betterclient.client.bridge.IBridge;
 import io.github.betterclient.client.util.modremapper.utility.ModLoadingInformation;
 import io.github.betterclient.client.util.modremapper.ModRemapper;
@@ -31,7 +31,6 @@ import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -517,7 +516,7 @@ public class FabricLoader {
             FabricMod mod = configToModMap.get(rawConfig.getName());
             if (mod == null) {
                 IMixinConfig config = rawConfig.getConfig();
-                config.decorate(FabricUtil.KEY_MOD_ID, "Ballsack_Client");
+                config.decorate(FabricUtil.KEY_MOD_ID, "AscendClient");
 
                 continue;
             }
@@ -634,7 +633,7 @@ public class FabricLoader {
         return name;
     }
 
-    File getBallsack() throws URISyntaxException, IOException {
+    File getAscend() throws URISyntaxException, IOException {
         URL location = FabricLoader.class.getProtectionDomain().getCodeSource().getLocation();
 
         if ("file".equals(location.getProtocol())) {
@@ -650,21 +649,21 @@ public class FabricLoader {
     }
 
     public void loadDefault() throws URISyntaxException, IOException {
-        List<String> version = Files.readAllLines(toPath(BallSack.class.getResourceAsStream("/ballsack/github/github.txt")));
+        List<String> version = Files.readAllLines(toPath(Ascend.class.getResourceAsStream("/ascend/github/github.txt")));
         version.removeIf(string -> !string.contains("git.commit.id.abbrev="));
         String ver = version.getFirst().replaceAll("git.commit.id.abbrev=", "");
 
-        File fabric_ballsack = getBallsack();
+        File fabric_ascend = getAscend();
         File minecraft = Application.minecraft.intermediaryJar();
-        PlaceholderMod ballsack_client = new PlaceholderMod("Minecraft client with very cool things", "ballsack-client", ver + "/modern", "Ballsack Client", fabric_ballsack);
-        PlaceholderMod fabricLoader = new PlaceholderMod("Quixotic/Ballsack client implementation of the fabric loader", "fabric-loader", "0.69.0", "Fabric Loader", fabric_ballsack);
+        PlaceholderMod ascend_client = new PlaceholderMod("Minecraft client with very cool things", "ascend-client", ver + "/modern", "Ascend Client", fabric_ascend);
+        PlaceholderMod fabricLoader = new PlaceholderMod("Quixotic/Ascend client implementation of the fabric loader", "fabric-loader", "0.69.0", "Fabric Loader", fabric_ascend);
         PlaceholderMod minecraft_ = new PlaceholderMod("Base game", "minecraft", Application.minecraft.version().version().realName(), "Minecraft", minecraft);
 
-        this.loadedMods.add(ballsack_client);
+        this.loadedMods.add(ascend_client);
         this.loadedMods.add(fabricLoader);
         this.loadedMods.add(minecraft_);
 
-        this.builtin_donotfind.add(ballsack_client);
+        this.builtin_donotfind.add(ascend_client);
         this.builtin_donotfind.add(fabricLoader);
         this.builtin_donotfind.add(minecraft_);
     }

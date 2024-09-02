@@ -10,7 +10,7 @@ public class FontGlyphInfo {
     public List<FontCharacter> chars = new ArrayList<>();
 
     public FontGlyphInfo(String fontName) throws IOException {
-        this(Objects.requireNonNull(FontGlyphInfo.class.getResourceAsStream("/ballsack/fonts/" + fontName + ".fnt")));
+        this(Objects.requireNonNull(FontGlyphInfo.class.getResourceAsStream("/ascend/fonts/" + fontName + ".fnt")));
     }
 
     public FontGlyphInfo(InputStream is) throws IOException {

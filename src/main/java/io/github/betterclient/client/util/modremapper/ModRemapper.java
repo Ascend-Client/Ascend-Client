@@ -324,7 +324,7 @@ public class ModRemapper {
     private static Map<String, byte[]> map(File modToRemap, File mapping, File intermediaryJar) throws IOException {
         TinyRemapper.Builder builder = TinyRemapper.newRemapper();
         builder.withMappings(TinyUtils.createTinyMappingProvider(mapping.toPath(), "intermediary", "named"));
-        builder.withMappings(TinyUtils.createTinyMappingProvider(generateFabricLoaderMappings().toPath(), "fabric", "ballsack"));
+        builder.withMappings(TinyUtils.createTinyMappingProvider(generateFabricLoaderMappings().toPath(), "fabric", "ascend"));
         builder.ignoreConflicts(true);
         builder.threads(1);
         TinyRemapper remapper = builder.build();

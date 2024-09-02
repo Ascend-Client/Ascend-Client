@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Version {
-    private static final Logger LOGGER = LogManager.getLogger("Ballsack Client");
+    private static final Logger LOGGER = LogManager.getLogger("Ascend Client");
 
     public static IBridge bridge;
     public static IBridge.KeyStorage keys = new IBridge.KeyStorage(GLFW.GLFW_KEY_V, GLFW.GLFW_KEY_LEFT_SHIFT, GLFW.GLFW_KEY_C, GLFW.GLFW_KEY_RIGHT_SHIFT, GLFW.GLFW_KEY_BACKSPACE, GLFW.GLFW_KEY_ESCAPE, GLFW.GLFW_KEY_ENTER, GLFW.GLFW_KEY_LEFT_ALT);
@@ -67,7 +67,7 @@ public class Version {
         }
 
         @Override
-        public void registerVersionBallsackMods(ModuleManager manager) {
+        public void registerVersionAscendMods(ModuleManager manager) {
             //1.19 doesn't have any version specific mods atm
         }
 

@@ -1,6 +1,6 @@
 package io.github.betterclient.client.util.smooth;
 
-import io.github.betterclient.client.BallSack;
+import io.github.betterclient.client.Ascend;
 import io.github.betterclient.client.bridge.IBridge;
 import io.github.betterclient.client.mod.impl.other.SmoothFont;
 import io.github.betterclient.client.util.FileResource;
@@ -19,20 +19,20 @@ public class SmoothTextRenderer implements IBridge.TextRenderer {
     }
 
     public FontGlyphInfo info;
-    public IBridge.Identifier texture = new IBridge.Identifier("/ballsackfont" + SmoothFont.instance.font.value.toLowerCase() + ".png");
+    public IBridge.Identifier texture = new IBridge.Identifier("/ascendfont" + SmoothFont.instance.font.value.toLowerCase() + ".png");
 
     public SmoothTextRenderer(FontGlyphInfo glyph) {
         this.info = glyph;
 
         boolean initResource = true;
-        for (IBridge.Resource value : BallSack.getInstance().resources.values()) {
-            if(value instanceof FileResource fres && fres.s.equals("/ballsack/fonts/" + SmoothFont.instance.font.value + ".png")) {
+        for (IBridge.Resource value : Ascend.getInstance().resources.values()) {
+            if(value instanceof FileResource fres && fres.s.equals("/ascend/fonts/" + SmoothFont.instance.font.value + ".png")) {
                 initResource = false;
             }
         }
 
         if (initResource) {
-            BallSack.getInstance().resources.put(texture, new FileResource("/ballsack/fonts/" + SmoothFont.instance.font.value + ".png"));
+            Ascend.getInstance().resources.put(texture, new FileResource("/ascend/fonts/" + SmoothFont.instance.font.value + ".png"));
         }
     }
 

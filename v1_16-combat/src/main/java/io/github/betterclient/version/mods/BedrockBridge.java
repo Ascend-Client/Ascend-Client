@@ -1,6 +1,6 @@
 package io.github.betterclient.version.mods;
 
-import io.github.betterclient.client.BallSack;
+import io.github.betterclient.client.Ascend;
 import io.github.betterclient.client.mod.Category;
 import io.github.betterclient.client.mod.Module;
 import net.minecraft.client.MinecraftClient;
@@ -19,7 +19,7 @@ public class BedrockBridge extends Module {
     }
 
     public static BedrockBridge get() {
-        return (BedrockBridge) BallSack.getInstance().moduleManager.getModuleByName("Bedrock Bridging");
+        return (BedrockBridge) Ascend.getInstance().moduleManager.getModuleByName("Bedrock Bridging");
     }
 
     @Override

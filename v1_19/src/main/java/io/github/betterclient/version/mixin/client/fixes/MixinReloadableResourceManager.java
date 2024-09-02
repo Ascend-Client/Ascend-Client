@@ -1,6 +1,6 @@
 package io.github.betterclient.version.mixin.client.fixes;
 
-import io.github.betterclient.client.BallSack;
+import io.github.betterclient.client.Ascend;
 import io.github.betterclient.client.bridge.IBridge;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.resource.Resource;
@@ -28,7 +28,7 @@ public interface MixinReloadableResourceManager {
 
         if(of.isEmpty()) {
             IBridge.Identifier identifier = new IBridge.Identifier(id);
-            IBridge.Resource resource = BallSack.getInstance().findLoadedResource(identifier);
+            IBridge.Resource resource = Ascend.getInstance().findLoadedResource(identifier);
 
             if(resource != null) {
                 return new Resource(MinecraftClient.getInstance().getDefaultResourcePack(), resource.resourceSupplier::getInputStream);

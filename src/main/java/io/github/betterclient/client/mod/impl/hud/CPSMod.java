@@ -17,7 +17,7 @@ public class CPSMod extends HUDModule {
     public BooleanSetting showBoth = new BooleanSetting("Show Both Keys", true);
 
     public CPSMod() {
-        super("CPS", 100, 10, new IBridge.Identifier("minecraft:textures/ballsack/modules/cps.png"));
+        super("CPS", 100, 10, new IBridge.Identifier("minecraft:textures/ascend/modules/cps.png"));
         this.addSetting(showBoth);
     }
 

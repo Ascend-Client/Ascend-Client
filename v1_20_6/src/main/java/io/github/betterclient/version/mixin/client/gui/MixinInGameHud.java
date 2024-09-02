@@ -1,7 +1,7 @@
 package io.github.betterclient.version.mixin.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import io.github.betterclient.client.BallSack;
+import io.github.betterclient.client.Ascend;
 import io.github.betterclient.client.event.impl.RenderEvent;
 import io.github.betterclient.client.mod.impl.other.CrosshairMod;
 import net.minecraft.client.MinecraftClient;
@@ -19,10 +19,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class MixinInGameHud {
     @Inject(method = "render", at = @At(value = "TAIL"), slice = @Slice(from = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;disableDepthTest()V")))
     public void render(DrawContext context, float tickDelta, CallbackInfo ci) {
-        BallSack.getInstance().bus.call(new RenderEvent());
+        Ascend.getInstance().bus.call(new RenderEvent());
     }
 
-    private CrosshairMod cross = (CrosshairMod) BallSack.getInstance().moduleManager.getModuleByName("Crosshair");
+    private CrosshairMod cross = (CrosshairMod) Ascend.getInstance().moduleManager.getModuleByName("Crosshair");
 
     @Inject(method = "renderCrosshair", at = @At("HEAD"), cancellable = true)
     private void renderCross(DrawContext context, float tickDelta, CallbackInfo ci) {

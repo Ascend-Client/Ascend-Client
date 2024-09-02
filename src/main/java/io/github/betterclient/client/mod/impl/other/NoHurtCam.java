@@ -1,6 +1,6 @@
 package io.github.betterclient.client.mod.impl.other;
 
-import io.github.betterclient.client.BallSack;
+import io.github.betterclient.client.Ascend;
 import io.github.betterclient.client.mod.Category;
 import io.github.betterclient.client.mod.Module;
 import io.github.betterclient.client.mod.setting.NumberSetting;
@@ -14,6 +14,6 @@ public class NoHurtCam extends Module {
     }
 
     public static NoHurtCam get() {
-        return (NoHurtCam) BallSack.getInstance().moduleManager.getModuleByName("NoHurtCam");
+        return (NoHurtCam) Ascend.getInstance().moduleManager.getModuleByName("NoHurtCam");
     }
 }

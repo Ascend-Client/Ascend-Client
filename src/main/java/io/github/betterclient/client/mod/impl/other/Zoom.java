@@ -1,6 +1,6 @@
 package io.github.betterclient.client.mod.impl.other;
 
-import io.github.betterclient.client.BallSack;
+import io.github.betterclient.client.Ascend;
 import io.github.betterclient.client.bridge.IBridge;
 import io.github.betterclient.client.bridge.IBridge.*;
 import io.github.betterclient.client.event.EventTarget;
@@ -30,7 +30,7 @@ public class Zoom extends Module {
     }
 
     public static Zoom get() {
-        return (Zoom) BallSack.getInstance().moduleManager.getModuleByName("Zoom");
+        return (Zoom) Ascend.getInstance().moduleManager.getModuleByName("Zoom");
     }
 
     @Override

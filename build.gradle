@@ -77,7 +77,7 @@ tasks.processResources {
 
 gitProperties {
     gitPropertiesName = "github.txt"
-    gitPropertiesResourceDir = file("src/main/resources/ballsack/github")
+    gitPropertiesResourceDir = file("src/main/resources/ascend/github")
     keys = ["git.branch", "git.commit.id.abbrev"]
 }
 

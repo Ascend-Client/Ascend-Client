@@ -34,7 +34,7 @@ public class ModuleManager {
         moduleList.add(new SnapLook());
         moduleList.add(new PaperDoll());
 
-        IBridge.getPreLaunch().registerVersionBallsackMods(this);
+        IBridge.getPreLaunch().registerVersionAscendMods(this);
     }
 
     public Module getModuleByName(String name) {

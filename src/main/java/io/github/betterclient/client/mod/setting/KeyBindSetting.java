@@ -1,6 +1,6 @@
 package io.github.betterclient.client.mod.setting;
 
-import io.github.betterclient.client.BallSack;
+import io.github.betterclient.client.Ascend;
 import io.github.betterclient.client.util.ClickableBind;
 
 public class KeyBindSetting extends Setting {
@@ -11,7 +11,7 @@ public class KeyBindSetting extends Setting {
         super(name);
         this.key = val;
 
-        this.bind = ClickableBind.registerKeyBind(new ClickableBind(name, val, BallSack.getInstance().categoryName, press, unPress));
+        this.bind = ClickableBind.registerKeyBind(new ClickableBind(name, val, Ascend.getInstance().categoryName, press, unPress));
     }
 
     public int isValue() {

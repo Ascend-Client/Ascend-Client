@@ -1,7 +1,7 @@
 
 package io.github.betterclient.client.mod.impl.other;
 
-import io.github.betterclient.client.BallSack;
+import io.github.betterclient.client.Ascend;
 import io.github.betterclient.client.bridge.IBridge;
 import io.github.betterclient.client.mod.Category;
 import io.github.betterclient.client.mod.Module;
@@ -22,8 +22,8 @@ public class CrosshairMod extends Module {
         this.addSetting(mainColor);
         this.addSetting(hitColor);
         this.addSetting(texture);
-        ID = new IBridge.Identifier("minecraft:textures/ballsack/cmt.png");
-        BallSack.getInstance().resources.put(ID, new FileResource("/assets/ballsack/CrossModTexture.png"));
+        ID = new IBridge.Identifier("minecraft:textures/ascend/cmt.png");
+        Ascend.getInstance().resources.put(ID, new FileResource("/assets/ascend/CrossModTexture.png"));
     }
 
     public boolean render() {

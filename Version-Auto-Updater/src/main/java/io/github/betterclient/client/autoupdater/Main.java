@@ -25,17 +25,6 @@ public class Main {
         is.close();
         file.close();
 
-        File file1 = new File("." + File.separator + ".ballsack" + File.separator + "remapped-mods" + File.separator + version + File.separator);
-        for (File listFile : Objects.requireNonNullElse(file1.listFiles(), new File[0])) {
-            if(listFile.getName().endsWith(".jar"))
-                file1.delete();
-        }
-        file1 = new File("." + File.separator + ".ballsack" + File.separator + "modjars" + File.separator + "remapped" + File.separator);
-        for (File listFile : Objects.requireNonNullElse(file1.listFiles(), new File[0])) {
-            if(listFile.getName().endsWith(".jar"))
-                file1.delete();
-        }
-
         Files.write(toInstall.toPath(), versionJar);
 
         System.exit(0);

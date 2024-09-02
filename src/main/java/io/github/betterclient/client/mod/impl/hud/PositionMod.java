@@ -11,7 +11,7 @@ public class PositionMod extends HUDModule {
     public BooleanSetting showFacing = new BooleanSetting("Show Direction", true);
 
     public PositionMod() {
-        super("Position", 10, 10, new IBridge.Identifier("minecraft:textures/ballsack/modules/cps.png"));
+        super("Position", 10, 10, new IBridge.Identifier("minecraft:textures/ascend/modules/cps.png"));
         this.addSetting(showBiome);
         this.addSetting(showFacing);
     }

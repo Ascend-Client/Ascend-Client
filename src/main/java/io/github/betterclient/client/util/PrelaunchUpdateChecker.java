@@ -23,7 +23,7 @@ public class PrelaunchUpdateChecker {
     public static void check() throws IOException {
         if(Application.isDev) return;
         String commitId = "";
-        List<String> text = Files.readAllLines(toPath(PrelaunchUpdateChecker.class.getResourceAsStream("/ballsack/github/github.txt")));
+        List<String> text = Files.readAllLines(toPath(PrelaunchUpdateChecker.class.getResourceAsStream("/ascend/github/github.txt")));
 
         for(String line : text) {
             if(line.startsWith("git.commit.id.abbrev=")) {

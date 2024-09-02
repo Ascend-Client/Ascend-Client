@@ -67,7 +67,7 @@ public class ModRemapperUtility {
         File mappings = File.createTempFile("FabricLoader", ".tiny");
         List<String> classses = RelocatedClasses.getFabricClasses();
         List<String> lines = new ArrayList<>();
-        lines.add("v1\tfabric\tballsack");
+        lines.add("v1\tfabric\tascend");
         for (String s : classses) {
             lines.add("CLASS\t" + s + "\t" + relocate(s));
         }

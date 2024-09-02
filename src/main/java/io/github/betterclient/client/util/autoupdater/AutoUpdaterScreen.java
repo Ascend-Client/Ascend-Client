@@ -1,6 +1,6 @@
 package io.github.betterclient.client.util.autoupdater;
 
-import io.github.betterclient.client.BallSack;
+import io.github.betterclient.client.Ascend;
 import io.github.betterclient.client.bridge.IBridge;
 import io.github.betterclient.client.bridge.IBridge.*;
 import io.github.betterclient.client.ui.minecraft.CustomLoadingOverlay;
@@ -75,7 +75,7 @@ public class AutoUpdaterScreen extends Screen {
             if(isMouseOn(width / 2 - 125, o, width / 2 - 25, o20)) {
                 AutoUpdaterUtil.update();
             } else if(isMouseOn(width / 2 + 25, o, width / 2 + 125, o20)) {
-                BallSack.getInstance().doUpdate = false;
+                Ascend.getInstance().doUpdate = false;
                 CustomLoadingOverlay.isDoingAnimation = false;
                 client.setGuiScreen(this.parent);
             }
