@@ -3,6 +3,7 @@ package io.github.betterclient.version;
 import io.github.betterclient.client.bridge.IBridge;
 import io.github.betterclient.client.mod.ModuleManager;
 import io.github.betterclient.client.util.downloader.MinecraftVersion;
+import io.github.betterclient.fabric.FabricLoader;
 import io.github.betterclient.fabric.Util;
 import io.github.betterclient.version.util.InternalBridgeImplementation;
 import org.apache.logging.log4j.LogManager;
@@ -52,6 +53,12 @@ public class Version {
         public List<File> getVersionMods() {
             try {
                 File fapi = Util.downloadIfFirstLaunch("https://cdn.modrinth.com/data/P7dR8mSH/versions/P7uGFii0/fabric-api-0.92.2%2B1.20.1.jar");
+
+                //1.20.1 lwjgl version is incompatible with sodium?????
+                if (Boolean.getBoolean("fabric.development")) {
+                    return List.of(fapi);
+                }
+
                 File sodium = Util.downloadIfFirstLaunch("https://cdn.modrinth.com/data/AANobbMI/versions/ygf8cVZg/sodium-fabric-0.5.11%2Bmc1.20.1.jar");
                 File sodiumExtra = Util.downloadIfFirstLaunch("https://cdn.modrinth.com/data/PtjYWJkn/versions/I7ggF6B5/sodium-extra-0.5.4%2Bmc1.20.1-build.115.jar");
                 File reesesSodiumExtras = Util.downloadIfFirstLaunch("https://cdn.modrinth.com/data/Bh37bMuy/versions/Rc9pkPug/reeses_sodium_options-1.7.2%2Bmc1.20.1-build.101.jar");

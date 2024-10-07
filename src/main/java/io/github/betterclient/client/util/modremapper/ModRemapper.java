@@ -106,7 +106,7 @@ public class ModRemapper {
                     bites = str.getBytes();
                 }
 
-                if(entry.getName().equals("fabric-screen-api-v1.mixins.json") && modName.equals("Fabric Screen API (v1)") && (Application.minecraft.version().version() == MinecraftVersion.Version.COMBAT_TEST_8C || Application.minecraft.version().version() == MinecraftVersion.Version.V1_19_4)) {
+                if(entry.getName().equals("fabric-screen-api-v1.mixins.json") && modName.equals("Fabric Screen API (v1)") && (Application.minecraft.version().version() == MinecraftVersion.Version.COMBAT_TEST_8C || Application.minecraft.version().version() == MinecraftVersion.Version.V1_19_4 || Application.minecraft.version().version() == MinecraftVersion.Version.V1_20_1)) {
                     bites = new String(bites).replace("\"GameRendererMixin\",", "").getBytes();
                 }
 

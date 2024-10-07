@@ -10,9 +10,7 @@ public record MinecraftVersion(Version version, String clientJar, String interme
 
         final String good;
         final String real;
-        Version(String good) {
-            this(good, good);
-        }
+        Version(String good) { this(good, good); }
         Version(String good, String real) {
             this.good = good;
             this.real = real;
