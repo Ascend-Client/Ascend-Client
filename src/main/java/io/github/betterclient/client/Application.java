@@ -39,6 +39,7 @@ public class Application {
             customJarsFolder = new File(clientFolder, "custom-mods"),
             remappedModsFolder = new File(clientFolder, "remapped-mods"),
             remappedModJarsFolder = new File(modJarsFolder, "remapped"),
+            remappedModsHashesFolder = new File(remappedModsFolder, "hashes"),
             remappedBuiltinModJarsFolder = new File(remappedModJarsFolder, "builtin"),
             customJarsRequestedFolder = new File(customJarsFolder, "requested"),
             modsFolder = new File(clientFolder.getParentFile(), "mods"),
@@ -78,6 +79,7 @@ public class Application {
             Files.createDirectories(mcDownloadsFolder.toPath());
             Files.createDirectories(customJarsFolder.toPath());
             Files.createDirectories(remappedModsFolder.toPath());
+            Files.createDirectories(remappedModsHashesFolder.toPath());
             Files.createDirectories(remappedModJarsFolder.toPath());
             Files.createDirectories(remappedBuiltinModJarsFolder.toPath());
             Files.createDirectories(customJarsRequestedFolder.toPath());

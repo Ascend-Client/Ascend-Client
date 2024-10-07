@@ -1,2 +1,0 @@
-git.branch=dev
-git.commit.id.abbrev=90c7184
