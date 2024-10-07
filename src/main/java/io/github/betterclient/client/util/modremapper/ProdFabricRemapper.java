@@ -4,6 +4,7 @@ import io.github.betterclient.client.Application;
 import io.github.betterclient.client.bridge.IBridge;
 import io.github.betterclient.client.util.downloader.MinecraftVersion;
 import io.github.betterclient.client.util.modremapper.utility.ModIssueFixer;
+import io.github.betterclient.client.util.modremapper.utility.ModRemapperUtility;
 import io.github.betterclient.fabric.FabricLoader;
 import io.github.betterclient.fabric.Util;
 import net.fabricmc.tinyremapper.TinyRemapper;
@@ -14,9 +15,11 @@ import org.objectweb.asm.tree.ClassNode;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -26,7 +29,7 @@ import static io.github.betterclient.client.util.modremapper.utility.ModRemapper
 import static io.github.betterclient.client.util.modremapper.utility.ModRemapperUtility.generateFabricLoaderMappings;
 
 public class ProdFabricRemapper {
-    public static File remap(File modToRemap, boolean isBuiltin, boolean isInternal) throws IOException {
+    public static File remap(File modToRemap, boolean isBuiltin, boolean isInternal) throws IOException, NoSuchAlgorithmException {
         IBridge.PreLaunchBridge bridge = IBridge.getPreLaunch();
         File remappedMod;
 
@@ -46,7 +49,10 @@ public class ProdFabricRemapper {
 
         if(remappedMod.exists() && !Application.doRemappingOfAlreadyRemappedMods) {
             if(Util.readAndClose(new FileInputStream(remappedMod)).length != 0)
-                return remappedMod;
+                if (ModRemapperUtility.checkLastHash(modToRemap))
+                    return remappedMod;
+                else
+                    bridge.info("Mod already remapped but different version.");
             else
                 bridge.info("Found corrupted mod file, deleting and remapping");
         }
@@ -88,6 +94,12 @@ public class ProdFabricRemapper {
             }
         }
         file.close();
+
+        File hasher = new File(Application.remappedModsHashesFolder, modToRemap.getName() + ".hash");
+        hasher.createNewFile();
+        try(FileOutputStream fos = new FileOutputStream(hasher)) {
+            fos.write(Util.getSHA256Checksum(modToRemap).getBytes());
+        }
 
         for (String s : new ArrayList<>(finalFile.keySet())) {
             if(s.endsWith(".class")) {

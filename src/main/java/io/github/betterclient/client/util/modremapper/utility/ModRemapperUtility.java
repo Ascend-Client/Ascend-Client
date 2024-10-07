@@ -1,6 +1,8 @@
 package io.github.betterclient.client.util.modremapper.utility;
 
+import io.github.betterclient.client.Application;
 import io.github.betterclient.client.util.downloader.DownloadedMinecraft;
+import io.github.betterclient.fabric.Util;
 import io.github.betterclient.fabric.relocate.RelocatedClasses;
 import org.json.JSONObject;
 import org.objectweb.asm.Type;
@@ -8,10 +10,9 @@ import org.objectweb.asm.tree.AnnotationNode;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodNode;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -315,5 +316,16 @@ public class ModRemapperUtility {
         }
 
         return "";
+    }
+
+    public static boolean checkLastHash(File toRemap) throws IOException, NoSuchAlgorithmException {
+        if (toRemap.getAbsolutePath().contains("modjars")) return true;
+        File hashLocation = new File(Application.remappedModsHashesFolder, toRemap.getName() + ".hash");
+        if (!hashLocation.exists()) return false;
+
+        String hash = new String(Util.readAndClose(new FileInputStream(hashLocation)));
+        String hash2 = Util.getSHA256Checksum(toRemap);
+
+        return hash.equals(hash2);
     }
 }

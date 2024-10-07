@@ -8,6 +8,7 @@ import io.github.betterclient.client.util.modremapper.mixin.MixinMethodMapper;
 import io.github.betterclient.client.util.modremapper.mixin.method.RecursiveAnnotationMapper;
 import io.github.betterclient.client.util.modremapper.utility.ModIssueFixer;
 import io.github.betterclient.client.util.modremapper.utility.ModLoadingInformation;
+import io.github.betterclient.client.util.modremapper.utility.ModRemapperUtility;
 import io.github.betterclient.fabric.FabricLoader;
 import io.github.betterclient.fabric.Util;
 import net.fabricmc.tinyremapper.TinyRemapper;
@@ -23,6 +24,7 @@ import java.io.*;
 import java.lang.reflect.Modifier;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -35,21 +37,21 @@ public class ModRemapper {
     //true for mixin mapping
     private static boolean mappingMethod = false;
 
-    public static File remapMod(File toRemap, boolean isBuiltin) throws IOException {
+    public static File remapMod(File toRemap, boolean isBuiltin) throws IOException, NoSuchAlgorithmException {
         if(!Application.isDev) return ProdFabricRemapper.remap(toRemap, isBuiltin, false);
 
         DownloadedMinecraft version = Application.minecraft;
         return remapMod(toRemap, isBuiltin, false, version.intermediaryToYarn(), version.intermediaryJar());
     }
 
-    public static File remapInternalMod(File toRemap, boolean isBuiltin) throws IOException {
+    public static File remapInternalMod(File toRemap, boolean isBuiltin) throws IOException, NoSuchAlgorithmException {
         if(!Application.isDev) return ProdFabricRemapper.remap(toRemap, isBuiltin, true);
 
         DownloadedMinecraft version = Application.minecraft;
         return remapMod(toRemap, isBuiltin, true, version.intermediaryToYarn(), version.intermediaryJar());
     }
 
-    private static File remapMod(File modToRemap, boolean isBuiltin, boolean isInternal, File mappingsFile, File mappingJar) throws IOException {
+    private static File remapMod(File modToRemap, boolean isBuiltin, boolean isInternal, File mappingsFile, File mappingJar) throws IOException, NoSuchAlgorithmException {
         IBridge.PreLaunchBridge bridge = IBridge.getPreLaunch();
 
         ModLoadingInformation old = Application.modLoadingInformation;
@@ -72,10 +74,15 @@ public class ModRemapper {
         }
 
         if(remappedMod.exists() && !Application.doRemappingOfAlreadyRemappedMods) {
-            if(Util.readAndClose(new FileInputStream(remappedMod)).length != 0)
-                return remappedMod;
-            else
+            if(Util.readAndClose(new FileInputStream(remappedMod)).length != 0) {
+                if (ModRemapperUtility.checkLastHash(modToRemap)) {
+                    return remappedMod;
+                } else {
+                    bridge.info("Mod already remapped but different version.");
+                }
+            } else {
                 bridge.info("Found corrupted mod file, deleting and remapping");
+            }
         }
         String modName = FabricLoader.getInstance().getModName(modToRemap);
 
@@ -114,6 +121,12 @@ public class ModRemapper {
             }
         }
         file.close();
+
+        File hasher = new File(Application.remappedModsHashesFolder, modToRemap.getName() + ".hash");
+        hasher.createNewFile();
+        try(FileOutputStream fos = new FileOutputStream(hasher)) {
+            fos.write(Util.getSHA256Checksum(modToRemap).getBytes());
+        }
 
         Map<String, String> tinyMappings = new HashMap<>();
         populateMappings(tinyMappings, mappingsFile);

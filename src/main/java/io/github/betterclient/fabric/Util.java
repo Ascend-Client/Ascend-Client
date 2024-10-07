@@ -28,9 +28,7 @@ public class Util {
     }
 
     public static byte[] readAndClose(InputStream str) throws IOException {
-        byte[] bytes = str.readAllBytes();
-        str.close();
-        return bytes;
+        try (str) { return str.readAllBytes(); }
     }
 
     public static File urlToFile(String url) throws IOException, URISyntaxException {
