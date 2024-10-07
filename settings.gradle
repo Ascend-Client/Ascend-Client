@@ -9,7 +9,7 @@ pluginManagement {
     }
 }
 
-rootProject.name = 'MinecraftClient'
+rootProject.name = 'Ascend-Client'
 include 'v1_19'
 include 'v1_20_1'
 include 'v1_20_6'
