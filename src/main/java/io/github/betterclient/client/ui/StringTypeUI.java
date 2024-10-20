@@ -18,6 +18,12 @@ public class StringTypeUI extends IBridge.Screen {
     @Override
     protected void init() {
         IBridge.ButtonWidget widget = new IBridge.ButtonWidget(IBridge.Text.literal("Accept"), () -> {
+            if (text.isEmpty()) {
+                ui.isNotWaiting();
+                IBridge.getInstance().getClient().setGuiScreen((IBridge.Screen) ui);
+                return;
+            }
+
             ui.setCurrentConfig(text);
             IBridge.getInstance().getClient().setGuiScreen((IBridge.Screen) ui);
         }).dimensions(width / 2 - 50, height / 2 + 30, 98, 20);

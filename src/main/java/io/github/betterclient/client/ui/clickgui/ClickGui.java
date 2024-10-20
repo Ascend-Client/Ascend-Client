@@ -288,4 +288,9 @@ public class ClickGui extends Screen implements StringTypeHandler {
     public void setCurrentConfig(String cfg) {
         this.currentConfig = cfg;
     }
+
+    @Override
+    public void isNotWaiting() {
+        isWaitingForString = false;
+    }
 }
