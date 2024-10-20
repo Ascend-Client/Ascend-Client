@@ -32,4 +32,4 @@ bin/
 
 run/
 quixotic.jar
-src/main/resources/ascend/github/
+src/main/resources/ascend/github/*

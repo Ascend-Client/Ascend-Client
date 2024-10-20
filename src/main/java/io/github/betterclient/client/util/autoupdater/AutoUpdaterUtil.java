@@ -38,7 +38,7 @@ public class AutoUpdaterUtil {
     }
 
     private static String downloadUpdater() throws IOException, URISyntaxException {
-        JarFile file = new JarFile(Util.urlToFile("https://nightly.link/betterclient/Minecraft-Client/workflows/updater/modern/Updater.zip"));
+        JarFile file = new JarFile(Util.urlToFile("https://nightly.link/Ascend-Client/Ascend-Client/workflows/updater/modern/Updater.zip"));
         byte[] bites = Util.readAndClose(file.getInputStream(file.getEntry("Updater.jar")));
 
         File f0 = File.createTempFile("updater", ".jar");
