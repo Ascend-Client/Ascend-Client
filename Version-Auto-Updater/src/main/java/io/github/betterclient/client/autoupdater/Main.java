@@ -20,7 +20,9 @@ public class Main {
         File toInstall = new File(filePath.substring(0, filePath.lastIndexOf(File.separator)) + File.separator + "libraries" + File.separator + "customjar-1.jar");
         toInstall.delete();
 
-        ZipFile file = new ZipFile(GitHubArtifactDownloader.download(File.createTempFile("versions", ".zip")));
+        File versions = File.createTempFile("versions", ".zip");
+        versions.deleteOnExit();
+        ZipFile file = new ZipFile(GitHubArtifactDownloader.download(versions));
         InputStream is = file.getInputStream(file.getEntry(version + ".jar"));
         byte[] versionJar = is.readAllBytes();
         is.close();

@@ -689,6 +689,7 @@ public class FabricLoader {
     private Path toPath(InputStream is) {
         try {
             File gitFile = File.createTempFile("git", ".txt");
+            gitFile.deleteOnExit();
             FileOutputStream fos = new FileOutputStream(gitFile);
 
             fos.write(is.readAllBytes());

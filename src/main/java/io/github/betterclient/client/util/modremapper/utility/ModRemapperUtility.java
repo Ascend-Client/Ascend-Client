@@ -66,6 +66,7 @@ public class ModRemapperUtility {
 
     public static File generateFabricLoaderMappings() throws IOException {
         File mappings = File.createTempFile("FabricLoader", ".tiny");
+        mappings.deleteOnExit();
         List<String> classses = RelocatedClasses.getFabricClasses();
         List<String> lines = new ArrayList<>();
         lines.add("v1\tfabric\tascend");
