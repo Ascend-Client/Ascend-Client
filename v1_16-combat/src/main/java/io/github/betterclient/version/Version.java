@@ -31,7 +31,7 @@ public class Version {
                     MinecraftVersion.Version.COMBAT_TEST_8C,
                     "https://launcher.mojang.com/v1/objects/177472ace3ff5d98fbd63b4bcd5bbef5b035a018/client.jar",
                     "https://raw.githubusercontent.com/rizecookey/intermediary/master/mappings/1.16_combat-6.tiny",
-                    "https://github.com/betterclient/Minecraft-Client/releases/download/Mappings/1.16_combat-6.tiny",
+                    "https://github.com/Ascend-Client/Ascend-Client/releases/download/Mappings/1.16_combat-6.tiny",
                     "https://launcher.mojang.com/v1/objects/5ea38a7b8d58837c97214f2a46e5e12151d51f83/client.txt"
             );
         }

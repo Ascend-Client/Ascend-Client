@@ -2,7 +2,7 @@ package io.github.betterclient.client;
 
 import io.github.betterclient.client.asm.YarnFix;
 import io.github.betterclient.client.bridge.IBridge;
-import io.github.betterclient.client.util.PrelaunchUpdateChecker;
+import io.github.betterclient.client.util.autoupdater.PreLaunchUpdateChecker;
 import io.github.betterclient.client.util.downloader.DownloadedMinecraft;
 import io.github.betterclient.client.util.downloader.MinecraftDownloader;
 import io.github.betterclient.client.util.mclaunch.StatusFrame;
@@ -15,6 +15,7 @@ import io.github.betterclient.fabric.Util;
 import io.github.betterclient.quixotic.Quixotic;
 import io.github.betterclient.quixotic.QuixoticClassLoader;
 
+import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -23,7 +24,6 @@ import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.jar.JarEntry;
@@ -59,8 +59,9 @@ public class Application {
         quixoticClassLoader.addExclusion("org.slf4j.");
 
         try {
-            PrelaunchUpdateChecker.check();
+            PreLaunchUpdateChecker.check();
         } catch (IOException e) {
+            System.out.println("Failed checking for updates");
             e.printStackTrace(System.err);
         }
 

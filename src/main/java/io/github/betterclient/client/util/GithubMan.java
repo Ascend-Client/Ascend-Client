@@ -67,7 +67,7 @@ public class GithubMan {
 
     public boolean checkUpdate() {
         try {
-            URL url = new URI("https://api.github.com/repos/betterclient/Minecraft-Client/commits").toURL();
+            URL url = new URI("https://api.github.com/repos/Ascend-Client/Ascend-Client/commits").toURL();
             InputStream is = url.openStream();
             byte[] bites = is.readAllBytes();
             is.close();

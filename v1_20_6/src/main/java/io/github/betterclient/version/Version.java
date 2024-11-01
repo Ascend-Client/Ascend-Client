@@ -28,7 +28,7 @@ public class Version {
                     MinecraftVersion.Version.V1_20_6,
                     "https://piston-data.mojang.com/v1/objects/05b6f1c6b46a29d6ea82b4e0d42190e42402030f/client.jar",
                     "https://raw.githubusercontent.com/FabricMC/intermediary/master/mappings/1.20.6.tiny",
-                    "https://github.com/betterclient/Minecraft-Client/releases/download/Mappings/1.20.6.tiny",
+                    "https://github.com/Ascend-Client/Ascend-Client/releases/download/Mappings/1.20.6.tiny",
                     "https://piston-data.mojang.com/v1/objects/de46c8f33d7826eb83e8ef0e9f80dc1f08cb9498/client.txt"
             );
         }

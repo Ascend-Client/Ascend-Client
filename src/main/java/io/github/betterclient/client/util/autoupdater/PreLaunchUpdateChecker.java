@@ -1,4 +1,4 @@
-package io.github.betterclient.client.util;
+package io.github.betterclient.client.util.autoupdater;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
@@ -19,11 +19,11 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.jar.JarFile;
 
-public class PrelaunchUpdateChecker {
+public class PreLaunchUpdateChecker {
     public static void check() throws IOException {
         if(Application.isDev) return;
         String commitId = "";
-        List<String> text = Files.readAllLines(toPath(PrelaunchUpdateChecker.class.getResourceAsStream("/ascend/github/github.txt")));
+        List<String> text = Files.readAllLines(toPath(PreLaunchUpdateChecker.class.getResourceAsStream("/ascend/github/github.txt")));
 
         for(String line : text) {
             if(line.startsWith("git.commit.id.abbrev=")) {
@@ -38,12 +38,17 @@ public class PrelaunchUpdateChecker {
 
     private static boolean checkUpdate(String commitId) {
         try {
-            URL url = new URI("https://api.github.com/repos/betterclient/Minecraft-Client/commits").toURL();
+            URL url = new URI("https://api.github.com/repos/Ascend-Client/Ascend-Client/commits").toURL();
             InputStream is = url.openStream();
-            byte[] bites = is.readAllBytes();
+            String readStr = new String(is.readAllBytes());
             is.close();
 
-            JsonArray array = new JsonParser().parse(new String(bites)).getAsJsonArray();
+            if (readStr.contains("API rate limit exceeded for")) {
+                JOptionPane.showConfirmDialog(null, "You are being rate limited by github.", "Update Failed", JOptionPane.OK_CANCEL_OPTION);
+                return false;
+            }
+
+            JsonArray array = new JsonParser().parse(readStr).getAsJsonArray();
             String version = array.get(0).getAsJsonObject().get("sha").getAsString();
             return !version.startsWith(commitId);
         } catch (IOException | URISyntaxException ex) {
@@ -96,7 +101,7 @@ public class PrelaunchUpdateChecker {
     }
 
     private static String downloadUpdater() throws IOException, URISyntaxException {
-        JarFile file = new JarFile(Util.urlToFile("https://nightly.link/betterclient/Minecraft-Client/workflows/updater/modern/Updater.zip"));
+        JarFile file = new JarFile(Util.urlToFile("https://nightly.link/Ascend-Client/Ascend-Client/workflows/updater/modern/Updater.zip"));
         byte[] bites = Util.readAndClose(file.getInputStream(file.getEntry("Updater.jar")));
 
         File f0 = File.createTempFile("updater", ".jar");

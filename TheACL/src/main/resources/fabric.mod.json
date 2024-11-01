@@ -8,8 +8,8 @@
     "betterclient"
   ],
   "contact": {
-    "sources": "https://github.com/betterclient/Minecraft-Client",
-    "issues": "https://github.com/betterclient/Minecraft-Client/issues",
+    "sources": "https://github.com/Ascend-Client/Ascend-Client",
+    "issues": "https://github.com/Ascend-Client/Ascend-Client/issues",
     "homepage": "https://discord.gg/FmKNQverS7"
   },
   "license": "CC0-1.0",

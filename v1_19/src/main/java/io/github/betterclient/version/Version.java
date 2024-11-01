@@ -30,7 +30,7 @@ public class Version {
                     MinecraftVersion.Version.V1_19_4,
                     "https://piston-data.mojang.com/v1/objects/958928a560c9167687bea0cefeb7375da1e552a8/client.jar",
                     "https://raw.githubusercontent.com/FabricMC/intermediary/master/mappings/1.19.4.tiny",
-                    "https://github.com/betterclient/Minecraft-Client/releases/download/Mappings/1.19.4.tiny",
+                    "https://github.com/Ascend-Client/Ascend-Client/releases/download/Mappings/1.19.4.tiny",
                     "https://piston-data.mojang.com/v1/objects/f14771b764f943c154d3a6fcb47694477e328148/client.txt"
             );
         }
