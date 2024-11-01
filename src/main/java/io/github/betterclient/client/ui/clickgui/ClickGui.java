@@ -144,9 +144,10 @@ public class ClickGui extends Screen implements StringTypeHandler {
             modules = Ascend.getInstance().moduleManager.getByCategory(current);
         }
 
+        this.max = (((modules.size() / 3) + 1) * 90) - 360;
+
         UIUtil.enableScissor(w2 - 200, h2 - 190, w2 + 200, h2 + 190);
         int i = 0;
-        int latestY = 0;
         for (Module module : modules) {
             int px = (i % 3) * 90;
             int py = (i / 3) * 90 - scrollY;
@@ -168,16 +169,9 @@ public class ClickGui extends Screen implements StringTypeHandler {
                 drawTexture(matrices, w2 - 90 + px, h2 - 160 + py, 0, 0, 60, 35, 60, 35);
             }
 
-            latestY = h2 - 90 + (i / 3) * 90;
             i++;
         }
         UIUtil.disableScissor();
-
-        max = ((i / 3) * 90) - h2 - 20;
-        if(latestY <= h2 + 190) {
-            scrollY = 0;
-            max = 0;
-        }
 
         super.render(matrices, mouseX, mouseY, partialTicks);
     }
@@ -247,7 +241,7 @@ public class ClickGui extends Screen implements StringTypeHandler {
                         System.out.println("Failed to delete (?)");
                     }
 
-                    String configName = Arrays.stream(Objects.requireNonNullElse(Application.configFolder.listFiles(), new File[0])).filter(file -> file.getName().endsWith(".json")).toList().get(0).getName().replace(".json", "");
+                    String configName = Arrays.stream(Objects.requireNonNullElse(Application.configFolder.listFiles(), new File[0])).filter(file -> file.getName().endsWith(".json")).toList().getFirst().getName().replace(".json", "");
                     Ascend.getInstance().config.switchConfig(configName);
                 }
             }

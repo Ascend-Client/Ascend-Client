@@ -142,6 +142,9 @@ public class UIUtil {
     }
 
     public static String capitalize(String string) {
+        if (string.isEmpty())
+            return "";
+
         if(string.contains(" ")) {
             String[] strE = string.split(" ");
             List<String> strEL = new ArrayList<>();

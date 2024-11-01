@@ -60,12 +60,19 @@ public class Version {
             ArrayList<File> list = new ArrayList<>();
 
             try {
+                //ReplayMod compatible sodium
                 list.add(Util.downloadIfFirstLaunch("https://www.replaymod.com/download/sodium-fabric-mc1.16.5-0.2.0+rev.f42b4ca.jar"));
+                //Updated fabric api (by NotCoded)
                 list.add(Util.downloadIfFirstLaunch("https://github.com/not-coded/fabric/releases/download/0.42.0%2B1.16.combat/fabric-api-0.42.0+1.16.combat.jar", fapiHash));
+                //Sodium extras
                 list.add(Util.downloadIfFirstLaunch("https://cdn.modrinth.com/data/PtjYWJkn/versions/Et3PybAh/sodium-extra-0.4.18%2Bmc1.16.5-build.96.jar"));
+                //Reeses sodium extras
                 list.add(Util.downloadIfFirstLaunch("https://cdn.modrinth.com/data/Bh37bMuy/versions/Em4mC86n/reeses_sodium_options-1.6.3%2Bmc1.16.5-build.86.jar"));
+                //Iris
                 list.add(Util.downloadIfFirstLaunch("https://cdn.modrinth.com/data/YL57xq9U/versions/1turazSM/iris-mc1.16.5-1.4.5.jar"));
+                //Bedrock bridge
                 list.add(Util.downloadIfFirstLaunch("https://github.com/not-coded/cts-8a-parity/releases/download/1.0.2/cts-8a-parity-1.0.2.jar", cbbHash));
+                //LazyDFU
                 list.add(Util.downloadIfFirstLaunch("https://cdn.modrinth.com/data/hvFnDODi/versions/0.1.2/lazydfu-0.1.2.jar"));
             } catch (Exception e) {
                 IBridge.getPreLaunch().error(e);

@@ -52,6 +52,7 @@ public class Version {
         @Override
         public List<File> getVersionMods() {
             try {
+                //Fabric api
                 File fapi = Util.downloadIfFirstLaunch("https://cdn.modrinth.com/data/P7dR8mSH/versions/P7uGFii0/fabric-api-0.92.2%2B1.20.1.jar");
 
                 //1.20.1 lwjgl version is incompatible with sodium?????
@@ -59,9 +60,13 @@ public class Version {
                     return List.of(fapi);
                 }
 
+                //Sodium
                 File sodium = Util.downloadIfFirstLaunch("https://cdn.modrinth.com/data/AANobbMI/versions/ygf8cVZg/sodium-fabric-0.5.11%2Bmc1.20.1.jar");
+                //Sodium extras
                 File sodiumExtra = Util.downloadIfFirstLaunch("https://cdn.modrinth.com/data/PtjYWJkn/versions/I7ggF6B5/sodium-extra-0.5.4%2Bmc1.20.1-build.115.jar");
+                //Reeses sodium extras
                 File reesesSodiumExtras = Util.downloadIfFirstLaunch("https://cdn.modrinth.com/data/Bh37bMuy/versions/Rc9pkPug/reeses_sodium_options-1.7.2%2Bmc1.20.1-build.101.jar");
+                //Iris
                 File iris = Util.downloadIfFirstLaunch("https://cdn.modrinth.com/data/YL57xq9U/versions/1CMVXDHo/iris-1.7.2%2Bmc1.20.1.jar");
 
                 return List.of(fapi, sodium, sodiumExtra, reesesSodiumExtras, iris);

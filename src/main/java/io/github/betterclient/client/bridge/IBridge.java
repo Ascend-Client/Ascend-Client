@@ -13,7 +13,7 @@ public interface IBridge {
         try {
             return (IBridge) Class.forName("io.github.betterclient.version.Version").getDeclaredField("bridge").get(null);
         } catch (Exception e) {
-            throw new RuntimeException("hi (youll never see me)");
+            throw new RuntimeException("hi (you'll never see me)");
         }
     }
 
@@ -21,7 +21,7 @@ public interface IBridge {
         try {
             return (PreLaunchBridge) Class.forName("io.github.betterclient.version.Version").getDeclaredField("preLaunchBridge").get(null);
         } catch (Exception e) {
-            throw new RuntimeException("hi (youll never see me)");
+            throw new RuntimeException("hi (you'll never see me)");
         }
     }
 

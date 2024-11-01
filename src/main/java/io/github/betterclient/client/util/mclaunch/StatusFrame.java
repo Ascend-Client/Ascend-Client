@@ -63,6 +63,7 @@ public class StatusFrame extends JFrame {
     }
 
     public void update(ModLoadingInformation mli) throws IOException {
+        setAlwaysOnTop(false); //Just put on screen on the start
         if(mli.currentMod() == null) {
             progressCurrent = 1;
             progressTotal = 1;
