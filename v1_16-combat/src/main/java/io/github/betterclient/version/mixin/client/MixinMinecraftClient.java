@@ -5,7 +5,6 @@ import io.github.betterclient.client.bridge.IBridge;
 import io.github.betterclient.version.Version;
 import io.github.betterclient.client.event.impl.HitEntityEvent;
 import io.github.betterclient.fabric.FabricLoader;
-import io.github.betterclient.version.mods.BedrockBridge;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.util.hit.EntityHitResult;
@@ -33,11 +32,6 @@ public abstract class MixinMinecraftClient {
     @Inject(method = "doAttack", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerInteractionManager;attackEntity(Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/entity/Entity;)V"))
     public void attackSwing(CallbackInfo ci) {
         Ascend.getInstance().bus.call(new HitEntityEvent((IBridge.PlayerEntity) this.player, (IBridge.Entity) ((EntityHitResult) this.crosshairTarget).getEntity()));
-    }
-
-    @Inject(method = "disconnect()V", at = @At("HEAD"))
-    public void enableServer(CallbackInfo ci) {
-        BedrockBridge.get().setServerAllowing(true);
     }
 
     @ModifyArg(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Mouse;<init>(Lnet/minecraft/client/MinecraftClient;)V"))

@@ -13,10 +13,6 @@ import java.util.List;
  * This class contains class specific access fixes that are breaking minecraft in prod
  */
 public class PrivateAccessTransformer implements ClassTransformer {
-    public List<String> transforming = new ArrayList<>(List.of(
-            "com.mojang.blaze3d.platform.GlStateManager"
-    ));
-
     @Override
     public byte[] transform(String className, byte[] classFileBuffer) {
         if(!className.equals("com.mojang.blaze3d.platform.GlStateManager")) {

@@ -189,10 +189,10 @@ public class Application {
             throw new RuntimeException("Mod loading failed while " + modLoadingInformation.state().getName(), e);
         }
 
-        IBridge.getPreLaunch().info("Took " + (System.currentTimeMillis() - startt) / 1000f + " seconds for remapping of all mods!");
-
-        quixoticClassLoader.addPlainTransformer(new YarnFix());
+        IBridge.getPreLaunch().info("Loaded all mods in " + (System.currentTimeMillis() - startt) / 1000f + " seconds!");
 
         FabricLoader.getInstance().loadApplicationManager(quixoticClassLoader);
+
+        quixoticClassLoader.addPlainTransformer(new YarnFix());
     }
 }

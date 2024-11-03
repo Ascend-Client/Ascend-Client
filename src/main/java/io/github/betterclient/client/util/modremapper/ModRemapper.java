@@ -38,14 +38,14 @@ public class ModRemapper {
     private static boolean mappingMethod = false;
 
     public static File remapMod(File toRemap, boolean isBuiltin) throws IOException, NoSuchAlgorithmException {
-        if(!Application.isDev) return ProdFabricRemapper.remap(toRemap, isBuiltin, false);
+        if(!Application.isDev) return ProdFabricRemapper.remap(toRemap);
 
         DownloadedMinecraft version = Application.minecraft;
         return remapMod(toRemap, isBuiltin, false, version.intermediaryToYarn(), version.intermediaryJar());
     }
 
     public static File remapInternalMod(File toRemap, boolean isBuiltin) throws IOException, NoSuchAlgorithmException {
-        if(!Application.isDev) return ProdFabricRemapper.remap(toRemap, isBuiltin, true);
+        if(!Application.isDev) return ProdFabricRemapper.remap(toRemap);
 
         DownloadedMinecraft version = Application.minecraft;
         return remapMod(toRemap, isBuiltin, true, version.intermediaryToYarn(), version.intermediaryJar());
@@ -76,7 +76,7 @@ public class ModRemapper {
         if(remappedMod.exists() && !Application.doRemappingOfAlreadyRemappedMods) {
             if(Util.readAndClose(new FileInputStream(remappedMod)).length != 0) {
                 if (ModRemapperUtility.checkLastHash(modToRemap)) {
-                    return remappedMod;
+                    return ProdFabricRemapper.remap(remappedMod); //Generate fabric mapping data while returning already remapped file.
                 } else {
                     bridge.info("Mod already remapped but different version.");
                 }
@@ -288,6 +288,7 @@ public class ModRemapper {
 
         jos.close();
 
+        ProdFabricRemapper.remap(remappedMod); //Generate fabric mapping data
         return remappedMod;
     }
 
@@ -337,7 +338,6 @@ public class ModRemapper {
     private static Map<String, byte[]> map(File modToRemap, File mapping, File intermediaryJar) throws IOException {
         TinyRemapper.Builder builder = TinyRemapper.newRemapper();
         builder.withMappings(TinyUtils.createTinyMappingProvider(mapping.toPath(), "intermediary", "named"));
-        builder.withMappings(TinyUtils.createTinyMappingProvider(generateFabricLoaderMappings().toPath(), "fabric", "ascend"));
         builder.ignoreConflicts(true);
         builder.threads(1);
         TinyRemapper remapper = builder.build();

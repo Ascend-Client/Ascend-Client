@@ -10,6 +10,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -99,5 +100,12 @@ public class Util {
         String hash = formatter.toString();
         formatter.close();
         return hash;
+    }
+
+    public static Path toFile(byte[] bytes, String prefix) throws IOException {
+        File f = File.createTempFile("toFile", prefix);
+        f.deleteOnExit();
+        Files.write(f.toPath(), bytes);
+        return f.toPath();
     }
 }

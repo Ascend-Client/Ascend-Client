@@ -36,7 +36,7 @@ File downloadQuixotic() {
     println("Downloading quixotic")
 
     f.createNewFile()
-    def is = new URI("https://github.com/betterclient/Quixotic-Loader/releases/download/iforgordoesntexist/Quixotic-1.0.jar").toURL().openStream()
+    def is = new URI("https://github.com/betterclient/Quixotic-Loader/releases/download/WOOOOOOOOOO/Quixotic-1.0.jar").toURL().openStream()
     Files.copy(
             is,
             f.toPath(),
@@ -180,7 +180,7 @@ abstract class MergeJarsTask extends DefaultTask {
         while (jes.hasMoreElements()) {
             var je = jes.nextElement()
 
-            if(!je.directory && je.name != "fabric.mod.json") {
+            if(!je.directory && je.name != "fabric.mod.json" && !je.name.startsWith("net/fabricmc/loader")) {
                 var str = jf.getInputStream(je)
                 mapFiles[je.name] = str.readAllBytes()
                 str.close()

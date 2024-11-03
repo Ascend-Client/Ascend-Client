@@ -46,7 +46,7 @@ public interface IBridge {
         void error(Exception e);
         List<File> getVersionMods();
         void registerVersionAscendMods(ModuleManager manager);
-        void modifyVersion(ClassNode node, File mod) throws IOException;
+        void modifyVersion(ClassNode node, File mod);
     }
 
     interface InternalBridge {

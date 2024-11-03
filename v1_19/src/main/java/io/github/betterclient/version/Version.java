@@ -77,7 +77,7 @@ public class Version {
         }
 
         @Override
-        public void modifyVersion(ClassNode node, File mod) throws IOException {
+        public void modifyVersion(ClassNode node, File mod) {
             if(node.name.equals("net/coderbot/iris/compat/sodium/mixin/vertex_format/entity/MixinEntityRenderDispatcher")) {
                 for (MethodNode method : node.methods) {
                     if(method.name.equals("renderShadowPart")) {

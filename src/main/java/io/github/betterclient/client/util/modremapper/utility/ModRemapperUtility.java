@@ -79,7 +79,7 @@ public class ModRemapperUtility {
         return mappings;
     }
 
-    private static String relocate(String s) {
+    public static String relocate(String s) {
         return s
                 .replace("net/fabricmc/api", "io/github/betterclient/fabric/relocate/api")
                 .replace("net/fabricmc/loader", "io/github/betterclient/fabric/relocate/loader");

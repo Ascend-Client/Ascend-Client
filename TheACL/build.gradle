@@ -17,6 +17,5 @@ repositories {
 dependencies {
     implementation parent
 
-    implementation "net.fabricmc:fabric-loader:0.16.2"
     implementation "org.jetbrains:annotations:24.1.0"
 }

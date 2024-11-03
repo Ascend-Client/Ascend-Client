@@ -82,7 +82,7 @@ public class Version {
         }
 
         @Override
-        public void modifyVersion(ClassNode node, File mod) throws IOException {}
+        public void modifyVersion(ClassNode node, File mod) {}
     };
 
     public static void setup() {

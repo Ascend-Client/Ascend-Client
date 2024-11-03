@@ -3,6 +3,7 @@ package io.github.betterclient.fabric;
 import io.github.betterclient.client.Application;
 import io.github.betterclient.client.bridge.IBridge;
 import io.github.betterclient.client.util.downloader.MinecraftVersion;
+import io.github.betterclient.client.util.modremapper.ModRemapper;
 import io.github.betterclient.fabric.relocate.loader.api.FabricLoader;
 import io.github.betterclient.fabric.relocate.loader.api.SemanticVersion;
 import io.github.betterclient.fabric.relocate.loader.api.Version;
@@ -23,9 +24,29 @@ import java.util.regex.Pattern;
 
 import static io.github.betterclient.fabric.FabricVersionParser.LoadingError.*;
 
+/*
+ * Copyright 2016 FabricMC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ * Some parts of this code is from:
+ * <a href="https://github.com/FabricMC/fabric-loader/blob/083a4dc339655bddec498ffd75f13580d9b9722d/src/main/java/net/fabricmc/loader/impl/util/version/SemanticVersionImpl.java#L67">...</a>
+ */
+
 public class FabricVersionParser implements VersionPredicate {
     /**
-    Check if mod is missing a dependency
+     Check if mod is missing a dependency
      @param mod The mod to check
      */
     public static LoadingError checkIncompatible(File mod) {
@@ -40,7 +61,7 @@ public class FabricVersionParser implements VersionPredicate {
                 String src = new String(is.readAllBytes());
                 is.close();
 
-                JSONObject obj = new JSONObject(src);
+                JSONObject obj = new JSONObject(ModRemapper.fixIssue(src));
 
                 if(obj.has("depends")) {
                     JSONObject as = obj.getJSONObject("depends");

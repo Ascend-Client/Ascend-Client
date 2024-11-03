@@ -15,7 +15,9 @@ import io.github.betterclient.fabric.relocate.loader.api.metadata.ContactInforma
 import io.github.betterclient.fabric.relocate.loader.api.metadata.CustomValue;
 import io.github.betterclient.fabric.relocate.loader.api.metadata.ModEnvironment;
 import io.github.betterclient.fabric.relocate.loader.api.metadata.Person;
+import io.github.betterclient.fabric.transformer.FixModIssuesTransformer;
 import io.github.betterclient.fabric.transformer.PrivateAccessTransformer;
+import io.github.betterclient.fabric.transformer.RelocationTransformer;
 import io.github.betterclient.fabric.transformer.RemoveEntryPointImplements;
 import io.github.betterclient.quixotic.Quixotic;
 import io.github.betterclient.quixotic.QuixoticClassLoader;
@@ -481,8 +483,14 @@ public class FabricLoader {
     }
 
     public void loadApplicationManager(QuixoticClassLoader quixoticClassLoader) {
+        //Relocation should be first because it replaces the entire class.
+        quixoticClassLoader.addPlainTransformer(new RelocationTransformer());
+
         quixoticClassLoader.addPlainTransformer(new RemoveEntryPointImplements());
-        quixoticClassLoader.addPlainTransformer(new PrivateAccessTransformer());
+        quixoticClassLoader.addPlainTransformer(new FixModIssuesTransformer());
+
+        if (Application.isDev)
+            quixoticClassLoader.addPlainTransformer(new PrivateAccessTransformer());
     }
 
     public void doMixin() {
