@@ -9,8 +9,11 @@ import java.util.Map;
 
 public class NoDuplicates implements ClassTransformer {
     @Override
-    public byte[] transform(String s, byte[] bytes) {
-        BetterClassNode bcn = new BetterClassNode(bytes);
+    public byte[] transform(String name, byte[] basicClass) {
+        if(!name.startsWith("net.minecraft") && !name.startsWith("com.mojang.blaze3d."))
+            return basicClass;
+
+        BetterClassNode bcn = new BetterClassNode(basicClass);
 
         List<Map.Entry<String, String>> seenMethods = new ArrayList<>();
 
