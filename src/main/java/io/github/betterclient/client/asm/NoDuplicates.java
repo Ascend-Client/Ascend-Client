@@ -10,7 +10,7 @@ import java.util.Map;
 public class NoDuplicates implements ClassTransformer {
     @Override
     public byte[] transform(String name, byte[] basicClass) {
-        if(!name.startsWith("net.minecraft") && !name.startsWith("com.mojang.blaze3d."))
+        if((!name.startsWith("net.minecraft") && !name.startsWith("com.mojang.blaze3d.")) || basicClass == null)
             return basicClass;
 
         BetterClassNode bcn = new BetterClassNode(basicClass);
