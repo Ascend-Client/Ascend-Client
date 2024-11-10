@@ -1,5 +1,6 @@
 package io.github.betterclient.client;
 
+import io.github.betterclient.client.asm.NoDuplicates;
 import io.github.betterclient.client.asm.YarnFix;
 import io.github.betterclient.client.bridge.IBridge;
 import io.github.betterclient.client.util.autoupdater.PreLaunchUpdateChecker;
@@ -194,5 +195,6 @@ public class Application {
         FabricLoader.getInstance().loadApplicationManager(quixoticClassLoader);
 
         quixoticClassLoader.addPlainTransformer(new YarnFix());
+        quixoticClassLoader.addPlainTransformer(new NoDuplicates());
     }
 }
