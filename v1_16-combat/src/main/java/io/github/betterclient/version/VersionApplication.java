@@ -1,6 +1,7 @@
 package io.github.betterclient.version;
 
 import io.github.betterclient.client.Application;
+import io.github.betterclient.client.asm.NoDuplicates;
 import io.github.betterclient.fabric.FabricLoader;
 import io.github.betterclient.quixotic.QuixoticApplication;
 import io.github.betterclient.quixotic.QuixoticClassLoader;
@@ -34,8 +35,10 @@ public class VersionApplication implements QuixoticApplication {
         Application.customJarsFolder = new File(Application.customJarsFolder, "1.16-combat-6");
         Application.remappedModsFolder = new File(Application.remappedModsFolder, "1.16-combat-6");
         Application.load(quixoticClassLoader);
+
         quixoticClassLoader.addPlainTransformer(new RenderSystemTransformer());
         quixoticClassLoader.addPlainTransformer(new TexturedButtonWidgetTransformer());
+        quixoticClassLoader.addPlainTransformer(new NoDuplicates());
     }
 
     @Override

@@ -1,6 +1,7 @@
 package io.github.betterclient.version;
 
 import io.github.betterclient.client.Application;
+import io.github.betterclient.client.asm.NoDuplicates;
 import io.github.betterclient.fabric.FabricLoader;
 import io.github.betterclient.quixotic.Side;
 import io.github.betterclient.version.transformers.PlayerInteractEntityC2SPacketEditor;
@@ -29,12 +30,13 @@ public class VersionApplication implements QuixoticApplication {
 
     @Override
     public void loadApplicationManager(QuixoticClassLoader quixoticClassLoader) {
-        quixoticClassLoader.addPlainTransformer(new PlayerInteractEntityC2SPacketEditor());
-
         Application.mcVersionFolder = new File(Application.mcDownloadsFolder, "1.21.1");
         Application.customJarsFolder = new File(Application.customJarsFolder, "1.21.1");
         Application.remappedModsFolder = new File(Application.remappedModsFolder, "1.21.1");
         Application.load(quixoticClassLoader);
+
+        quixoticClassLoader.addPlainTransformer(new PlayerInteractEntityC2SPacketEditor());
+        quixoticClassLoader.addPlainTransformer(new NoDuplicates());
     }
 
     @Override
