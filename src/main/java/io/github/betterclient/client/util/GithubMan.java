@@ -6,6 +6,7 @@ import io.github.betterclient.client.Application;
 import io.github.betterclient.client.Ascend;
 import io.github.betterclient.client.bridge.IBridge;
 
+import javax.swing.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -76,7 +77,12 @@ public class GithubMan {
             String version = array.get(0).getAsJsonObject().get("sha").getAsString();
             return !version.startsWith(this.commitId);
         } catch (IOException | URISyntaxException ex) {
-            IBridge.getPreLaunch().error(ex.toString());}
+            if (ex.toString().contains("403")) {
+                JOptionPane.showConfirmDialog(null, "You are being rate limited by github.", "Update Failed", JOptionPane.OK_CANCEL_OPTION);
+                return false;
+            }
+            IBridge.getPreLaunch().error(ex.toString());
+        }
 
         return false;
     }

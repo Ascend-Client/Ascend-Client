@@ -52,7 +52,13 @@ public class PreLaunchUpdateChecker {
             String version = array.get(0).getAsJsonObject().get("sha").getAsString();
             return !version.startsWith(commitId);
         } catch (IOException | URISyntaxException ex) {
-            IBridge.getPreLaunch().error(ex.toString());}
+            if (ex.toString().contains("403")) {
+                JOptionPane.showConfirmDialog(null, "You are being rate limited by github.", "Update Failed", JOptionPane.OK_CANCEL_OPTION);
+                return false;
+            }
+
+            IBridge.getPreLaunch().error(ex.toString());
+        }
 
         return false;
     }
